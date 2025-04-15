@@ -1,0 +1,76 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+    <h:form id="formPuntoVenta"> 
+
+        <h:panelGroup>
+
+            <p:outputLabel value="Código de Barra*"  for="codigoBarra"/>
+            <br/>
+            <p:inputText id="codigoBarra" placeholder="Escenea el código o escríbelo y presiona Enter" value="#{puntoVentaBean.codigo}"   style="width: 100%" >
+                <p:ajax listener="#{puntoVentaBean.buscarProductos()}" update="dataTableVentas" />
+
+            </p:inputText>
+
+
+
+            <br/>
+            <br/>
+            <p:dataTable                 
+                id="dataTableVentas"
+                tableStyle="min-width: 100px;"
+                var="varComponente"
+                value="#{puntoVentaBean.ventasTO}"
+                lazy="true"
+                reflow="true"
+                paginator="true"
+                filterDelay="1000"
+                rows="5"
+                paginatorPosition="bottom"
+                paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink}
+                {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}  "
+                rowsPerPageTemplate="5,10,15,20,25,50"
+                currentPageReportTemplate="( {currentPage} of {totalPages} - Total : {totalRecords} )"
+
+                widgetVar="TableVentas">
+
+                <p:column  headerText="Nombre"   width="100px">
+
+                </p:column>
+
+                <p:column  headerText="Stock"    width="150px">
+
+                </p:column>
+
+                <p:column  headerText="Código"    width="100px">
+
+                </p:column>
+
+                <p:column  headerText="Precio"   width="100px">
+
+                </p:column>
+
+                <p:column  headerText="Cantidad"   width="100px">
+
+                </p:column>
+
+                <p:column  headerText="Total"   width="100px">
+
+                </p:column>
+
+                <p:column  headerText="Acción"  width="50px" >
+                    <p:commandButton icon="pi pi-trash" styleClass="rounded-button ui-button-danger" 
+
+                                     update="dataTableVentas"/>
+                </p:column>
+            </p:dataTable>
+
+
+        </h:panelGroup>
+
+
+
+    </h:form>
+</ui:composition>

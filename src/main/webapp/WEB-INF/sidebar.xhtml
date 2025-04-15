@@ -1,0 +1,45 @@
+<ui:composition
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:po="http://primefaces.org/omega">
+    <h:form id="menuform">
+        <div class="sidebar">
+            <div class="sidebar-scroll-content">
+                <div class="logo">
+                    <p:link outcome="/view/mailbox/index">
+                        <p:graphicImage name="images/logo_inicio.png" library="omega-layout" width="150" height="80"/>
+                    </p:link>
+                </div>
+                <div class="profile" >
+                    <p:graphicImage name="images/profile.png" library="omega-layout" />
+                    <a id="profile-button" href="#" >
+                        <span class="username">#{full_name}</span>
+                        <i class="pi pi-fw pi-cog"/>
+                    </a>
+                    <ul>                  
+                        <li><p:commandLink action="#{loginBean.logout()}"><i class='pi pi-fw pi-sign-out'></i> Salir </p:commandLink></li>
+
+<!--                        <li>  <p:commandLink process="@this"
+                                             onstart="PF('dialogPassword').show()"                                     
+                                             style="margin-right: .5rem" >
+                                <i class='pi pi-user'></i> Cambiar Contraseña </p:commandLink>
+                        </li>-->
+                    </ul>
+                </div>
+
+                <div class="menu">
+                    <po:menu widgetVar="OmegaMenuWidget">              
+                        <p:menuitem id="home" value="HOME" icon="pi pi-book" outcome="/view/mailbox/index" />  
+                        <p:menuitem id="venta" value="Punto Venta" icon="pi pi-book" outcome="/view/mailbox/punto/index" />  
+                        <p:menuitem id="productos" value="Productos" icon="pi pi-book" outcome="/view/mailbox/productos/index" />  
+                         
+                    </po:menu>
+                </div>
+            </div>
+        </div>
+    </h:form>
+  
+</ui:composition>
