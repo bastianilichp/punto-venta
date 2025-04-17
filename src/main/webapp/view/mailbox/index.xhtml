@@ -11,7 +11,7 @@
         </h:form>
 
         <h:form>
-           
+
             <div  style="display: flex; justify-content: center; margin-top: 180px" >
                 <table style="width: 80%;">
                     <tr>
@@ -41,6 +41,7 @@
                         </td>
                         <td style="text-align: center;">
                             <p:commandButton type="button" value="CREAR USUARIO" icon="pi pi-user-plus" rendered="#{ADMIN}"
+                                             onstart ="PF('dialogCreacionUser').show()" update="formCreacionUsuario"
                                              styleClass="rounded-button ui-button-info" style="width: 300px; height:80px "/>
                         </td>
                     </tr>
@@ -50,5 +51,23 @@
 
         </h:form>
 
+        <p:dialog onShow="PF('dialogCreacionUser').initPosition()" id="DlgCreacionUser" 
+                  widgetVar="dialogCreacionUser" modal="true" showEffect="explode" 
+                  resizable="false" appendTo="@(body)" 
+                  width="1000" 
+                  header="Creación Usuario" closeOnEscape="true">
+
+            <h:form id="formCreacionUsuario" >
+
+
+
+
+            </h:form>
+
+
+        </p:dialog>
+
     </ui:define>
+
+
 </ui:composition>
