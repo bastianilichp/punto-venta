@@ -16,7 +16,7 @@ import java.io.Serializable;
 @ViewScoped
 public class SecurityBean implements Serializable {
     
-    private final String HOME = "/view/acta/index.hsm";
+    private final String HOME = "/view/index.hsm";
 
     @Inject
     private HttpSession httpSession;
