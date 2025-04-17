@@ -9,22 +9,22 @@
     <p:dialog onShow="PF('dialogDetallesVenta').initPosition()" id="DlgDetallesVenta" 
               widgetVar="dialogDetallesVenta" modal="true" showEffect="explode" 
               resizable="false" appendTo="@(body)" 
-              width="1000" height="500"
+              width="1000" 
               header="Detalles Venta" closeOnEscape="true">
 
-        <h:form id="formDetallesVentaUser" >
-            <p:dataTable id="dtListProductos"
-                         value="#{ventasUserBean.listDetalle}"
+        <h:form id="formDetallesVentasModal" >
+            <p:dataTable id="dtListDetalle"
+                         value="#{ventasDetallesBean.listDetalle}"
                          var="detallesU"
                          lazy="true"
                          paginator="true"
-                         rows="10"
+                         rows="5"
                          paginatorPosition="bottom"
                          paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink}
                          {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}  "
                          rowsPerPageTemplate="5,10,15,20,25,50"
                          currentPageReportTemplate="( {currentPage} of {totalPages} - Total : {totalRecords} )"       
-                         widgetVar="dtListProductos">
+                         widgetVar="dtListDetalle">
                 <p:ajax event="page" onstart="PF('blockUIWidget').show()" oncomplete="PF('blockUIWidget').hide()"/>
 
                 <p:column headerText="Codigo" style="width: 100px">

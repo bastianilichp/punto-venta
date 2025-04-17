@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import static java.util.UUID.randomUUID;
 import jakarta.annotation.PostConstruct;
+import jakarta.faces.component.UIInput;
 import jakarta.faces.component.UISelectOne;
 import jakarta.faces.context.ExternalContext;
 import jakarta.faces.context.FacesContext;
@@ -23,6 +24,7 @@ import jakarta.inject.Named;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.servlet.http.HttpSession;
+import org.primefaces.PrimeFaces;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
 @Named("loginBean")
@@ -31,7 +33,7 @@ public class LoginBean implements AppBean, Serializable {
 
     private final String HOME_PAGE = "/view/mailbox/index?faces-redirect=true";
 
-    
+    private String email;
 
     @Inject
     private UserController userController;
@@ -100,6 +102,14 @@ public class LoginBean implements AppBean, Serializable {
 
     public void setConfirm_password(String confirm_password) {
         this.confirm_password = confirm_password;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     @PostConstruct
@@ -188,8 +198,7 @@ public class LoginBean implements AppBean, Serializable {
                 httpSession.setAttribute("userSession", userValidado);
                 httpSession.setAttribute("autologin", false);
                 httpSession.setAttribute("full_name", userValidado.getNombre() + " " + userValidado.getApellido());
-                
-                //  httpSession.setAttribute("ADMIN", userValidado.getManager());
+                httpSession.setAttribute("ADMIN", userValidado.getManager());
 
                 redirect = true;
             } else {
@@ -202,7 +211,7 @@ public class LoginBean implements AppBean, Serializable {
         if (redirect) {
             //se ejecuta en JSGA
             //loginSessionController.updateLoginSession();
-            contadorController.incrementAndGet();           
+            contadorController.incrementAndGet();
 
             return HOME_PAGE;
         }
@@ -300,6 +309,35 @@ public class LoginBean implements AppBean, Serializable {
 //        }
 //
 //    }
+    public void recuperarContrasena() {
+        if (!validarFormRecovery("Recovery")) {
+            return;
+        }
+
+        if (this.userController.updateAndCheck(email)) {
+            Util.avisoInfo("infoMsg", "Su nueva contraseña se ha enviado a su correo");
+            PrimeFaces.current().executeScript("PF('dlgRecuperarPassword').hide()");
+        } else {
+            Util.avisoError("infoMsg", "Ocurrio un error al generar la nueva contraseña");
+        }
+    }
+
+    private boolean validarFormRecovery(String prefix) {
+        boolean validar = true;
+        FacesContext context = FacesContext.getCurrentInstance();
+        String formName = "form" + prefix;
+        String growlId = "infoMsg";
+
+        UIInput input_txtEmail = (UIInput) context.getViewRoot().findComponent(formName + ":txtEmail");
+
+        if (this.email == null || this.email.isEmpty()) {
+            input_txtEmail.setValid(false);
+            Util.avisoError(growlId, "Email:  Favor de ingresar su correo");
+            validar = false;
+        }
+
+        return validar;
+    }
 
     public String shutdown() throws IOException {
 

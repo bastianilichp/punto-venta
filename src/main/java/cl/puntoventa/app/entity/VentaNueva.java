@@ -11,14 +11,14 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
+import jakarta.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.Date;
 import java.util.Set;
 
 /**
@@ -37,15 +37,18 @@ public class VentaNueva implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
+    @Size(max = 50)
     @Column(name = "fechayhora")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date fechayhora;
+    private String fechayhora;
     @Column(name = "descuento")
     private Integer descuento;
     @Column(name = "subtotal")
     private Integer subtotal;
     @Column(name = "total")
     private Integer total;
+    @JoinColumn(name = "usuario_id", referencedColumnName = "id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Usuarios usuarios;
     @OneToMany(mappedBy = "ventaNueva", fetch = FetchType.LAZY)
     private Set<VentaDetalles> ventaDetallesSet;
 
@@ -64,11 +67,11 @@ public class VentaNueva implements Serializable {
         this.id = id;
     }
 
-    public Date getFechayhora() {
+    public String getFechayhora() {
         return fechayhora;
     }
 
-    public void setFechayhora(Date fechayhora) {
+    public void setFechayhora(String fechayhora) {
         this.fechayhora = fechayhora;
     }
 
@@ -94,6 +97,14 @@ public class VentaNueva implements Serializable {
 
     public void setTotal(Integer total) {
         this.total = total;
+    }
+
+    public Usuarios getUsuarios() {
+        return usuarios;
+    }
+
+    public void setUsuarios(Usuarios usuarios) {
+        this.usuarios = usuarios;
     }
 
     public Set<VentaDetalles> getVentaDetallesSet() {

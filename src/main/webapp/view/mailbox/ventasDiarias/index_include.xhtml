@@ -6,9 +6,44 @@
 
 
     <h:form id="formVentasDiarias">
- 
-        
-        
-        
+
+        <p:panelGrid columns="2" layout="flex" style="align-content: center; border: 2px"
+                     columnClasses="col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4"
+                     contentStyleClass="align-items-baseline ui-fluid">
+
+            <p:outputLabel for="fecha" value="Fecha:" style="font-weight: bold;"/>
+            <p:calendar locale="es" id="fecha"
+                        readonlyInput="false"
+                        size="60"
+                        maxlength="50"                                                 
+                        pattern="dd-MM-yyyy"
+                        required="false"    
+                        navigator="true"                             
+                        value="#{ventasDiariasBean.fechaActual}"> 
+                <p:ajax event="dateSelect" update="formVentasDiarias :formMessage" listener="#{ventasDiariasBean.ventasFecha}"></p:ajax>
+            </p:calendar>
+
+            <p:outputLabel for="subtotal" value="SubTotal:" style="font-weight: bold;"/>
+            <p:outputLabel id="subtotal" value="#{ventasDiariasBean.subTotal}">
+                <f:convertNumber  type="currency" currencySymbol="$ " locale="es_CL"/> 
+            </p:outputLabel>
+
+            <p:outputLabel for="descuento" value="Descuento Total" style="font-weight: bold;"/>
+            <p:outputLabel id="descuento" value="#{ventasDiariasBean.descuento}">
+                <f:convertNumber  type="currency" currencySymbol="$ " locale="es_CL"/> 
+            </p:outputLabel>
+
+            <p:outputLabel for="total" value="Venta Total" style="font-weight: bold;"/>
+            <p:outputLabel id="total" value="#{ventasDiariasBean.total}">
+                <f:convertNumber  type="currency" currencySymbol="$ " locale="es_CL"/> 
+            </p:outputLabel>
+
+        </p:panelGrid>
+
+
+
+
+
+
     </h:form>
 </ui:composition>

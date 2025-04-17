@@ -5,15 +5,19 @@ import cl.puntoventa.app.controller.ProductosController;
 import cl.puntoventa.app.controller.VentasDetallesController;
 import cl.puntoventa.app.controller.VentasNuevaController;
 import cl.puntoventa.app.entity.Producto;
+import cl.puntoventa.app.entity.Usuarios;
 import cl.puntoventa.app.entity.VentaNueva;
 import cl.puntoventa.app.to.VentasTO;
 import jakarta.annotation.PostConstruct;
+import jakarta.faces.context.ExternalContext;
+import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.RollbackException;
+import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -37,6 +41,9 @@ public class PuntoVentaBean implements AppBean, Serializable {
     private List<VentasTO> ventasTO;
 
     @Inject
+    private HttpSession httpSession;
+
+    @Inject
     private ProductosController productosController;
 
     @Inject
@@ -45,8 +52,7 @@ public class PuntoVentaBean implements AppBean, Serializable {
     @Inject
     private VentasNuevaController ventasNuevaController;
 
-    @PersistenceContext
-    private EntityManager entityManager;
+    private Usuarios user;
 
     private final String HOME_PAGE_REDIRECT = "/view/mailbox/punto/index?faces-redirect=true";
 
@@ -59,6 +65,7 @@ public class PuntoVentaBean implements AppBean, Serializable {
 
     @Override
     public void listar() {
+        user = (Usuarios) httpSession.getAttribute("userSession");
 
     }
 
@@ -70,6 +77,7 @@ public class PuntoVentaBean implements AppBean, Serializable {
         this.subTotal = 0;
         this.descuento = 0;
         this.totalVenta = 0;
+        this.user = new Usuarios();
 
     }
 
@@ -80,7 +88,6 @@ public class PuntoVentaBean implements AppBean, Serializable {
                 .findFirst();
 
         if (existingVenta.isPresent()) {
-
             VentasTO vent = existingVenta.get();
             vent.setCantidad(vent.getCantidad() + 1);
             vent.setTotal(vent.getCantidad() * vent.getPrecioVenta());
@@ -88,15 +95,20 @@ public class PuntoVentaBean implements AppBean, Serializable {
 
             Producto pro = productosController.findByCodigo(codigo);
             if (pro != null) {
+                if (pro.getStock() == 0) {
+                    Util.avisoError("infoMsg", "Producto Sin Stock");
 
-                VentasTO to = new VentasTO();
-                to.setCodigo(pro.getCodigo());
-                to.setNombre(pro.getNombre());
-                to.setPrecioVenta(pro.getPrecioVenta());
-                to.setStock(pro.getStock());
-                to.setCantidad(1);
-                to.setTotal(to.getCantidad() * to.getPrecioVenta());
-                ventasTO.add(to);
+                } else {
+                    VentasTO to = new VentasTO();
+                    to.setCodigo(pro.getCodigo());
+                    to.setNombre(pro.getNombre());
+                    to.setPrecioVenta(pro.getPrecioVenta());
+                    to.setStock(pro.getStock());
+                    to.setCantidad(1);
+                    to.setTotal(to.getCantidad() * to.getPrecioVenta());
+                    ventasTO.add(to);
+                }
+
             } else {
 
                 Util.avisoError("infoMsg", "Producto No Existe");
@@ -140,7 +152,7 @@ public class PuntoVentaBean implements AppBean, Serializable {
 
         if (!ventasTO.isEmpty()) {
 
-            VentaNueva nueva = ventasNuevaController.create(this.descuento, this.subTotal, this.totalVenta);
+            VentaNueva nueva = ventasNuevaController.create(this.descuento, this.subTotal, this.totalVenta, this.user);
 
             if (nueva == null) {
                 Util.avisoError("infoMsg", "Error al crear la nueva venta. Intente nuevamente.");
@@ -153,12 +165,15 @@ public class PuntoVentaBean implements AppBean, Serializable {
                 if (ventasDetallesController.create(to, nueva)) {
                     contador++;
                     //descontar Stock
+                    // productosController.descontarStock(to);
                 } else {
                     Util.avisoError("infoMsg", "No se guardo la venta.");
                 }
             }
 
             if (contador == ventasTO.size()) {
+                ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+                context.getFlash().setKeepMessages(true);
                 Util.avisoInfo("infoMsg", "Nueva venta creada exitosamente.");
                 return HOME_PAGE_REDIRECT;
             }
@@ -240,6 +255,14 @@ public class PuntoVentaBean implements AppBean, Serializable {
 
     public void setTotalVenta(Integer totalVenta) {
         this.totalVenta = totalVenta;
+    }
+
+    public Usuarios getUser() {
+        return user;
+    }
+
+    public void setUser(Usuarios user) {
+        this.user = user;
     }
 
 }

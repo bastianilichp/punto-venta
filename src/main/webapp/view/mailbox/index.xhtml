@@ -4,11 +4,51 @@
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:f="http://java.sun.com/jsf/core"
                 template="/WEB-INF/template.xhtml">     
-  
+
     <ui:define name="content">
         <h:form id="formMessage">
             <p:growl for="infoMsg" life="3000" />
         </h:form>
-        
+
+        <h:form>
+           
+            <div  style="display: flex; justify-content: center; margin-top: 180px" >
+                <table style="width: 80%;">
+                    <tr>
+                        <td style="text-align: center;">
+                            <p:commandButton type="button" value="DESCARGAR VENTAS DIARIAS" icon="pi pi-file-excel" rendered="#{ADMIN}"
+                                             styleClass="rounded-button ui-button-secondary" style="width: 300px; height:80px " />
+                        </td>
+                        <td style="text-align: center;">
+                            <p:commandButton type="button" value="DESCARGAR VENTAS POR USUARIOS" icon="pi pi-file-excel" rendered="#{ADMIN}"
+                                             styleClass="rounded-button ui-button-secondary" style="width: 300px; height:80px "/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: center;">
+                            <p:commandButton type="button" value="DESCARGAR VENTAS MENSUALES" icon="pi pi-file-excel" rendered="#{ADMIN}"
+                                             styleClass="rounded-button ui-button-secondary" style="width: 300px; height:80px "/>
+                        </td>
+                        <td style="text-align: center;">
+                            <p:commandButton type="button" value="DESCARGAR VENTAS DETALLE" icon="pi pi-file-excel" rendered="#{ADMIN}"
+                                             styleClass="rounded-button ui-button-secondary" style="width: 300px; height:80px "/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: center;">
+                            <p:commandButton type="button" value="MODIFICAR USUARIO" icon="pi pi-user-edit" rendered="#{ADMIN}"
+                                             styleClass="rounded-button ui-button-info" style="width: 300px; height:80px "/>
+                        </td>
+                        <td style="text-align: center;">
+                            <p:commandButton type="button" value="CREAR USUARIO" icon="pi pi-user-plus" rendered="#{ADMIN}"
+                                             styleClass="rounded-button ui-button-info" style="width: 300px; height:80px "/>
+                        </td>
+                    </tr>
+
+                </table>
+            </div>
+
+        </h:form>
+
     </ui:define>
 </ui:composition>

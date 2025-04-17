@@ -1,5 +1,6 @@
 package cl.puntoventa.app.bean;
 
+import cl.puntoventa.app.controller.UserController;
 import cl.puntoventa.app.controller.VentasDetallesController;
 import cl.puntoventa.app.controller.VentasNuevaController;
 import cl.puntoventa.app.entity.Producto;
@@ -21,14 +22,16 @@ import org.primefaces.model.FilterMeta;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortMeta;
 
-@Named("ventasUserBean")
+@Named("ventasDetallesBean")
 @ViewScoped
-public class VentasUserBean implements AppBean, Serializable {
+public class VentasDetallesBean implements AppBean, Serializable {
 
     @Inject
     private HttpSession httpSession;
 
     private Usuarios usuario;
+
+    private List<Usuarios> listUsuario;
 
     private LazyDataModel<VentaNueva> ventaNuevaLazy;
 
@@ -36,6 +39,9 @@ public class VentasUserBean implements AppBean, Serializable {
 
     @Inject
     private VentasNuevaController ventasNuevaController;
+
+    @Inject
+    private UserController usuarioController;
 
     @PostConstruct
     @Override
@@ -58,6 +64,8 @@ public class VentasUserBean implements AppBean, Serializable {
                 return ventasNuevaController.findAll(i, i1, map, map1);
             }
         };
+        
+        listUsuario = usuarioController.findAll();
 
     }
 
@@ -65,16 +73,15 @@ public class VentasUserBean implements AppBean, Serializable {
     public void prepareCreate() {
         this.usuario = new Usuarios();
         this.listDetalle = new ArrayList<>();
+        this.listUsuario = new ArrayList<>();
 
     }
 
-    public void detalleVentaUser(VentaNueva venta) {
+    public void detallesVentas(VentaNueva venta) {
         System.out.println(venta.getVentaDetallesSet());
-        Set<VentaDetalles> detallesSet = venta.getVentaDetallesSet();        
-        this.listDetalle = new ArrayList<>(detallesSet);        
+        Set<VentaDetalles> detallesSet = venta.getVentaDetallesSet();
+        this.listDetalle = new ArrayList<>(detallesSet);
         PrimeFaces.current().executeScript("PF('dialogDetallesVenta').show()");
-       
-        
 
     }
 
@@ -115,6 +122,14 @@ public class VentasUserBean implements AppBean, Serializable {
 
     public void setListDetalle(List<VentaDetalles> listDetalle) {
         this.listDetalle = listDetalle;
+    }
+
+    public List<Usuarios> getListUsuario() {
+        return listUsuario;
+    }
+
+    public void setListUsuario(List<Usuarios> listUsuario) {
+        this.listUsuario = listUsuario;
     }
 
 }

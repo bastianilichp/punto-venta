@@ -37,6 +37,9 @@ public class Usuarios implements Serializable {
     @Column(name = "id")
     private Long id;
     @Size(max = 255)
+    @Column(name = "nombre")
+    private String nombre;
+    @Size(max = 255)
     @Column(name = "apellido")
     private String apellido;
     // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
@@ -44,13 +47,16 @@ public class Usuarios implements Serializable {
     @Column(name = "email")
     private String email;
     @Size(max = 255)
-    @Column(name = "nombre")
-    private String nombre;
-    @Size(max = 255)
     @Column(name = "password")
     private String password;
+    @Column(name = "manager")
+    private Boolean manager;
+    @Column(name = "enabled")
+    private Boolean enabled;
     @ManyToMany(mappedBy = "usuariosSet", fetch = FetchType.LAZY)
     private Set<Rol> rolSet;
+    @OneToMany(mappedBy = "usuarios", fetch = FetchType.LAZY)
+    private Set<VentaNueva> ventaNuevaSet;
     @OneToMany(mappedBy = "usuarios", fetch = FetchType.LAZY)
     private Set<VentaDetalles> ventaDetallesSet;
 
@@ -69,6 +75,14 @@ public class Usuarios implements Serializable {
         this.id = id;
     }
 
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
     public String getApellido() {
         return apellido;
     }
@@ -85,14 +99,6 @@ public class Usuarios implements Serializable {
         this.email = email;
     }
 
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
     public String getPassword() {
         return password;
     }
@@ -101,12 +107,36 @@ public class Usuarios implements Serializable {
         this.password = password;
     }
 
+    public Boolean getManager() {
+        return manager;
+    }
+
+    public void setManager(Boolean manager) {
+        this.manager = manager;
+    }
+
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
+    }
+
     public Set<Rol> getRolSet() {
         return rolSet;
     }
 
     public void setRolSet(Set<Rol> rolSet) {
         this.rolSet = rolSet;
+    }
+
+    public Set<VentaNueva> getVentaNuevaSet() {
+        return ventaNuevaSet;
+    }
+
+    public void setVentaNuevaSet(Set<VentaNueva> ventaNuevaSet) {
+        this.ventaNuevaSet = ventaNuevaSet;
     }
 
     public Set<VentaDetalles> getVentaDetallesSet() {

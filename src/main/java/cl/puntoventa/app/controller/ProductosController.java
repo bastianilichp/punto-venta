@@ -3,6 +3,7 @@ package cl.puntoventa.app.controller;
 import cl.puntoventa.app.dao.AbstractDaoImpl;
 import cl.puntoventa.app.entity.Producto;
 import cl.puntoventa.app.entity.Usuarios;
+import cl.puntoventa.app.to.VentasTO;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.Query;
 import java.util.List;
@@ -157,6 +158,14 @@ public class ProductosController extends AbstractDaoImpl<Producto> {
         }
 
         return result;
+    }
+
+    public void descontarStock(VentasTO to) {
+        Integer nuevaStock = to.getStock() - to.getCantidad();
+        Producto pro = findByCodigo(to.getCodigo());
+        pro.setStock(nuevaStock);
+        super.update(pro);
+
     }
 
 }

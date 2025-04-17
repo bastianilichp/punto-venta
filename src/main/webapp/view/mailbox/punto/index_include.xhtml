@@ -50,6 +50,10 @@
                             <h:outputText value="#{ventasTO.nombre}" styleClass="center"></h:outputText>
                         </p:column> 
 
+                        <p:column  headerText="Stock"   width="40px">
+                            <h:outputText value="#{ventasTO.stock}" styleClass="center"></h:outputText>
+                        </p:column> 
+
                         <p:column  headerText="Precio"   width="40px">
                             <h:outputText value="#{ventasTO.precioVenta}" styleClass="left">
                                 <f:convertNumber  type="currency" currencySymbol="$ " locale="es_CL"/> 

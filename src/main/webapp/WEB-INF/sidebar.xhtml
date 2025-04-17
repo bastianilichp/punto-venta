@@ -34,15 +34,15 @@
                     <po:menu widgetVar="OmegaMenuWidget">              
                         <p:menuitem id="home" value="Home" icon="pi pi-home" outcome="/view/mailbox/index" />  
                         <p:menuitem id="venta" value="Punto Venta" icon="pi pi-dollar" outcome="/view/mailbox/punto/index" />  
-                        <p:menuitem id="productos" value="Productos" icon="pi pi-inbox" outcome="/view/mailbox/productos/index"  onstart="PF('blockUIWidget').show()" oncomplete="PF('blockUIWidget').hide()"/> 
+                        <p:menuitem id="productos" value="Productos" icon="pi pi-inbox" outcome="/view/mailbox/productos/index" rendered="#{ADMIN}" onstart="PF('blockUIWidget').show()" oncomplete="PF('blockUIWidget').hide()"/> 
 
-                        <p:submenu  label="Ventas" icon="pi pi-file">
-                            <p:menuitem  value="Ventas Diarias" icon="pi pi-folder-open" outcome="/view/mailbox/ventasDiarias/index"/>                              
-                            <p:menuitem  value="Ventas Por Usuarios" icon="pi pi-folder-open" outcome="/view/mailbox/ventasUser/index"/>                               
+                        <p:submenu  label="Ventas" icon="pi pi-file" rendered="#{ADMIN}">
+                            <p:menuitem  value="Ventas Detalles" icon="pi pi-folder-open" outcome="/view/mailbox/ventasDetalles/index"/>     
+                            <p:menuitem  value="Ventas Diarias" icon="pi pi-folder-open" outcome="/view/mailbox/ventasDiarias/index"/>
                             <p:menuitem  value="Ventas Mensuales" icon="pi pi-folder-open" outcome="/view/mailbox/ventasMes/index"/> 
                         </p:submenu>
 
-                        <p:menuitem id="historial" value="Historial" icon="pi pi-history" outcome="/view/mailbox/index" />  
+                        <p:menuitem id="historial" value="Historial" icon="pi pi-history" rendered="#{ADMIN}" outcome="/view/mailbox/index" />  
 
                     </po:menu>
                 </div>
