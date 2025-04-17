@@ -136,6 +136,7 @@ public class LoginBean implements AppBean, Serializable {
         if (Util.getURLReal().equals("http://localhost:8080")) {
 
             this.users.setEmail("bastianilichp@gmail.com");
+            this.users.setPassword("Ilich1991");
         }
 
     }
@@ -187,8 +188,7 @@ public class LoginBean implements AppBean, Serializable {
                 httpSession.setAttribute("userSession", userValidado);
                 httpSession.setAttribute("autologin", false);
                 httpSession.setAttribute("full_name", userValidado.getNombre() + " " + userValidado.getApellido());
-                httpSession.setAttribute("ADMIN", false);
-                httpSession.setAttribute("firmador", false);
+                
                 //  httpSession.setAttribute("ADMIN", userValidado.getManager());
 
                 redirect = true;

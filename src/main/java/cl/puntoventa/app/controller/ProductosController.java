@@ -79,7 +79,6 @@ public class ProductosController extends AbstractDaoImpl<Producto> {
             for (FilterMeta meta : filterBy.values()) {
                 String filterField = meta.getField();
                 Object filterValue = meta.getFilterValue();
-              
 
                 if (filterField.equals("codigo") && filterValue != null) {
                     jpql.append(" AND productos.codigo like :codigo ");
@@ -91,17 +90,17 @@ public class ProductosController extends AbstractDaoImpl<Producto> {
 
                 if (filterField.equals("precioCompra") && filterValue != null) {
                     jpql.append(" AND CAST(productos.precioCompra as String) like :precioCompra ");
-                    
+
                 }
 
                 if (filterField.equals("precioVenta") && filterValue != null) {
                     jpql.append(" AND CAST(productos.precioVenta as String) like :precioVenta ");
-                    
+
                 }
 
                 if (filterField.equals("stock") && filterValue != null) {
                     jpql.append(" AND CAST(productos.stock as String) like :stock ");
-                   
+
                 }
 
             }
@@ -115,7 +114,6 @@ public class ProductosController extends AbstractDaoImpl<Producto> {
             for (FilterMeta meta : filterBy.values()) {
                 String filterField = meta.getField();
                 Object filterValue = meta.getFilterValue();
-              
 
                 if (filterField.equals("codigo") && filterValue != null) {
                     query.setParameter("codigo", "%" + filterValue + "%");
@@ -139,6 +137,26 @@ public class ProductosController extends AbstractDaoImpl<Producto> {
 
             }
         }
+    }
+
+    public Producto findByCodigo(String codigo) {
+        StringBuilder jpql = new StringBuilder();
+        Producto result = null;
+
+        try {
+            jpql.append("SELECT pro FROM Producto pro ")
+                    .append(" WHERE 1=1 ")
+                    .append(" AND pro.codigo = :codigo");
+
+            Query query = entityManager.createQuery(jpql.toString());
+            query.setParameter("codigo", codigo.trim());
+
+            result = (Producto) query.getSingleResult();
+        } catch (Exception ex) {
+            this.rollbackOperation(this.getClass().getSimpleName(), Thread.currentThread().getStackTrace()[1].getMethodName(), ex);
+        }
+
+        return result;
     }
 
 }

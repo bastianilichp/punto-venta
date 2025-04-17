@@ -15,8 +15,10 @@ import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.Size;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Set;
 
 /**
@@ -35,11 +37,15 @@ public class VentaNueva implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
-    @Size(max = 255)
     @Column(name = "fechayhora")
-    private String fechayhora;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date fechayhora;
     @Column(name = "descuento")
     private Integer descuento;
+    @Column(name = "subtotal")
+    private Integer subtotal;
+    @Column(name = "total")
+    private Integer total;
     @OneToMany(mappedBy = "ventaNueva", fetch = FetchType.LAZY)
     private Set<VentaDetalles> ventaDetallesSet;
 
@@ -58,11 +64,11 @@ public class VentaNueva implements Serializable {
         this.id = id;
     }
 
-    public String getFechayhora() {
+    public Date getFechayhora() {
         return fechayhora;
     }
 
-    public void setFechayhora(String fechayhora) {
+    public void setFechayhora(Date fechayhora) {
         this.fechayhora = fechayhora;
     }
 
@@ -72,6 +78,22 @@ public class VentaNueva implements Serializable {
 
     public void setDescuento(Integer descuento) {
         this.descuento = descuento;
+    }
+
+    public Integer getSubtotal() {
+        return subtotal;
+    }
+
+    public void setSubtotal(Integer subtotal) {
+        this.subtotal = subtotal;
+    }
+
+    public Integer getTotal() {
+        return total;
+    }
+
+    public void setTotal(Integer total) {
+        this.total = total;
     }
 
     public Set<VentaDetalles> getVentaDetallesSet() {

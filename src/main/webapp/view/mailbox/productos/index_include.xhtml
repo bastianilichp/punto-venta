@@ -4,13 +4,13 @@
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui">
     <h:form id="formListProductos"> 
-<!--        <p:toolbar>          
-            <p:toolbarGroup align="right">
-                <p:commandButton value="Exportar" ajax="false" icon="pi pi-file-excel" styleClass="ui-button-success">
-                  <p:dataExporter type="xls" target="dtListFileSga" fileName="Lista_IP" exportHeader="true"/>
-                </p:commandButton>
-            </p:toolbarGroup>
-        </p:toolbar>-->
+        <!--        <p:toolbar>          
+                    <p:toolbarGroup align="right">
+                        <p:commandButton value="Exportar" ajax="false" icon="pi pi-file-excel" styleClass="ui-button-success">
+                          <p:dataExporter type="xls" target="dtListFileSga" fileName="Lista_IP" exportHeader="true"/>
+                        </p:commandButton>
+                    </p:toolbarGroup>
+                </p:toolbar>-->
         <p:dataTable id="dtListProductos"
                      value="#{productoBean.productosList}"
                      var="productos"
@@ -24,40 +24,42 @@
                      currentPageReportTemplate="( {currentPage} of {totalPages} - Total : {totalRecords} )"       
                      widgetVar="dtListProductos">
             <p:ajax event="page" onstart="PF('blockUIWidget').show()" oncomplete="PF('blockUIWidget').hide()"/>
-            
 
-
-            <p:column headerText="Codigo" field="codigo">
+            <p:column headerText="Codigo" field="codigo" style="width: 100px">
                 <h:outputText value="#{productos.codigo}"/>
             </p:column>
 
-            <p:column headerText="Producto" style="width: 150px" field="nombre">
+            <p:column headerText="Producto" style="width: 180px" field="nombre">
                 <h:outputText value="#{productos.nombre}"/>
             </p:column>
 
-            <p:column headerText="Precio Compra" field="precioCompra">
-                <h:outputText value="#{productos.precioCompra}"/>
-            </p:column>
-            
-            <p:column headerText="Precio Venta" field="precioVenta">
-                <h:outputText value="#{productos.precioVenta}"/>
-            </p:column>
-            
-            <p:column headerText="Stock" field="stock">
-                <h:outputText value="#{productos.stock}"/>
+            <p:column headerText="Precio Compra" field="precioCompra" style="width: 80px" >
+                <h:outputText value="#{productos.precioCompra}" styleClass="left">
+                    <f:convertNumber  type="currency" currencySymbol="$ " locale="es_CL"/> 
+                </h:outputText>
             </p:column>
 
-           
+            <p:column headerText="Precio Venta" field="precioVenta" style="width: 80px">
+                <h:outputText value="#{productos.precioVenta}" styleClass="right">
+                    <f:convertNumber  type="currency" currencySymbol="$ " locale="es_CL"/> 
+                </h:outputText>
+            </p:column>
+
+            <p:column headerText="Stock" field="stock" style="width: 80px">
+                <h:outputText value="#{productos.stock}" styleClass="center"/>
+            </p:column>
+
+
 
             <p:column headerText="Acciones" style="width: 125px" exportable="false">
                 <p:splitButton value="Acciones">
-                   
+
                 </p:splitButton>
             </p:column>
         </p:dataTable>
     </h:form>
 
 
- 
+
 </ui:composition>
 
