@@ -36,6 +36,10 @@ public class PuntoVentaBean implements AppBean, Serializable {
 
     private Integer totalVenta;
 
+    private Integer pagaCon;
+
+    private Integer vuelto;
+
     private Producto productos;
 
     private List<VentasTO> ventasTO;
@@ -77,6 +81,7 @@ public class PuntoVentaBean implements AppBean, Serializable {
         this.subTotal = 0;
         this.descuento = 0;
         this.totalVenta = 0;
+        this.pagaCon = 0;
         this.user = new Usuarios();
 
     }
@@ -142,6 +147,7 @@ public class PuntoVentaBean implements AppBean, Serializable {
         subTotal = 0;
         descuento = 0;
         totalVenta = 0;
+        pagaCon = 0;
 //        for (VentasTO v : ventasTO) {
 //            subTotal += v.getTotal();
 //        }
@@ -165,7 +171,7 @@ public class PuntoVentaBean implements AppBean, Serializable {
                 if (ventasDetallesController.create(to, nueva)) {
                     contador++;
                     //descontar Stock
-                    // productosController.descontarStock(to);
+                    productosController.descontarStock(to);
                 } else {
                     Util.avisoError("infoMsg", "No se guardo la venta.");
                 }
@@ -183,7 +189,8 @@ public class PuntoVentaBean implements AppBean, Serializable {
             Util.avisoError("infoMsg", "No hay ventas para procesar.");
         }
         return null;
-    }
+    }    
+  
 
     public String cancelarVenta() {
         return HOME_PAGE_REDIRECT;
@@ -191,7 +198,6 @@ public class PuntoVentaBean implements AppBean, Serializable {
 
     public void calcularTotal() {
         this.totalVenta = subTotal - descuento;
-
     }
 
     @Override
@@ -263,6 +269,22 @@ public class PuntoVentaBean implements AppBean, Serializable {
 
     public void setUser(Usuarios user) {
         this.user = user;
+    }
+
+    public Integer getPagaCon() {
+        return pagaCon;
+    }
+
+    public void setPagaCon(Integer pagaCon) {
+        this.pagaCon = pagaCon;
+    }
+
+    public Integer getVuelto() {
+        return vuelto;
+    }
+
+    public void setVuelto(Integer vuelto) {
+        this.vuelto = vuelto;
     }
 
 }

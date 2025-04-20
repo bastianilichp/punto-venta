@@ -53,6 +53,13 @@
                 <p:column headerText="Usuario" style="width: 180px" >
                     <h:outputText value="#{detallesU.usuarios.email}"/>
                 </p:column>
+
+                <p:column style="width: 50px" >
+                    <p:commandButton  icon="pi pi-trash" styleClass="rounded-button ui-button-danger" 
+                                      process="@this" update="formDeleteDetalle"
+                                      action="#{ventasDetallesBean.prepareDeleteD(detallesU)}"/>
+                </p:column>
+
             </p:dataTable>
 
         </h:form>

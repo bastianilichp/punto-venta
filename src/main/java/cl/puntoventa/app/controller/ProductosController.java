@@ -1,5 +1,6 @@
 package cl.puntoventa.app.controller;
 
+import cl.puntoventa.app.clases.Util;
 import cl.puntoventa.app.dao.AbstractDaoImpl;
 import cl.puntoventa.app.entity.Producto;
 import cl.puntoventa.app.entity.Usuarios;
@@ -30,6 +31,7 @@ public class ProductosController extends AbstractDaoImpl<Producto> {
 
         try {
             jpql.append("SELECT COUNT(productos) FROM Producto productos ")
+                    .append(" LEFT JOIN productos.categoria ")
                     .append(" WHERE 1=1 ")
                     .append(this.filtroDataTable(filterBy));
 
@@ -51,6 +53,7 @@ public class ProductosController extends AbstractDaoImpl<Producto> {
 
         try {
             jpql.append("SELECT productos FROM Producto productos ")
+                    .append(" LEFT JOIN FETCH productos.categoria ")
                     .append(" WHERE 1=1 ")
                     .append(this.filtroDataTable(filterBy));
 
@@ -146,6 +149,7 @@ public class ProductosController extends AbstractDaoImpl<Producto> {
 
         try {
             jpql.append("SELECT pro FROM Producto pro ")
+                    .append(" LEFT JOIN FETCH pro.categoria ")
                     .append(" WHERE 1=1 ")
                     .append(" AND pro.codigo = :codigo");
 
@@ -166,6 +170,87 @@ public class ProductosController extends AbstractDaoImpl<Producto> {
         pro.setStock(nuevaStock);
         super.update(pro);
 
+    }
+
+    @Override
+    public boolean create(Producto nuevo) {
+        if (validarProducto(nuevo, "Add")) {
+            return super.create(nuevo);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean update(Producto edit) {
+        if (validarProducto(edit, "Edit")) {
+            return super.update(edit);
+        }
+        return false;
+    }
+
+    public boolean validarProducto(Producto producto, String prefix) {
+        boolean valido = true;
+        if (prefix.equals("Add")) {
+            if (producto.getCodigo() == null) {
+                valido = false;
+                Util.avisoError("infoMsg", "Ingresar Código");
+            } else {
+                Producto p = findByCodigo(producto.getCodigo());
+                if (p != null) {
+                    Util.avisoError("infoMsg", "Producto ya Existe");
+                }
+            }
+
+            if (producto.getNombre() == null) {
+                valido = false;
+                Util.avisoError("infoMsg", "Ingresar Nombre");
+            }
+
+            if (producto.getPrecioCompra() == null) {
+                valido = false;
+                Util.avisoError("infoMsg", "Ingresar Precio Compra");
+            }
+
+            if (producto.getPrecioVenta() == null) {
+                valido = false;
+                Util.avisoError("infoMsg", "Ingresar Precio Venta");
+            }
+
+            if (producto.getStock() == null) {
+                valido = false;
+                Util.avisoError("infoMsg", "Ingresar Stock");
+            }
+
+            if (producto.getCategoria() == null) {
+                valido = false;
+                Util.avisoError("infoMsg", "Ingresar Categoría");
+            }
+
+        }
+        if (prefix.equals("Edit")) {
+            if (producto.getPrecioCompra() == null) {
+                valido = false;
+                Util.avisoError("infoMsg", "Ingresar Precio Compra");
+            }
+
+            if (producto.getPrecioVenta() == null) {
+                valido = false;
+                Util.avisoError("infoMsg", "Ingresar Precio Venta");
+            }
+
+            if (producto.getStock() == null) {
+                valido = false;
+                Util.avisoError("infoMsg", "Ingresar Stock");
+            }
+
+            if (producto.getCategoria() == null) {
+                valido = false;
+                Util.avisoError("infoMsg", "Ingresar Categoría");
+            }
+
+        }
+
+        return valido;
     }
 
 }

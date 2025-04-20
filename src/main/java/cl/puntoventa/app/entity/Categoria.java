@@ -7,18 +7,21 @@ package cl.puntoventa.app.entity;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.Set;
 
 /**
  *
- * @author ACTIS
+ * @author basti
  */
 @Entity
 @Table(name = "categoria")
@@ -35,6 +38,8 @@ public class Categoria implements Serializable {
     @Size(max = 50)
     @Column(name = "descripcion")
     private String descripcion;
+    @OneToMany(mappedBy = "categoria", fetch = FetchType.LAZY)
+    private Set<Producto> productoSet;
 
     public Categoria() {
     }
@@ -57,6 +62,14 @@ public class Categoria implements Serializable {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
+    }
+
+    public Set<Producto> getProductoSet() {
+        return productoSet;
+    }
+
+    public void setProductoSet(Set<Producto> productoSet) {
+        this.productoSet = productoSet;
     }
 
     @Override

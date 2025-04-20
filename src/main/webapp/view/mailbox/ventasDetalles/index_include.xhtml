@@ -64,7 +64,16 @@
                                   process="@this" title="Ver Detalles Venta"
                                   update="formDetallesVentasModal"/>
                 <p:spacer width="5px"/>
-                <p:commandButton  icon="pi pi-trash" styleClass="rounded-button ui-button-danger" />
+                <p:commandButton  icon="pi pi-trash" 
+                                  styleClass="rounded-button ui-button-danger"
+                                  action="#{ventasDetallesBean.delete()}" 
+                                  process="@this" title="Ver Detalles Venta"
+                                  onstart="PF('blockUIWidget').show()" 
+                                  oncomplete="PF('blockUIWidget').hide();"
+                                  update="formVentasDetalles :formMessage" >
+                    <f:setPropertyActionListener target="#{ventasDetallesBean.deleteVenta}" value="#{vDetalle}"/> 
+                </p:commandButton>
+
 
 
 

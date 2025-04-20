@@ -11,6 +11,8 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
@@ -21,7 +23,7 @@ import java.util.Set;
 
 /**
  *
- * @author ACTIS
+ * @author basti
  */
 @Entity
 @Table(name = "producto")
@@ -47,8 +49,9 @@ public class Producto implements Serializable {
     private Integer precioVenta;
     @Column(name = "stock")
     private Integer stock;
-    @Column(name = "categoria_id")
-    private Integer categoriaId;
+    @JoinColumn(name = "categoria_id", referencedColumnName = "id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Categoria categoria;
     @OneToMany(mappedBy = "producto", fetch = FetchType.LAZY)
     private Set<VentaDetalles> ventaDetallesSet;
 
@@ -107,12 +110,12 @@ public class Producto implements Serializable {
         this.stock = stock;
     }
 
-    public Integer getCategoriaId() {
-        return categoriaId;
+    public Categoria getCategoria() {
+        return categoria;
     }
 
-    public void setCategoriaId(Integer categoriaId) {
-        this.categoriaId = categoriaId;
+    public void setCategoria(Categoria categoria) {
+        this.categoria = categoria;
     }
 
     public Set<VentaDetalles> getVentaDetallesSet() {

@@ -99,8 +99,19 @@
                             <f:convertNumber  type="currency" currencySymbol="$ " locale="es_CL"/> 
                         </p:inputText>
 
-                        <p:outputLabel for="totalF" value="TOTAL:" style="font-weight: bold; font-size: 18px"/>
+                        <p:outputLabel for="totalF" value="TOTAL:" style="font-weight: bold; font-size: 18px; color: red"/>
                         <p:outputLabel id="totalF"  value="#{puntoVentaBean.totalVenta}"> 
+                            <f:convertNumber  type="currency" currencySymbol="$ " locale="es_CL"/> 
+                        </p:outputLabel>
+
+                        <p:outputLabel for="paga" value="PAGA CON:" style="font-weight: bold; font-size: 12px"/>
+                        <p:inputText id="paga"  value="#{puntoVentaBean.pagaCon}"> 
+                            <p:ajax update="vuelto" ></p:ajax>
+                            <f:convertNumber  type="currency" currencySymbol="$ " locale="es_CL"/> 
+                        </p:inputText>
+
+                        <p:outputLabel for="vuelto" value="VUELTO: " style="font-weight: bold; font-size: 12px"/>
+                        <p:outputLabel id="vuelto"  value="#{puntoVentaBean.pagaCon - puntoVentaBean.totalVenta }"> 
                             <f:convertNumber  type="currency" currencySymbol="$ " locale="es_CL"/> 
                         </p:outputLabel>
 

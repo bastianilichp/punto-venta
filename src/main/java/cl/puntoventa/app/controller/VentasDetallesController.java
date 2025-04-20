@@ -35,7 +35,7 @@ public class VentasDetallesController extends AbstractDaoImpl<VentaDetalles> {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
-   @Override
+    @Override
     public Long count(Map<String, FilterMeta> filterBy) {
         StringBuilder jpql = new StringBuilder();
         Long cantidad = 0L;
@@ -162,6 +162,28 @@ public class VentasDetallesController extends AbstractDaoImpl<VentaDetalles> {
         detalles.setVentaNueva(nueva);
 
         return super.create(detalles);
+    }
+
+    public List<VentaDetalles> findByVenta(Integer id) {
+        StringBuilder jpql = new StringBuilder();
+        List<VentaDetalles> lista = null;
+
+        try {
+            jpql.append("SELECT detalle FROM VentaDetalles detalle ")
+                    .append(" LEFT JOIN detalle.producto ")
+                    .append(" WHERE 1=1 ")
+                    .append(" AND detalle.ventaNueva.id = :id");
+
+            Query query = entityManager.createQuery(jpql.toString());
+            query.setParameter("id", id);
+
+            lista = query.getResultList();
+        } catch (Exception ex) {
+            this.rollbackOperation(this.getClass().getSimpleName(), Thread.currentThread().getStackTrace()[1].getMethodName(), ex);
+        }
+
+        return lista;
+
     }
 
 }

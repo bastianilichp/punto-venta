@@ -23,7 +23,7 @@ import java.util.Set;
 
 /**
  *
- * @author ACTIS
+ * @author basti
  */
 @Entity
 @Table(name = "venta_nueva")
