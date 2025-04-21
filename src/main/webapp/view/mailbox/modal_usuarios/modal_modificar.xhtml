@@ -1,15 +1,57 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
-Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
-Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit this template
--->
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
-    <head>
-        <title>TODO supply a title</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    </head>
-    <body>
-        <div>TODO write content</div>
-    </body>
-</html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">               
+
+
+    <p:dialog onShow="PF('dialogModificarUser').initPosition()" id="DlgModificarUser" 
+              widgetVar="dialogModificarUser" modal="true" showEffect="explode" 
+              resizable="false" appendTo="@(body)" width="1000"
+              header="Modificar Usuarios" closeOnEscape="true">
+        <h:form id="formModificarUser">
+
+            <p:dataTable id="dtModificarUsuario"
+                         value="#{inboxBean.listUsuarios}"
+                         var="listUser"
+                         lazy="true"
+                         paginator="true"
+                         rows="10"
+                         paginatorPosition="bottom"
+                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink}
+                         {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}  "
+                         rowsPerPageTemplate="5,10,15,20,25,50"
+                         currentPageReportTemplate="( {currentPage} of {totalPages} - Total : {totalRecords} )"       
+                         widgetVar="dtModificarUsuario">
+
+                <p:ajax event="page" onstart="PF('blockUIWidget').show()" oncomplete="PF('blockUIWidget').hide()"/>
+
+                <p:column headerText="Nombre"  style="width: 50px" >
+                    <h:outputText value="#{listUser.nombre}" />
+                </p:column>
+
+                <p:column headerText="Apellido"  style="width: 50px" >
+                    <h:outputText value="#{listUser.apellido}" />
+                </p:column>
+
+                <p:column headerText="Email"  style="width: 90px" >
+                    <h:outputText value="#{listUser.email}" />
+                </p:column>
+
+                <p:column headerText="Rol" style="width: 50px" >
+                    <h:outputText rendered="#{listUser.manager}" value="Administrador"/>
+                    <h:outputText rendered="#{!listUser.manager}" value="Caja"/>
+                </p:column>
+
+                <p:column headerText="Disponible"  style="width: 50px" >
+                    <h:outputText rendered="#{listUser.enabled}" value="SI"/>
+                    <h:outputText rendered="#{!listUser.enabled}" value="NO"/>
+                </p:column>
+            </p:dataTable>
+        </h:form>
+
+
+    </p:dialog>
+
+</ui:composition>

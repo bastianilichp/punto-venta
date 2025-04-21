@@ -39,8 +39,6 @@ public class VentasDetallesBean implements AppBean, Serializable {
 
     private List<VentaDetalles> listDetalle;
 
-    private VentaDetalles deleteDetalle;
-
     private VentaNueva deleteVenta;
 
     @Inject
@@ -86,7 +84,6 @@ public class VentasDetallesBean implements AppBean, Serializable {
         this.usuario = new Usuarios();
         this.listDetalle = new ArrayList<>();
         this.listUsuario = new ArrayList<>();
-        this.deleteDetalle = new VentaDetalles();
         this.deleteVenta = new VentaNueva();
 
     }
@@ -96,36 +93,6 @@ public class VentasDetallesBean implements AppBean, Serializable {
         Set<VentaDetalles> detallesSet = venta.getVentaDetallesSet();
         this.listDetalle = new ArrayList<>(detallesSet);
         PrimeFaces.current().executeScript("PF('dialogDetallesVenta').show()");
-
-    }
-
-    public void deleteDetalle() {
-        if (ventasDetallesController.delete(this.deleteDetalle)) {
-            Producto p = productoController.findOneById(this.deleteDetalle.getProducto().getId());
-            p.setStock(p.getStock() + deleteDetalle.getCantidad());
-            //actualizar Stock
-            if (productoController.update(p)) {
-                //elimnar venta completa
-                VentaNueva venta = ventasNuevaController.findOneById(this.deleteDetalle.getVentaNueva().getId());
-                if (venta.getVentaDetallesSet().isEmpty()) {
-                    ventasNuevaController.delete(venta);
-                    Util.avisoInfo("infoMsg", "Venta Eliminado Completamente");
-                } else {
-                    //actualizar venta total
-
-                    Util.avisoInfo("infoMsg", "Detalle Venta Eliminado");
-                }
-            }
-
-        } else {
-            Util.avisoError("infoMsg", "Error al eliminar el detalle");
-        }
-
-    }
-
-    public void prepareDeleteD(VentaDetalles detalle) {
-        this.deleteDetalle = detalle;
-        PrimeFaces.current().executeScript("PF('dialogDeleteDetalle').show()");
 
     }
 
@@ -151,12 +118,14 @@ public class VentasDetallesBean implements AppBean, Serializable {
             if (ventasDetallesController.delete(d)) {
                 contador++;
             }
+
         }
         if (contador == detalles.size()) {
-            if (ventasNuevaController.delete(deleteVenta)) {
-                Util.avisoInfo("infoMsg", "Venta Eliminada");
-            }
+            Util.avisoInfo("infoMsg", "Detalle Venta Eliminado");
+            VentaNueva venta = ventasNuevaController.findOneById(this.deleteVenta.getId());
+            ventasNuevaController.delete(venta);
         }
+
     }
 
     public Usuarios getUsuario() {
@@ -189,14 +158,6 @@ public class VentasDetallesBean implements AppBean, Serializable {
 
     public void setListUsuario(List<Usuarios> listUsuario) {
         this.listUsuario = listUsuario;
-    }
-
-    public VentaDetalles getDeleteDetalle() {
-        return deleteDetalle;
-    }
-
-    public void setDeleteDetalle(VentaDetalles deleteDetalle) {
-        this.deleteDetalle = deleteDetalle;
     }
 
     public VentaNueva getDeleteVenta() {

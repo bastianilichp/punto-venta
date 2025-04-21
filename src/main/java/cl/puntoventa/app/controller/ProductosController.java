@@ -106,6 +106,9 @@ public class ProductosController extends AbstractDaoImpl<Producto> {
                     jpql.append(" AND CAST(productos.stock as String) like :stock ");
 
                 }
+                if (filterField.equals("categoria.descripcion") && filterValue != null) {
+                    jpql.append(" AND productos.categoria.descripcion like :categoria ");
+                }
 
             }
         }
@@ -137,6 +140,9 @@ public class ProductosController extends AbstractDaoImpl<Producto> {
 
                 if (filterField.equals("Stock") && filterValue != null) {
                     query.setParameter("Stock", "%" + filterValue + "%");
+                }
+                 if (filterField.equals("categoria.descripcion") && filterValue != null) {
+                    query.setParameter("categoria", "%" + filterValue + "%");
                 }
 
             }

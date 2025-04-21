@@ -48,7 +48,7 @@ public class UsuarioBean implements AppBean, Serializable {
         if (usersController.create(this.userNuevo)) {
             this.userNuevo = new Usuarios();
 
-            Util.avisoInfo("infoMsg", "Se ha creado su cuenta y se envia contraseña a correo ingresado");
+            Util.avisoInfo("infoMsg", "Se ha creado su cuenta");
 
         } else {
 
@@ -58,7 +58,7 @@ public class UsuarioBean implements AppBean, Serializable {
 
     public void cerrarDglUsuario() {
         this.userNuevo = new Usuarios();
-        Util.ejecutarJavaScript("PF('dialogAddAccount').hide()");
+        Util.ejecutarJavaScript("PF('dialogCreacionUser').hide()");
 
     }
 

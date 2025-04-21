@@ -103,59 +103,7 @@
 
         </h:form>
 
-        <p:dialog  onShow="PF('dialogAddAccount').initPosition()"  
-                   id="DlgAddAccount" widgetVar="dialogAddAccount" modal="true" 
-                   showEffect="explode" resizable="false" appendTo="@(body)" header="Crear Cuenta" closeOnEscape="true" closable="false">
 
-            <h:form id="formAddAccount" >
-                <h:panelGroup id="displayAddAccount" >
-                    <p:panelGrid columns="2"   style="width:100%">
-
-                        <p:outputLabel for="txtName" value="Nombre *" />
-                        <p:inputText id="txtName" value="#{usuarioBean.userNuevo.nombre}" size="50"  maxlength="50" >
-                            <f:validateBean disabled="true"/>
-                        </p:inputText>
-
-                        <p:outputLabel for="txtApellido" value="Apellido *" />
-                        <p:inputText id="txtApellido" value="#{usuarioBean.userNuevo.apellido}" size="50"  maxlength="50" >
-                            <f:validateBean disabled="true"/>
-                        </p:inputText>
-
-                        <p:outputLabel value="Email *" for="txtEmail" />
-                        <p:inputText id="txtEmail"  value="#{usuarioBean.userNuevo.email}" size="50" maxlength="50" >
-                            <f:validateBean disabled="true"/>
-                        </p:inputText>
-
-                        <p:outputLabel value="Password *" for="txtPass" />
-                        <p:password id="txtPass"
-                                    required="false"
-                                    maxlength="50"
-                                    autocomplete="false"
-                                    placeholder="Contraseña"
-                                    feedback="false"                                            
-                                    value="#{usuarioBean.userNuevo.password}">                                        
-                            <f:validateBean disabled="true"/>
-                        </p:password>
-
-                    </p:panelGrid>
-
-                    <br/><br/>    
-                    <p:commandButton value="Crear"  action="#{usuarioBean.crearUsers()}" 
-                                     update="formMessage"   oncomplete="PF('dialogAddAccount').hide()"                                   
-                                     style="width: 100%;">                       
-                    </p:commandButton>
-                    <p:spacer width="20px"/>
-
-                    <p:commandButton value="Cancelar"
-                                     immediate="true" action="#{usuarioBean.cerrarDglUsuario()}" 
-                                     style="width: 100%;">                       
-                    </p:commandButton>  
-
-                </h:panelGroup>
-
-            </h:form>
-
-        </p:dialog>
 
         <p:dialog header="Recuperar Contraseña" modal="true" widgetVar="dlgRecuperarPassword" id="dlgRecuperarPassword"
                   class="w-6">

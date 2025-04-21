@@ -9,14 +9,75 @@
     <p:dialog onShow="PF('dialogCreacionUser').initPosition()" id="DlgCreacionUser" 
               widgetVar="dialogCreacionUser" modal="true" showEffect="explode" 
               resizable="false" appendTo="@(body)" 
-              width="1000" 
-              header="Creación Usuario" closeOnEscape="true">
-        
+              header="Creación Usuario" closable="false">
+
         <h:form id="formCreacionUsuario" >
-            
-            
-            
-            
+            <h:panelGroup id="displayAddAccount" >
+                <p:panelGrid columns="2"   style="width:100%">
+
+                    <p:outputLabel for="txtName" value="Nombre *" />
+                    <p:inputText id="txtName" value="#{usuarioBean.userNuevo.nombre}" size="50"  maxlength="50" style="width: 200px" >
+                        <f:validateBean disabled="true"/>
+                    </p:inputText>
+
+                    <p:outputLabel for="txtApellido" value="Apellido *" />
+                    <p:inputText id="txtApellido" value="#{usuarioBean.userNuevo.apellido}" size="50"  maxlength="50" style="width: 200px">
+                        <f:validateBean disabled="true"/>
+                    </p:inputText>
+
+                    <p:outputLabel value="Email *" for="txtEmail" />
+                    <p:inputText id="txtEmail"  value="#{usuarioBean.userNuevo.email}" size="50" maxlength="50" style="width: 200px" >
+                        <f:validateBean disabled="true"/>
+                    </p:inputText>
+
+                    <p:outputLabel value="Tipo Usuario *" for="txtTipo" />
+                    <p:selectOneMenu id="txtTipo" style="width: 200px"
+                                     value="#{usuarioBean.userNuevo.manager}">                    
+                        <f:selectItem itemLabel="Administrador" itemValue="#{true}"/>
+                        <f:selectItem itemLabel="Caja" itemValue="#{false}"/>                    
+                    </p:selectOneMenu>         
+
+                    <p:outputLabel value="Password *" for="txtPass" />
+                    <p:password id="txtPass"
+                                required="false"
+                                maxlength="50"
+                                autocomplete="false"
+                                placeholder="Contraseña"
+                                feedback="false"  
+                                style="width: 200px"
+                                value="#{usuarioBean.userNuevo.password}">                                        
+                        <f:validateBean disabled="true"/>
+                    </p:password>
+
+
+
+                </p:panelGrid>
+
+                <br/><br/>   
+                <div style="text-align:center ">
+                    <p:commandButton value="Crear Usuario"  
+                                     styleClass="ui-button-success"
+                                     action="#{usuarioBean.crearUsers()}" 
+                                     update="formMessage" 
+                                     style="width: 100px"
+                                     onstart="PF('blockUIWidget').show()" 
+                                     oncomplete="PF('blockUIWidget').hide();PF('dialogCreacionUser').hide()">                       
+                    </p:commandButton>
+                    <p:spacer width="20px"/>
+
+                    <p:commandButton value="Cancelar"
+                                     style="width: 100px"
+                                     immediate="true" 
+                                     styleClass="ui-button-danger"
+                                     action="#{usuarioBean.cerrarDglUsuario()}" >                       
+                    </p:commandButton> 
+                </div>
+
+            </h:panelGroup>
+
+
+
+
         </h:form>
 
 

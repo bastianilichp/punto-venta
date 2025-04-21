@@ -112,8 +112,7 @@ public class UserController extends AbstractDaoImpl<Usuarios> {
         }
         userNuevo.setPassword(BCrypt.hashpw(userNuevo.getPassword(), BCrypt.gensalt()));
         userNuevo.setEmail(userNuevo.getEmail().toLowerCase());
-        userNuevo.setEnabled(true);
-        userNuevo.setManager(false);
+        userNuevo.setEnabled(true);       
 
         return super.create(userNuevo);
     }
@@ -146,6 +145,7 @@ public class UserController extends AbstractDaoImpl<Usuarios> {
             }
 
         }
+     
 
         return valido;
 

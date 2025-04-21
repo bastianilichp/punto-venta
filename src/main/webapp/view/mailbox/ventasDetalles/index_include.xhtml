@@ -41,13 +41,13 @@
                 <h:outputText value="#{vDetalle.usuarios.email}"/>                    
             </p:column>
 
-            <p:column headerText="SubTotal Venta" style="width: 60px" styleClass="center">
+            <p:column headerText="SubTotal Venta" style="width: 80px" styleClass="center">
                 <h:outputText value="#{vDetalle.subtotal}">
                     <f:convertNumber  type="currency" currencySymbol="$ " locale="es_CL"/> 
                 </h:outputText>
             </p:column>
 
-            <p:column headerText="Descuento Venta"  style="width: 60px" styleClass="center">
+            <p:column headerText="Descuento Venta"  style="width: 80px" styleClass="center">
                 <h:outputText value="#{vDetalle.descuento}">
                     <f:convertNumber  type="currency" currencySymbol="$ " locale="es_CL"/> 
                 </h:outputText>
@@ -65,12 +65,10 @@
                                   update="formDetallesVentasModal"/>
                 <p:spacer width="5px"/>
                 <p:commandButton  icon="pi pi-trash" 
-                                  styleClass="rounded-button ui-button-danger"
-                                  action="#{ventasDetallesBean.delete()}" 
-                                  process="@this" title="Ver Detalles Venta"
-                                  onstart="PF('blockUIWidget').show()" 
-                                  oncomplete="PF('blockUIWidget').hide();"
-                                  update="formVentasDetalles :formMessage" >
+                                  styleClass="rounded-button ui-button-danger"                                 
+                                  process="@this" title="Eliminar Venta Completa"
+                                  oncomplete="PF('dialogDeleteConfirmacion').show();"
+                                  update="formDeleteConfirmacion" >
                     <f:setPropertyActionListener target="#{ventasDetallesBean.deleteVenta}" value="#{vDetalle}"/> 
                 </p:commandButton>
 
