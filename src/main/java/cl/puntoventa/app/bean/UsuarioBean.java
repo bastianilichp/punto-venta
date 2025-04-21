@@ -61,6 +61,7 @@ public class UsuarioBean implements AppBean, Serializable {
         Util.ejecutarJavaScript("PF('dialogCreacionUser').hide()");
 
     }
+    
 
     @Override
     public void create() {

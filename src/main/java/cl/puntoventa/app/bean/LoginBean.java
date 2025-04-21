@@ -142,6 +142,8 @@ public class LoginBean implements AppBean, Serializable {
     public void prepareCreate() {
 
         this.users = new Usuarios();
+        this.confirm_password = new String();
+        this.password = new String();
 
         if (Util.getURLReal().equals("http://localhost:8080")) {
 
@@ -241,7 +243,7 @@ public class LoginBean implements AppBean, Serializable {
             if (Util.getURLReal().equals("http://localhost:8080")) {
 
                 ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-                externalContext.redirect("http://localhost:8080/bodega-acta");
+                externalContext.redirect("http://localhost:8080/punto-venta");
 
             } else {
 
@@ -291,24 +293,24 @@ public class LoginBean implements AppBean, Serializable {
 
     }
 
-//    public String cambioPassword() throws Exception {
-//
-//        if (loginController.cambioPassword(this.password)) {
-//            ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-//            context.getFlash().setKeepMessages(true);
-//
-//            Util.avisoInfo("infoPasswd", "Cambio de contraseña realizada");
-//
-//            return HOME_PAGE;
-//
-//        } else {
-//
-//            Util.avisoInfo("infoPasswd", Message.updateError());
-//
-//            return null;
-//        }
-//
-//    }
+    public String cambioPassword() throws Exception {
+
+        if (userController.cambioPassword(this.password)) {
+            ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+            context.getFlash().setKeepMessages(true);
+
+            Util.avisoInfo("infoPasswd", "Cambio de contraseña realizada");
+
+            return HOME_PAGE;
+
+        } else {
+
+            Util.avisoInfo("infoPasswd", Message.updateError());
+
+            return null;
+        }
+
+    }
     public void recuperarContrasena() {
         if (!validarFormRecovery("Recovery")) {
             return;

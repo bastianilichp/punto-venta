@@ -37,7 +37,7 @@ public class VentasNuevaController extends AbstractDaoImpl<VentaNueva> {
 
         try {
             jpql.append("SELECT COUNT(nueva) FROM VentaNueva nueva ")
-                    .append(" LEFT JOIN nueva.usuarios ")                   
+                    .append(" LEFT JOIN nueva.usuarios ")
                     .append(" WHERE 1=1 ")
                     .append(this.filtroDataTable(filterBy));
 
@@ -50,6 +50,71 @@ public class VentasNuevaController extends AbstractDaoImpl<VentaNueva> {
         }
 
         return cantidad;
+    }
+
+    public Long countPeriodo(Map<String, FilterMeta> filterBy, Date fechaD, Date fechaH) {
+        StringBuilder jpql = new StringBuilder();
+        Long cantidad = 0L;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        String fechaDesde = dateFormat.format(fechaD);
+        String fechaHasta = dateFormat.format(fechaH);
+
+        try {
+            jpql.append("SELECT COUNT(nueva) FROM VentaNueva nueva ")
+                    .append(" LEFT JOIN nueva.usuarios ")
+                    .append(" WHERE 1=1 ")
+                    .append(" AND nueva.fechayhora BETWEEN :fechaDesde AND :fechaHasta ")
+                    .append(this.filtroDataTable(filterBy));
+
+            Query query = entityManager.createQuery(jpql.toString());
+            query.setParameter("fechaDesde", fechaDesde + " 00:00:00");
+            query.setParameter("fechaHasta", fechaHasta + " 23:59:59");
+            this.filtroDataTableCheck(query, filterBy);
+
+            cantidad = (Long) query.getSingleResult();
+        } catch (Exception ex) {
+            this.rollbackOperation(this.getClass().getSimpleName(), Thread.currentThread().getStackTrace()[1].getMethodName(), ex);
+        }
+
+        return cantidad;
+    }
+
+    public List<VentaNueva> findAllPeriodo(int first, int pageSize, Map<String, SortMeta> sortBy, Map<String, FilterMeta> filterBy, Date fechaD, Date fechaH) {
+        StringBuilder jpql = new StringBuilder();
+        List<VentaNueva> lista = null;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        String fechaDesde = dateFormat.format(fechaD);
+        String fechaHasta = dateFormat.format(fechaH);
+
+        try {
+            jpql.append("SELECT nueva FROM VentaNueva nueva ")
+                    .append(" LEFT JOIN FETCH nueva.ventaDetallesSet detalle ")
+                    .append(" LEFT JOIN FETCH detalle.producto ")
+                    .append(" LEFT JOIN FETCH nueva.usuarios ")
+                    .append(" WHERE 1=1 ")
+                    .append(" AND nueva.fechayhora BETWEEN :fechaDesde AND :fechaHasta ")
+                    .append(this.filtroDataTable(filterBy));
+
+            Query query = entityManager.createQuery(jpql.toString());
+            query.setParameter("fechaDesde", fechaDesde + " 00:00:00");
+            query.setParameter("fechaHasta", fechaHasta + " 23:59:59");
+
+            this.filtroDataTableCheck(query, filterBy);
+
+            if (pageSize >= 0) {
+                query.setMaxResults(pageSize);
+            }
+
+            if (first >= 0) {
+                query.setFirstResult(first);
+            }
+
+            lista = query.getResultList();
+        } catch (Exception ex) {
+            this.rollbackOperation(this.getClass().getSimpleName(), Thread.currentThread().getStackTrace()[1].getMethodName(), ex);
+        }
+
+        return lista;
     }
 
     @Override
@@ -99,8 +164,8 @@ public class VentasNuevaController extends AbstractDaoImpl<VentaNueva> {
                 if (filterField.equals("fechayhora") && filterValue != null) {
                     jpql.append(" AND nueva.fechayhora LIKE :fechayhora ");
                 }
-                if (filterField.equals("usuarios.id") && filterValue != null) {
-                    jpql.append(" AND nueva.usuarios.id = :usuarios ");
+                if (filterField.equals("usuarios.email") && filterValue != null) {
+                    jpql.append(" AND nueva.usuarios.email = :usuarios ");
                 }
 
             }
@@ -122,12 +187,8 @@ public class VentasNuevaController extends AbstractDaoImpl<VentaNueva> {
                 if (filterField.equals("fechayhora") && filterValue != null) {
                     query.setParameter("fechayhora", "%" + filterValue + "%");
                 }
-                if (filterField.equals("usuarios.id") && filterValue != null) {
-                    try {
-                        query.setParameter("usuarios", Long.valueOf((String) filterValue));
-                    } catch (NumberFormatException e) {
-                        query.setParameter("usuarios", null);
-                    }
+                if (filterField.equals("usuarios.email") && filterValue != null) {
+                    query.setParameter("email", "%" + filterValue + "%");
                 }
 
             }

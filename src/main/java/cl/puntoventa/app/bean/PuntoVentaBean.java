@@ -21,8 +21,13 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import org.primefaces.model.SortMeta;
+import org.primefaces.model.SortOrder;
 
 @Named("puntoVentaBean")
 @ViewScoped
@@ -65,6 +70,7 @@ public class PuntoVentaBean implements AppBean, Serializable {
     public void init() {
         this.prepareCreate();
         this.listar();
+
     }
 
     @Override
@@ -105,6 +111,7 @@ public class PuntoVentaBean implements AppBean, Serializable {
 
                 } else {
                     VentasTO to = new VentasTO();
+                    to.setFecha(new Date());
                     to.setCodigo(pro.getCodigo());
                     to.setNombre(pro.getNombre());
                     to.setPrecioVenta(pro.getPrecioVenta());
@@ -112,6 +119,10 @@ public class PuntoVentaBean implements AppBean, Serializable {
                     to.setCantidad(1);
                     to.setTotal(to.getCantidad() * to.getPrecioVenta());
                     ventasTO.add(to);
+                    ventasTO = ventasTO.stream()
+                            .sorted((v1, v2) -> v2.getFecha().compareTo(v1.getFecha())) // v2 primero para orden descendente
+                            .collect(Collectors.toList());
+
                 }
 
             } else {
@@ -119,6 +130,7 @@ public class PuntoVentaBean implements AppBean, Serializable {
                 Util.avisoError("infoMsg", "Producto No Existe");
             }
         }
+
         System.out.println(subTotal);
         subTotal = 0;
         for (VentasTO v : ventasTO) {
@@ -180,7 +192,7 @@ public class PuntoVentaBean implements AppBean, Serializable {
             if (contador == ventasTO.size()) {
                 ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
                 context.getFlash().setKeepMessages(true);
-                Util.avisoInfo("infoMsg", "Nueva venta creada exitosamente.");
+                Util.avisoInfo("infoMsg", "Venta Creada");
                 return HOME_PAGE_REDIRECT;
             }
 
@@ -189,8 +201,7 @@ public class PuntoVentaBean implements AppBean, Serializable {
             Util.avisoError("infoMsg", "No hay ventas para procesar.");
         }
         return null;
-    }    
-  
+    }
 
     public String cancelarVenta() {
         return HOME_PAGE_REDIRECT;

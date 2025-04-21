@@ -14,8 +14,8 @@
 
             <p:dataTable id="dtModificarUsuario"
                          value="#{inboxBean.listUsuarios}"
-                         var="listUser"
-                         lazy="true"
+                         var="listUser"                         
+                         editable="true"
                          paginator="true"
                          rows="10"
                          paginatorPosition="bottom"
@@ -26,6 +26,8 @@
                          widgetVar="dtModificarUsuario">
 
                 <p:ajax event="page" onstart="PF('blockUIWidget').show()" oncomplete="PF('blockUIWidget').hide()"/>
+                <p:ajax event="rowEdit"  update="formModificarUser:dtModificarUsuario" listener="#{inboxBean.onRowEdit}"/>
+                <p:ajax event="rowEditCancel" listener="#{inboxBean.onRowCancel}" />
 
                 <p:column headerText="Nombre"  style="width: 50px" >
                     <h:outputText value="#{listUser.nombre}" />
@@ -40,13 +42,37 @@
                 </p:column>
 
                 <p:column headerText="Rol" style="width: 50px" >
-                    <h:outputText rendered="#{listUser.manager}" value="Administrador"/>
-                    <h:outputText rendered="#{!listUser.manager}" value="Caja"/>
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText rendered="#{listUser.manager}" value="Administrador"/></f:facet>
+                        <f:facet name="output"><h:outputText rendered="#{!listUser.manager}" value="Caja"/></f:facet>
+                        <f:facet name="input">
+                            <p:selectOneMenu  style="width: 100px"
+                                              value="#{listUser.manager}">                    
+                                <f:selectItem itemLabel="Administrador" itemValue="#{true}"/>
+                                <f:selectItem itemLabel="Caja" itemValue="#{false}"/>                    
+                            </p:selectOneMenu>  
+                        </f:facet>
+
+                    </p:cellEditor>
                 </p:column>
 
                 <p:column headerText="Disponible"  style="width: 50px" >
-                    <h:outputText rendered="#{listUser.enabled}" value="SI"/>
-                    <h:outputText rendered="#{!listUser.enabled}" value="NO"/>
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText rendered="#{listUser.enabled}" value="SI"/></f:facet>
+                        <f:facet name="output"><h:outputText rendered="#{!listUser.enabled}" value="NO"/></f:facet>
+                        <f:facet name="input">
+                            <p:selectOneMenu  style="width: 100px"
+                                              value="#{listUser.enabled}">                    
+                                <f:selectItem itemLabel="Si" itemValue="#{true}"/>
+                                <f:selectItem itemLabel="No" itemValue="#{false}"/>                    
+                            </p:selectOneMenu>  
+                        </f:facet>
+
+                    </p:cellEditor>
+                </p:column>
+
+                <p:column style="width:6rem">
+                    <p:rowEditor/>
                 </p:column>
             </p:dataTable>
         </h:form>

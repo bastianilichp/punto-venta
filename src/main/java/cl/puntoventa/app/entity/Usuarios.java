@@ -18,6 +18,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Set;
 
 /**
@@ -171,5 +172,7 @@ public class Usuarios implements Serializable {
     public String toString() {
         return "cl.puntoventa.app.entity.Usuarios[ id=" + id + " ]";
     }
+
+  
     
 }

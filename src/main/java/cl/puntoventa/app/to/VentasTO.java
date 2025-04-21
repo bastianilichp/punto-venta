@@ -4,15 +4,25 @@
  */
 package cl.puntoventa.app.to;
 
+import java.util.Date;
 
 public class VentasTO {
-    
+
+    private Date fecha;
     private String nombre;
     private Integer stock;
     private String codigo;
     private Integer precioVenta;
     private Integer cantidad;
     private Integer total;
+
+    public Date getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(Date fecha) {
+        this.fecha = fecha;
+    }
 
     public String getNombre() {
         return nombre;
@@ -61,13 +71,5 @@ public class VentasTO {
     public void setTotal(Integer total) {
         this.total = total;
     }
-    
-    
-    
-    
-  
-    
-    
-    
-    
+
 }

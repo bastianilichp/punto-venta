@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package cl.puntoventa.app.controller;
 
 import cl.puntoventa.app.clases.Util;
@@ -15,6 +11,8 @@ import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
 import jakarta.persistence.Query;
 import jakarta.servlet.http.HttpSession;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import org.primefaces.model.FilterMeta;
@@ -32,7 +30,24 @@ public class VentasDetallesController extends AbstractDaoImpl<VentaDetalles> {
 
     @Override
     public List<VentaDetalles> findAll() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        StringBuilder jpql = new StringBuilder();
+        List<VentaDetalles> lista = null;
+
+        try {
+            jpql.append("SELECT detalle FROM VentaDetalles detalle ")
+                    .append(" LEFT JOIN FETCH detalle.producto ")
+                    .append(" LEFT JOIN FETCH detalle.usuarios ")
+                    .append(" LEFT JOIN FETCH detalle.ventaNueva ")
+                    .append(" WHERE 1=1 ");
+
+            Query query = entityManager.createQuery(jpql.toString());
+
+            lista = query.getResultList();
+        } catch (Exception ex) {
+            this.rollbackOperation(this.getClass().getSimpleName(), Thread.currentThread().getStackTrace()[1].getMethodName(), ex);
+        }
+
+        return lista;
     }
 
     @Override
@@ -170,12 +185,38 @@ public class VentasDetallesController extends AbstractDaoImpl<VentaDetalles> {
 
         try {
             jpql.append("SELECT detalle FROM VentaDetalles detalle ")
-                    .append(" LEFT JOIN detalle.producto ")
+                    .append(" LEFT JOIN FETCH detalle.producto ")
                     .append(" WHERE 1=1 ")
                     .append(" AND detalle.ventaNueva.id = :id");
 
             Query query = entityManager.createQuery(jpql.toString());
             query.setParameter("id", id);
+
+            lista = query.getResultList();
+        } catch (Exception ex) {
+            this.rollbackOperation(this.getClass().getSimpleName(), Thread.currentThread().getStackTrace()[1].getMethodName(), ex);
+        }
+
+        return lista;
+
+    }
+
+    public List<VentaDetalles> findByDiaria() {
+        StringBuilder jpql = new StringBuilder();
+        List<VentaDetalles> lista = null;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        String fechaActual = dateFormat.format(new Date());
+
+        try {
+            jpql.append("SELECT detalle FROM VentaDetalles detalle ")
+                    .append(" LEFT JOIN FETCH detalle.producto ")
+                    .append(" LEFT JOIN FETCH detalle.usuarios ")
+                    .append(" LEFT JOIN FETCH detalle.ventaNueva ")
+                    .append(" WHERE 1=1 ")
+                    .append(" AND detalle.ventaNueva.fechayhora like :fecha");
+
+            Query query = entityManager.createQuery(jpql.toString());
+            query.setParameter("fecha", "%" + fechaActual + "%");
 
             lista = query.getResultList();
         } catch (Exception ex) {

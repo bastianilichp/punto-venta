@@ -10,8 +10,12 @@ import cl.puntoventa.app.clases.Util;
 import cl.puntoventa.app.dao.AbstractDaoImpl;
 import cl.puntoventa.app.entity.Usuarios;
 import jakarta.ejb.Stateless;
+import jakarta.faces.component.UIInput;
+import jakarta.faces.context.FacesContext;
 import jakarta.inject.Inject;
 import jakarta.persistence.Query;
+import jakarta.servlet.http.HttpSession;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import org.primefaces.model.FilterMeta;
@@ -112,7 +116,7 @@ public class UserController extends AbstractDaoImpl<Usuarios> {
         }
         userNuevo.setPassword(BCrypt.hashpw(userNuevo.getPassword(), BCrypt.gensalt()));
         userNuevo.setEmail(userNuevo.getEmail().toLowerCase());
-        userNuevo.setEnabled(true);       
+        userNuevo.setEnabled(true);
 
         return super.create(userNuevo);
     }
@@ -145,7 +149,6 @@ public class UserController extends AbstractDaoImpl<Usuarios> {
             }
 
         }
-     
 
         return valido;
 
@@ -188,6 +191,98 @@ public class UserController extends AbstractDaoImpl<Usuarios> {
         }
 
         return user;
+    }
+
+    public boolean cambioPassword(String password) {
+
+        HttpSession httpSession = (HttpSession) Util.getSession();
+
+        Usuarios user = (Usuarios) httpSession.getAttribute("userSession");
+
+        Date hoy = new Date();
+
+        if (this.validarFormPass("Password")) {
+
+            user.setPassword(BCrypt.hashpw(password, BCrypt.gensalt()));
+
+            if (super.update(user)) {
+
+            }
+        }
+
+        return false;
+
+    }
+
+    public boolean validarFormPass(String prefix) {
+
+        boolean validar = true;
+
+        boolean largo_password = false;
+        boolean largo_confirm_password = false;
+
+        FacesContext context = FacesContext.getCurrentInstance();
+
+        UIInput input_password = (UIInput) context.getViewRoot().findComponent(":formPassword:password");
+
+        if (input_password.getValue().equals("") || input_password.getValue() == null) {
+            input_password.setValid(false);
+            validar = false;
+
+        } else {
+
+            String password = (String) input_password.getValue();
+            if (password.length() < 7) {
+                Util.avisoError("infoPasswd", "Contraseña debe tener un minimo de 7 caracteres");
+                input_password.setValid(false);
+                validar = false;
+            } else {
+                largo_password = true;
+            }
+
+        }
+
+        UIInput input_confirm_password = (UIInput) context.getViewRoot().findComponent(":formPassword:confirm_password");
+
+        if (input_confirm_password.getValue().equals("") || input_confirm_password.getValue() == null) {
+            input_confirm_password.setValid(false);
+            validar = false;
+
+        } else {
+
+            String confirm_password = (String) input_confirm_password.getValue();
+            if (confirm_password.length() < 7) {
+                Util.avisoError("infoPasswd", "Confirma Contraseña debe tener un minimo de 7 caracteres");
+                input_confirm_password.setValid(false);
+                validar = false;
+            } else {
+
+                largo_confirm_password = true;
+
+            }
+        }
+
+        if (largo_password && largo_confirm_password) {
+
+            if (!input_password.getValue().equals(input_confirm_password.getValue())) {
+
+                Util.avisoError("infoPasswd", "Contraseña y Confirma Contraseña no coinciden");
+                input_password.setValid(false);
+                input_confirm_password.setValid(false);
+                validar = false;
+            }
+        }
+
+        if (validar) {
+
+            Util.ejecutarJavaScript("PF('dialog" + prefix + "').hide()");
+
+        } else {
+
+            Util.ejecutarJavaScript("var jqDialog = jQuery('#DlgPassword');jqDialog.effect('shake', { times:3 }, 100);");
+        }
+
+        return validar;
     }
 
 //    private void sendMail(Usuarios user, String password, String accion) {

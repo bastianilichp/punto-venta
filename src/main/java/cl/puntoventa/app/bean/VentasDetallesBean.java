@@ -16,6 +16,7 @@ import jakarta.inject.Named;
 import jakarta.servlet.http.HttpSession;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -35,7 +36,7 @@ public class VentasDetallesBean implements AppBean, Serializable {
 
     private List<Usuarios> listUsuario;
 
-    private LazyDataModel<VentaNueva> ventaNuevaLazy;
+    private LazyDataModel<VentaNueva> ventaNuevaLazy;   
 
     private List<VentaDetalles> listDetalle;
 
@@ -52,6 +53,8 @@ public class VentasDetallesBean implements AppBean, Serializable {
 
     @Inject
     private ProductosController productoController;
+
+ 
 
     @PostConstruct
     @Override
@@ -126,7 +129,7 @@ public class VentasDetallesBean implements AppBean, Serializable {
             ventasNuevaController.delete(venta);
         }
 
-    }
+    }   
 
     public Usuarios getUsuario() {
         return usuario;
@@ -167,5 +170,7 @@ public class VentasDetallesBean implements AppBean, Serializable {
     public void setDeleteVenta(VentaNueva deleteVenta) {
         this.deleteVenta = deleteVenta;
     }
+
+ 
 
 }

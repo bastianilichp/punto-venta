@@ -1,0 +1,31 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"                
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                template="/WEB-INF/template.xhtml">     
+
+    <ui:define name="title">
+        HISTORICO
+    </ui:define>
+
+    <ui:define name="content">
+        <h:form id="formMessage">
+            <p:growl for="infoMsg" life="3000" />
+        </h:form>
+
+        <div class="content_include" >
+            <p:card class="w-full card-sin-sombra">
+                <f:facet name="title">
+
+                </f:facet>
+
+                <ui:include src="view_index.xhtml"/>
+
+            </p:card>
+
+        </div>
+        <ui:include src="/view/mailbox/historico/modal_detalles.xhtml"/>
+    </ui:define>
+
+</ui:composition>

@@ -4,7 +4,8 @@
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui">
     <h:form id="formListProductos"> 
-        <p:toolbar>          
+        <p:toolbar>     
+            
             <p:toolbarGroup align="left">
                 <p:commandButton  icon="pi pi-plus" value="Agregar Producto" 
                                   oncomplete="PF('dialogAddProdcutos').show()"
@@ -12,16 +13,8 @@
                                   styleClass="ui-button-outlined ui-button-success"/>
             </p:toolbarGroup>
             <p:toolbarGroup align="rigth">
-                <p:commandButton value="Exporta PDF" 
-                                 icon="pi pi-upload" 
-                                 styleClass="ui-button-outlined ui-button-info"                                 
-                                 onstart="PF('blockUIWidget').show()" 
-                                 oncomplete="PF('blockUIWidget').hide();" >
-                    <p:dataExporter type="pdf" target="dtListProductos" fileName="prodcutos" />
-                </p:commandButton>
-                <p:spacer width="10px"/>
                 <p:commandButton value="Exporta Excel" 
-                                 icon="pi pi-upload" 
+                                 icon="pi pi-file-excel" 
                                  styleClass="ui-button-outlined ui-button-info" 
                                  onstart="PF('blockUIWidget').show()" 
                                  oncomplete="PF('blockUIWidget').hide();">
