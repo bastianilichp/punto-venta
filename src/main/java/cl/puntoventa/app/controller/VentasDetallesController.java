@@ -6,12 +6,15 @@ import cl.puntoventa.app.entity.Producto;
 import cl.puntoventa.app.entity.Usuarios;
 import cl.puntoventa.app.entity.VentaDetalles;
 import cl.puntoventa.app.entity.VentaNueva;
+
 import cl.puntoventa.app.to.VentasTO;
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
 import jakarta.persistence.Query;
 import jakarta.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -225,6 +228,59 @@ public class VentasDetallesController extends AbstractDaoImpl<VentaDetalles> {
 
         return lista;
 
+    }
+
+    public List<VentaDetalles> findByPeriodo(LocalDate fechaD, LocalDate fechaH) {
+        StringBuilder jpql = new StringBuilder();
+        List<VentaDetalles> lista = null;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
+        String fechaDesde = fechaD.format(formatter);
+        String fechaHasta = fechaH.format(formatter);
+        System.out.println(fechaDesde);
+
+        try {
+            jpql.append("SELECT detalle FROM VentaDetalles detalle ")
+                    .append(" LEFT JOIN FETCH detalle.producto ")
+                    .append(" LEFT JOIN FETCH detalle.usuarios ")
+                    .append(" LEFT JOIN FETCH detalle.ventaNueva ")
+                    .append(" WHERE 1=1 ")
+                    .append(" AND detalle.ventaNueva.fechayhora BETWEEN :fechaDesde AND :fechaHasta ");
+
+            Query query = entityManager.createQuery(jpql.toString());
+            query.setParameter("fechaDesde", fechaDesde + " 00:00:00");
+            query.setParameter("fechaHasta", fechaHasta + " 23:59:59");
+
+            lista = query.getResultList();
+        } catch (Exception ex) {
+            this.rollbackOperation(this.getClass().getSimpleName(), Thread.currentThread().getStackTrace()[1].getMethodName(), ex);
+        }
+
+        return lista;
+
+    }
+
+    public List<Object[]> obtenerTopProductosVendidos() {
+        List<Object[]> resultados = null;
+        StringBuilder jpql = new StringBuilder();
+
+        try {
+             jpql.append("SELECT detalle.producto.codigo, detalle.producto.nombre, SUM(detalle.cantidad) ")
+            .append("FROM VentaDetalles detalle ") // Use the entity name, not the full class path
+            .append("JOIN detalle.producto ") // Use JOIN instead of LEFT JOIN FETCH
+            .append("GROUP BY detalle.producto.nombre ")
+            .append("ORDER BY SUM(detalle.cantidad) DESC");
+
+            // Crear la consulta
+            Query query = entityManager.createQuery(jpql.toString());
+            query.setMaxResults(30); // Limitar a los 10 productos más vendidos
+
+            resultados = query.getResultList();
+
+        } catch (Exception ex) {
+            this.rollbackOperation(this.getClass().getSimpleName(), Thread.currentThread().getStackTrace()[1].getMethodName(), ex);
+        }
+        return resultados;
     }
 
 }

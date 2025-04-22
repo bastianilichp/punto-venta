@@ -54,6 +54,26 @@ public class UserController extends AbstractDaoImpl<Usuarios> {
 
     }
 
+    public List<Usuarios> findAllModificacion() {
+
+        List<Usuarios> user = null;
+        StringBuilder jpql = new StringBuilder();
+
+        try {
+            jpql.append("SELECT usuario FROM Usuarios usuario ");
+            jpql.append(" WHERE 1=1 ");            
+
+            Query query = entityManager.createQuery(jpql.toString());
+            user = query.getResultList();
+
+        } catch (Exception ex) {
+            this.rollbackOperation(this.getClass().getSimpleName(), Thread.currentThread().getStackTrace()[1].getMethodName(), ex);
+        }
+
+        return user;
+
+    }
+
     @Override
     public List<Usuarios> findAll(int first, int pageSize, Map<String, SortMeta> sortBy, Map<String, FilterMeta> filterBy) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody

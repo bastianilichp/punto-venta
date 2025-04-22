@@ -36,17 +36,25 @@
                         <p:menuitem id="productos" value="Productos" icon="pi pi-inbox" outcome="/view/mailbox/productos/index" rendered="#{ADMIN}" onstart="PF('blockUIWidget').show()" oncomplete="PF('blockUIWidget').hide()"/> 
 
                         <p:submenu  label="Ventas" icon="pi pi-file" rendered="#{ADMIN}">
-                            <p:menuitem  value="Ventas Detalles" icon="pi pi-folder-open" outcome="/view/mailbox/ventasDetalles/index"/>     
                             <p:menuitem  value="Ventas Diarias" icon="pi pi-folder-open" outcome="/view/mailbox/ventasDiarias/index"/>
+                            <p:menuitem  value="Ventas Detalles" icon="pi pi-folder-open" outcome="/view/mailbox/ventasDetalles/index"/>  
                             <p:menuitem  value="Ventas Por Periodo" icon="pi pi-folder-open" outcome="/view/mailbox/ventasPeriodo/index"/> 
                         </p:submenu>
 
-                        <p:menuitem id="historial" value="Historial" icon="pi pi-history" rendered="#{ADMIN}" outcome="/view/mailbox/historico/index" />  
+                        <p:menuitem id="historial" value="Historico" icon="pi pi-history" rendered="#{ADMIN}" outcome="/view/mailbox/historico/index" /> 
+
+                        <p:submenu  label="Usuarios" icon="pi pi-user" rendered="#{ADMIN}">
+                            <p:menuitem  value="Creación Usuario" icon="pi pi-user-plus"     update="formMessage" action="#{inboxBean.dlgCrearUsuario()}"  />     
+                            <p:menuitem  value="Modificación Usuario" icon="pi pi-user-edit" update="formModificarUser" oncomplete="PF('dialogModificarUser').show();"/>
+
+                        </p:submenu>
 
                     </po:menu>
                 </div>
             </div>
         </div>
     </h:form>
+    <ui:include src="/view/mailbox/modal_usuarios/modal_crear.xhtml"/>
+    <ui:include src="/view/mailbox/modal_usuarios/modal_modificar.xhtml"/>
     <ui:include src="/view/mailbox/modal_usuarios/password_include.xhtml"/>
 </ui:composition>

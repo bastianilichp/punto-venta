@@ -1,16 +1,20 @@
 package cl.puntoventa.app.bean;
 
+import cl.puntoventa.app.clases.Util;
+import cl.puntoventa.app.controller.ProductoVendidoController;
 import cl.puntoventa.app.controller.UserController;
 import cl.puntoventa.app.controller.VentasDetallesController;
 import cl.puntoventa.app.controller.VentasNuevaController;
 import cl.puntoventa.app.entity.Usuarios;
 import cl.puntoventa.app.entity.VentaDetalles;
 import cl.puntoventa.app.entity.VentaNueva;
+import cl.puntoventa.app.to.TopProductosTO;
 import jakarta.annotation.PostConstruct;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.math3.stat.descriptive.summary.Product;
@@ -27,6 +31,8 @@ public class InboxBean implements AppBean, Serializable {
 
     private List<VentaDetalles> listVenta;
 
+    private List<TopProductosTO> topProdcutos;
+
     @Inject
     private UserController userController;
 
@@ -35,6 +41,9 @@ public class InboxBean implements AppBean, Serializable {
 
     @Inject
     private VentasDetallesController ventasDetallesController;
+
+    @Inject
+    private ProductoVendidoController productoVendidoController;
 
     @PostConstruct
     @Override
@@ -46,7 +55,7 @@ public class InboxBean implements AppBean, Serializable {
 
     @Override
     public void listar() {
-        listUsuarios = userController.findAll();
+        listUsuarios = userController.findAllModificacion();
 
     }
 
@@ -55,6 +64,7 @@ public class InboxBean implements AppBean, Serializable {
         this.user = new Usuarios();
         this.listUsuarios = new ArrayList<>();
         this.listVenta = new ArrayList<>();
+        this.topProdcutos = new ArrayList<>();
     }
 
     public void dlgCrearUsuario() {
@@ -66,30 +76,90 @@ public class InboxBean implements AppBean, Serializable {
     public void exportVentasDiarias() {
         this.listVenta = new ArrayList<>();
         this.listVenta = ventasDetallesController.findByDiaria();
-        PrimeFaces.current().executeScript("PF('dialogIndex').show()");
+        if (!listVenta.isEmpty()) {
+            PrimeFaces.current().executeScript("PF('dialogIndex').show()");
+        } else {
+            Util.avisoInfo("infoMsg", "Sin Datos Exportar");
+        }
 
     }
 
     public void exportVentasMensuales() {
         this.listVenta = new ArrayList<>();
+        LocalDate fechaActual = LocalDate.now();
+        LocalDate primerDia = fechaActual.withDayOfMonth(1);
+        LocalDate ultimoDia = fechaActual.withDayOfMonth(fechaActual.lengthOfMonth());
+        this.listVenta = ventasDetallesController.findByPeriodo(primerDia, ultimoDia);
+        if (!listVenta.isEmpty()) {
+            PrimeFaces.current().executeScript("PF('dialogIndex').show()");
+        } else {
+            Util.avisoInfo("infoMsg", "Sin Datos Exportar");
+        }
+
     }
 
     public void exportVentasDetalles() {
         this.listVenta = new ArrayList<>();
         this.listVenta = ventasDetallesController.findAll();
-        PrimeFaces.current().executeScript("PF('dialogIndex').show()");
+        if (!listVenta.isEmpty()) {
+            PrimeFaces.current().executeScript("PF('dialogIndex').show()");
+        } else {
+            Util.avisoInfo("infoMsg", "Sin Datos Exportar");
+        }
     }
 
     public void exportVentasUsuario() {
         this.listVenta = new ArrayList<>();
     }
 
+    public void topProductos() {
+        this.topProdcutos = new ArrayList<>();
+        List<Object[]> obj = ventasDetallesController.obtenerTopProductosVendidos();
+        for (Object[] row : obj) {
+            TopProductosTO to = new TopProductosTO();
+            to.setCodigo((String) row[0]);
+            to.setNombre((String) row[1]);
+            to.setCantidad((Long) row[2]);
+            topProdcutos.add(to);
+        }
+        if (!topProdcutos.isEmpty()) {
+            PrimeFaces.current().executeScript("PF('dialogTopProdcutos').show()");
+
+        }
+        System.out.println(topProdcutos);
+
+    }
+
+    public void topProductosHistorico() {
+        this.topProdcutos = new ArrayList<>();
+        List<Object[]> obj = productoVendidoController.obtenerTopProductosHistorico();
+        for (Object[] row : obj) {
+            TopProductosTO to = new TopProductosTO();
+            to.setCodigo((String) row[0]);
+            to.setNombre((String) row[1]);
+            to.setCantidad((Long) row[2]);
+            topProdcutos.add(to);
+        }
+        if (!topProdcutos.isEmpty()) {
+            PrimeFaces.current().executeScript("PF('dialogTopProdcutos').show()");
+
+        }
+        System.out.println(topProdcutos);
+
+    }
+
     public void onRowEdit(RowEditEvent<Usuarios> event) {
-        System.out.println("editar");
+        Usuarios user = userController.findOneById(event.getObject().getId());
+        user.setEnabled(event.getObject().getEnabled());
+        user.setManager(event.getObject().getManager());
+        if (userController.update(user)) {
+            Util.avisoInfo("infoMsg", "Usuario Modificado");
+        }
 
     }
 
     public void onRowCancel(RowEditEvent<Usuarios> event) {
+        Util.avisoInfo("infoMsg", "Usuario No Modificado");
 
     }
 
@@ -130,6 +200,14 @@ public class InboxBean implements AppBean, Serializable {
 
     public void setListVenta(List<VentaDetalles> listVenta) {
         this.listVenta = listVenta;
+    }
+
+    public List<TopProductosTO> getTopProdcutos() {
+        return topProdcutos;
+    }
+
+    public void setTopProdcutos(List<TopProductosTO> topProdcutos) {
+        this.topProdcutos = topProdcutos;
     }
 
 }

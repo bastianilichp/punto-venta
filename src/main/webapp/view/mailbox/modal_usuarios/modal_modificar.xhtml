@@ -26,8 +26,10 @@
                          widgetVar="dtModificarUsuario">
 
                 <p:ajax event="page" onstart="PF('blockUIWidget').show()" oncomplete="PF('blockUIWidget').hide()"/>
-                <p:ajax event="rowEdit"  update="formModificarUser:dtModificarUsuario" listener="#{inboxBean.onRowEdit}"/>
-                <p:ajax event="rowEditCancel" listener="#{inboxBean.onRowCancel}" />
+                <p:ajax event="rowEdit"  update="formModificarUser:dtModificarUsuario formMessage" listener="#{inboxBean.onRowEdit}" onstart="PF('blockUIWidget').show()" 
+                        oncomplete="PF('blockUIWidget').hide();"/>
+                <p:ajax event="rowEditCancel" listener="#{inboxBean.onRowCancel}"  update="formModificarUser:dtModificarUsuario formMessage" onstart="PF('blockUIWidget').show()" 
+                        oncomplete="PF('blockUIWidget').hide();" />
 
                 <p:column headerText="Nombre"  style="width: 50px" >
                     <h:outputText value="#{listUser.nombre}" />

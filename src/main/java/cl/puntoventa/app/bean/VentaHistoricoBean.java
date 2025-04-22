@@ -1,5 +1,6 @@
 package cl.puntoventa.app.bean;
 
+import cl.puntoventa.app.controller.ProductoVendidoController;
 import cl.puntoventa.app.controller.VentaHistoricoController;
 import cl.puntoventa.app.controller.VentasDetallesController;
 import cl.puntoventa.app.controller.VentasNuevaController;
@@ -13,6 +14,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -20,6 +22,7 @@ import org.primefaces.PrimeFaces;
 import org.primefaces.model.FilterMeta;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortMeta;
+import org.primefaces.model.TreeNode;
 
 @Named("historicoBean")
 @ViewScoped
@@ -29,8 +32,16 @@ public class VentaHistoricoBean implements AppBean, Serializable {
 
     private List<ProductoVendido> listDetalleH;
 
+    private List<ProductoVendido> listaVentasHistoricos;
+
     @Inject
     private VentaHistoricoController ventaHistoricoController;
+
+    @Inject
+    private ProductoVendidoController productoVendidoController;
+
+    private Date fechaDesde;
+    private Date fechaHasta;
 
     @PostConstruct
     @Override
@@ -60,15 +71,14 @@ public class VentaHistoricoBean implements AppBean, Serializable {
     @Override
     public void prepareCreate() {
         this.listDetalleH = new ArrayList<>();
+        this.listaVentasHistoricos = new ArrayList<>();
 
     }
 
-    public void detallesHistorico(Venta venta) {
-        System.out.println(venta.getProductoVendidoSet());
-        Set<ProductoVendido> detallesSet = venta.getProductoVendidoSet();
-        this.listDetalleH = new ArrayList<>(detallesSet);
-        PrimeFaces.current().executeScript("PF('dialogDetallesHistorico').show()");
-
+    public void buscarVentasHistorico() {
+        if (fechaDesde != null || fechaHasta != null) {
+            this.listaVentasHistoricos = productoVendidoController.findPeriodo(fechaDesde, fechaHasta);
+        }
     }
 
     @Override
@@ -100,6 +110,30 @@ public class VentaHistoricoBean implements AppBean, Serializable {
 
     public void setListDetalleH(List<ProductoVendido> listDetalleH) {
         this.listDetalleH = listDetalleH;
+    }
+
+    public List<ProductoVendido> getListaVentasHistoricos() {
+        return listaVentasHistoricos;
+    }
+
+    public void setListaVentasHistoricos(List<ProductoVendido> listaVentasHistoricos) {
+        this.listaVentasHistoricos = listaVentasHistoricos;
+    }
+
+    public Date getFechaDesde() {
+        return fechaDesde;
+    }
+
+    public void setFechaDesde(Date fechaDesde) {
+        this.fechaDesde = fechaDesde;
+    }
+
+    public Date getFechaHasta() {
+        return fechaHasta;
+    }
+
+    public void setFechaHasta(Date fechaHasta) {
+        this.fechaHasta = fechaHasta;
     }
 
 }
