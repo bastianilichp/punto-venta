@@ -1,1 +1,1 @@
-web: java -Djava.awt.headless=true -jar target/ROOT.war
+web: java -Djava.awt.headless=true -jar target/punto-venta.war
