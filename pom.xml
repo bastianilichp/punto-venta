@@ -69,7 +69,6 @@
             <version>11.0.0</version>
             <classifier>jakarta</classifier>
         </dependency>
-        
             
         <dependency>
             <groupId>org.primefaces.themes</groupId>
@@ -135,6 +134,13 @@
         </dependency>
      
     </dependencies>
+    
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <url>https://maven.pkg.github.com/bastianilichp/repo-maven-bastian</url>
+        </repository>
+    </distributionManagement>
     
     <build>
        
