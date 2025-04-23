@@ -4,7 +4,7 @@
     <groupId>punto-venta</groupId>
     <artifactId>punto-venta</artifactId>
     <version>1.0</version>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
     <name>punto-venta</name>
     
     <properties>
