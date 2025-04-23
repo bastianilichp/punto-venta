@@ -74,8 +74,7 @@
             <groupId>org.primefaces.themes</groupId>
             <artifactId>omega-theme</artifactId>
             <version>4.1.0</version>
-            <classifier>jakarta</classifier>
-            <scope>compile</scope>
+            <classifier>jakarta</classifier>           
         </dependency>
         
         <!-- Test DOC TO PDF -->
@@ -133,15 +132,8 @@
             <version>1.3.26</version>
         </dependency>
      
-    </dependencies>
-    
-    <distributionManagement>
-        <repository>
-            <id>github</id>
-            <url>https://maven.pkg.github.com/bastianilichp/repo-maven-bastian</url>
-        </repository>
-    </distributionManagement>
-    
+    </dependencies>    
+  
     <build>
        
         <plugins>
