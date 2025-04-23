@@ -27,7 +27,7 @@
     
     
     <dependencies>
-        <!-- https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp -->
+       
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>
             <artifactId>okhttp</artifactId>
@@ -57,7 +57,7 @@
         </dependency>
         
         
-        <!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-core-jakarta -->
+       
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core-jakarta</artifactId>
@@ -126,7 +126,7 @@
             <version>5.3.1.RELEASE</version>
         </dependency>
         
-        <!-- https://mvnrepository.com/artifact/com.github.librepdf/openpdf -->
+       
         <dependency>
             <groupId>com.github.librepdf</groupId>
             <artifactId>openpdf</artifactId>
