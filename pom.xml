@@ -12,6 +12,7 @@
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <failOnMissingWebXml>false</failOnMissingWebXml>
+        
         <jakartaee>10.0.0</jakartaee>
     </properties>
     
@@ -73,9 +74,7 @@
         <dependency>
             <groupId>org.primefaces.themes</groupId>
             <artifactId>omega-theme</artifactId>
-            <version>4.1.0</version>
-            <scope>system</scope>
-            <systemPath>/C:/BastianIlich/personal/GIT/punto-venta/lib/omega-theme/4.1.0/omega-theme-4.1.0.jar</systemPath>
+            <version>4.1.0</version>                     
         </dependency>
         
         <!-- Test DOC TO PDF -->
