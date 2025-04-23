@@ -1,0 +1,84 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+    <style>
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+    </style>
+
+
+    <h:form id="formVentasDiarias">
+
+        <div  style="display: flex; justify-content: center;" >
+            <table style="border: 1px solid black; border-collapse: collapse; width: 500px" class="table table-striped">
+                <tr>
+                    <td >
+                        <p:outputLabel for="fecha" value="Fecha:" style="font-weight: bold;font-size: 20px"/>
+                    </td>
+                    <td>
+                        <p:calendar locale="es" id="fecha" style="font-weight: bold;font-size: 20px"
+                                    readonlyInput="false"
+                                    size="20"
+                                    maxlength="50"                                                 
+                                    pattern="dd-MM-yyyy"
+                                    required="false"    
+                                    navigator="true"                             
+                                    value="#{ventasDiariasBean.fechaActual}"> 
+                            <p:ajax event="dateSelect" update="formVentasDiarias :formMessage" listener="#{ventasDiariasBean.ventasFecha}"></p:ajax>
+                        </p:calendar>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p:outputLabel for="subtotal" value="SubTotal:" style="font-weight: bold; font-size: 20px"/>
+                    </td>
+                    <td>
+                        <p:outputLabel id="subtotal" value="#{ventasDiariasBean.subTotal}" style="font-weight: bold;font-size: 20px">
+                            <f:convertNumber  type="currency" currencySymbol="$ " locale="es_CL"/> 
+                        </p:outputLabel>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p:outputLabel for="descuento" value="Descuento Total:" style="font-weight: bold;font-size: 20px"/>
+                    </td>
+                    <td>
+                        <p:outputLabel id="descuento" value="#{ventasDiariasBean.descuento}" style="font-weight: bold;font-size: 20px">
+                            <f:convertNumber  type="currency" currencySymbol="$ " locale="es_CL"/> 
+                        </p:outputLabel>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p:outputLabel for="total" value="Venta Total" style="font-weight: bold;font-size: 20px"/>
+                    </td>
+                    <td>
+                        <p:outputLabel id="total" value="#{ventasDiariasBean.total}" style="font-weight: bold;font-size: 20px">
+                            <f:convertNumber  type="currency" currencySymbol="$ " locale="es_CL"/> 
+                        </p:outputLabel>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+    </h:form>
+</ui:composition>

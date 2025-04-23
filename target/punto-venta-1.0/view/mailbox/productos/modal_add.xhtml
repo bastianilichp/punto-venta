@@ -1,0 +1,63 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">               
+
+
+    <p:dialog onShow="PF('dialogAddProdcutos').initPosition()" id="DlgAddProductos" 
+              widgetVar="dialogAddProdcutos" modal="true" showEffect="explode" 
+              resizable="false" appendTo="@(body)"  closable="false" width="600"         
+              header="Agregar Producto" closeOnEscape="true">
+
+        <h:form id="formAddProd" >
+            <p:panelGrid columns="2" columnClasses="p-col-3, p-col-10" style="width: 100%;">
+                <p:outputLabel value="Código: *" style="font-weight: bold"/>
+                <p:inputText value="#{productoBean.productos.codigo}" placeholder="Ingrese Código" style="width: 100%;"/>
+
+                <p:outputLabel value="Nombre: *" style="font-weight: bold"/>
+                <p:inputText value="#{productoBean.productos.nombre}"  placeholder="Ingrese Nombre" style="width: 100%;"/>
+
+                <p:outputLabel value="Precio Compra: *" style="font-weight: bold"/>
+                <p:inputText value="#{productoBean.productos.precioCompra}"  placeholder="Ingrese Precio Compra" style="width: 100%;">
+
+                </p:inputText>
+
+                <p:outputLabel value="Precio Venta: *" style="font-weight: bold"/>
+                <p:inputText value="#{productoBean.productos.precioVenta}"  placeholder="Ingrese Precio Venta" style="width: 100%;">
+
+                </p:inputText>
+
+                <p:outputLabel value="Stock: *" style="font-weight: bold"/>
+                <p:inputText value="#{productoBean.productos.stock}"  placeholder="Ingrese Stock" style="width: 100%;">
+
+                </p:inputText>
+
+                <h:outputText value="Categoría: *" style="font-weight: bold"/>
+                <p:selectOneMenu id="txtSelectAdd" style="width: 100%" 
+                                 value="#{productoBean.productos.categoria.id}">
+                    <f:selectItem itemLabel="--- SELECCION ---" itemValue="#{null}"/>
+                    <f:selectItems value="#{productoBean.listCategoria}" var="lista" itemLabel="#{lista.descripcion}" itemValue="#{lista.id}"/>
+                </p:selectOneMenu>
+            </p:panelGrid>
+            <br/><!-- comment -->
+            <div style="text-align:center">
+                <p:commandButton value="AGREGAR" styleClass="ui-button-raised ui-button-success"  
+                                 icon="pi pi-check" iconPos="right"
+                                 action="#{productoBean.create()}"
+                                 onstart="PF('blockUIWidget').show()" 
+                                 oncomplete="PF('blockUIWidget').hide(); PF('dialogAddProdcutos').hide()"
+                                 update="formMessage formListProductos"/>
+                <p:spacer width="10px"/>
+                <p:commandButton  value="CANCELAR" styleClass="ui-button-raised ui-button-danger" 
+                                  icon="pi pi-times" iconPos="right"                                 
+                                  onstart="PF('blockUIWidget').show()" 
+                                  oncomplete="PF('blockUIWidget').hide(); PF('dialogAddProdcutos').hide()"
+                                  update="formAddProd"/>
+            </div>
+
+
+        </h:form>
+    </p:dialog>
+</ui:composition>
