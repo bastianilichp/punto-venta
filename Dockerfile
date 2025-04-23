@@ -1,5 +1,10 @@
-FROM tomcat:9.0-jdk17
-RUN rm -rf /usr/local/tomcat/webapps/*
-COPY ROOT.war /usr/local/tomcat/webapps/ROOT.war
+FROM payara/server-full:6.2023.1-jdk17
+
+# Copiar el archivo WAR de la aplicación al servidor de Payara
+COPY target/punto-venta-1.0.war /opt/payara/deployments/
+
+# Exponer el puerto 8080
 EXPOSE 8080
-CMD ["catalina.sh", "run"]
+
+# Iniciar Payara
+CMD ["start", "server"]
