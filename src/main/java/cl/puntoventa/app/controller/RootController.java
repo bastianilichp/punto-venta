@@ -12,6 +12,6 @@ public class RootController {
 
     @GetMapping("/")
     public String redirectToLogin() {
-        return "redirect:/login";
+        return "redirect:/login.xhtml";
     }
 }
