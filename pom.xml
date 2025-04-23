@@ -69,11 +69,13 @@
             <classifier>jakarta</classifier>
         </dependency>
         
+    
         <dependency>
             <groupId>org.primefaces.themes</groupId>
             <artifactId>omega-theme</artifactId>
             <version>4.1.0</version>
-            <classifier>jakarta</classifier>
+            <scope>system</scope>
+            <systemPath>/C:/BastianIlich/personal/GIT/punto-venta/lib/omega-theme/4.1.0/omega-theme-4.1.0.jar</systemPath>
         </dependency>
         
         <!-- Test DOC TO PDF -->
