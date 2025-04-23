@@ -24,7 +24,7 @@
         </repository>
         <repository>
             <id>local-repo</id>
-            <url>file:///tmp/build_e62dcc2e/target/endorsed/</url>
+            <url>file:///tmp/build_e62dcc2e/lib/omega-theme/4.1.0/</url>
         </repository>
         
     </repositories>
