@@ -70,12 +70,13 @@
             <classifier>jakarta</classifier>
         </dependency>
         
-    
+            
         <dependency>
             <groupId>org.primefaces.themes</groupId>
             <artifactId>omega-theme</artifactId>
             <version>4.1.0</version>
             <classifier>jakarta</classifier>
+            <scope>compile</scope>
         </dependency>
         
         <!-- Test DOC TO PDF -->
