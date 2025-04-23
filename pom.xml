@@ -11,8 +11,7 @@
         <maven.compiler.release>17</maven.compiler.release>
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <failOnMissingWebXml>false</failOnMissingWebXml>
-        
+        <failOnMissingWebXml>false</failOnMissingWebXml>       
         <jakartaee>10.0.0</jakartaee>
     </properties>
     
@@ -73,10 +72,9 @@
         <dependency>
             <groupId>org.primefaces.themes</groupId>
             <artifactId>omega-theme</artifactId>
-            <version>4.1.0</version>
-            <classifier>jakarta</classifier>     
+            <version>4.1.0</version>                 
             <scope>system</scope>
-            <systemPath>${project.basedir}/lib/omega-theme-4.1.0.jar</systemPath>      
+            <systemPath>${project.build.directory}/endorsed/omega-theme/4.1.0/omega-theme-4.1.0.jar</systemPath>
         </dependency>
         
         <!-- Test DOC TO PDF -->
