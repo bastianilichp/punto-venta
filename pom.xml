@@ -69,11 +69,11 @@
             <classifier>jakarta</classifier>
         </dependency>
         
-        
         <dependency>
             <groupId>org.primefaces.themes</groupId>
             <artifactId>omega-theme</artifactId>
             <version>4.1.0</version>
+            <classifier>jakarta</classifier>
         </dependency>
         
         <!-- Test DOC TO PDF -->
@@ -134,7 +134,7 @@
     </dependencies>
     
     <build>
-        <finalName>puntoventa</finalName>
+       
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
