@@ -74,7 +74,9 @@
             <groupId>org.primefaces.themes</groupId>
             <artifactId>omega-theme</artifactId>
             <version>4.1.0</version>
-            <classifier>jakarta</classifier>           
+            <classifier>jakarta</classifier>     
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/omega-theme-4.1.0.jar</systemPath>      
         </dependency>
         
         <!-- Test DOC TO PDF -->
