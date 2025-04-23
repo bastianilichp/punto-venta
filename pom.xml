@@ -23,8 +23,8 @@
             <url>https://repository.primefaces.org</url>
         </repository>
         <repository>
-            <id>local-repo</id>
-            <url>file:///tmp/build_e62dcc2e/lib/omega-theme/4.1.0/</url>
+            <id>local-project-repo</id>
+            <url>file://${project.basedir}/lib</url>
         </repository>
         
     </repositories>
