@@ -39,8 +39,8 @@ cl\puntoventa\app\clases\UploadFile.class
 cl\puntoventa\app\controller\VentasNuevaController.class
 cl\puntoventa\app\to\TopProductosTO.class
 cl\puntoventa\app\helpers\SerializationUtils.class
+.netbeans_automatic_build
 cl\puntoventa\app\controller\FichaController.class
-cl\puntoventa\app\main\PuntoVentaApplication.class
 cl\puntoventa\app\bean\ProductosBean$1.class
 cl\puntoventa\app\bean\AppBean.class
 cl\puntoventa\app\bean\VentasDetallesBean.class

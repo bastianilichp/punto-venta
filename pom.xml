@@ -13,13 +13,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <failOnMissingWebXml>false</failOnMissingWebXml>       
         <jakartaee>10.0.0</jakartaee>
-    </properties>
-    <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.7.7</version>  <!-- Usa la versión que desees -->
-        <relativePath/> <!-- Look up parent from repository -->
-    </parent>
+    </properties> 
     
     <repositories>
         <repository>
@@ -36,12 +30,6 @@
     
     
     <dependencies>
-        
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-       
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>
             <artifactId>okhttp</artifactId>
@@ -150,8 +138,7 @@
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-crypto</artifactId>
             <version>5.3.1.RELEASE</version>
-        </dependency>
-        
+        </dependency>  
        
         
       
@@ -166,15 +153,7 @@
   
     <build>
        
-        <plugins>  
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>2.7.7</version>
-                <configuration>
-                    <layout>WAR</layout>
-                </configuration>
-            </plugin>   
+        <plugins>    
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
