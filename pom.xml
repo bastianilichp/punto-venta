@@ -126,6 +126,13 @@
             <artifactId>spring-security-crypto</artifactId>
             <version>5.3.1.RELEASE</version>
         </dependency>  
+        
+        <dependency>
+            <groupId>fish.payara.api</groupId>
+            <artifactId>payara-api</artifactId>
+            <version>6.2025.4</version>
+            <scope>provided</scope>
+        </dependency>
        
         
       

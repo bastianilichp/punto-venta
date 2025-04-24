@@ -1,5 +1,7 @@
 #!/bin/bash
-echo "Descargando Payara Micro..."
-mkdir -p server
-curl -L https://repo1.maven.org/maven2/fish/payara/distributions/payara-web/6.2024.12/payara-web-6.2024.12-sources.jar -o server/payara-micro-latest.jar
-echo "Payara Micro descargado correctamente."
+
+# Ruta al archivo JAR de Payara Micro
+PAYARA_JAR="server/payara-micro-6.2025.4.jar"
+
+# Comando para iniciar Payara Micro con el WAR desplegado
+java -jar $PAYARA_JAR --deploy target/punto-venta-1.0.war --port 8080
