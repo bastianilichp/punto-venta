@@ -31,12 +31,19 @@ import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import java.awt.GraphicsEnvironment;
+import java.awt.print.PrinterException;
+import java.awt.print.PrinterJob;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.Normalizer;
 import java.text.SimpleDateFormat;
+import javax.print.PrintService;
+import javax.print.PrintServiceLookup;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.printing.PDFPageable;
 import org.primefaces.PrimeFaces;
 import org.primefaces.model.file.UploadedFile;
 
@@ -552,8 +559,6 @@ public class Util {
         return periodo;
     }
 
-    
-
     public static String rutCero(String rut) {
         String[] rut_dv = rut.split("-");
         String rut_f = rut_dv[0];
@@ -571,5 +576,94 @@ public class Util {
         String normalized = Normalizer.normalize(input, Normalizer.Form.NFD);
         Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
         return pattern.matcher(normalized).replaceAll("");
+    }
+
+    public static void imprimirConDialogo(File fileToPdf) throws IOException, PrinterException {
+        PDDocument document = PDDocument.load(fileToPdf);
+        PrinterJob job = PrinterJob.getPrinterJob();
+        job.setPageable(new PDFPageable(document));
+
+// Verificamos modo gráfico
+        if (!GraphicsEnvironment.isHeadless()) {
+            System.out.println("🖨️ Mostrando diálogo de impresión...");
+            if (job.printDialog()) {
+                job.print();
+                System.out.println("✅ Impresión completada.");
+            } else {
+                System.out.println("❌ Impresión cancelada por el usuario.");
+            }
+        } else {
+            System.out.println("⚠️ Modo headless detectado. Imprimiendo directamente.");
+            job.print();
+        }
+
+        document.close();
+
+    }
+
+    public static void imprimirPdfDirectamente(File fileToPdf) {
+        try (PDDocument document = PDDocument.load(fileToPdf)) {
+
+            PrinterJob job = PrinterJob.getPrinterJob();
+            job.setPageable(new PDFPageable(document));
+
+            // Imprimir directamente (sin diálogo)
+            job.print();
+
+            System.out.println("✅ PDF enviado a la impresora predeterminada.");
+
+        } catch (Exception e) {
+            System.err.println("❌ Error al imprimir el PDF directamente:");
+            e.printStackTrace();
+        }
+    }
+
+    public static void imprimirEnImpresoraEspecifica(File fileToPdf, String nombreImpresora) {
+        try (PDDocument document = PDDocument.load(fileToPdf)) {
+
+            PrinterJob job = PrinterJob.getPrinterJob();
+            job.setPageable(new PDFPageable(document));
+
+            // Buscar la impresora por nombre
+            PrintService[] servicios = PrinterJob.lookupPrintServices();
+            boolean encontrada = false;
+
+            for (PrintService service : servicios) {
+                if (service.getName().equalsIgnoreCase(nombreImpresora)) {
+                    job.setPrintService(service);
+                    encontrada = true;
+                    break;
+                }
+            }
+
+            if (!encontrada) {
+                System.err.println("❌ Impresora '" + nombreImpresora + "' no encontrada.");
+                System.out.println("🖨️ Impresoras disponibles:");
+                for (PrintService service : servicios) {
+                    System.out.println(" - " + service.getName());
+                }
+                return;
+            }
+
+            job.print();
+            System.out.println("✅ PDF enviado a la impresora '" + nombreImpresora + "'.");
+
+        } catch (Exception e) {
+            System.err.println("❌ Error al imprimir en impresora específica:");
+            e.printStackTrace();
+        }
+    }
+
+    public static void listarImpresorasDisponibles() {
+        PrintService[] services = PrintServiceLookup.lookupPrintServices(null, null);
+
+        if (services.length == 0) {
+            System.out.println("❌ No se encontraron impresoras disponibles.");
+        } else {
+            System.out.println("🖨️ Impresoras disponibles:");
+            for (PrintService service : services) {
+                System.out.println(" - " + service.getName());
+            }
+        }
     }
 }

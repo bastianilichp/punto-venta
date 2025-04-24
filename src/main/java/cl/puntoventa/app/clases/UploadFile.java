@@ -27,7 +27,7 @@ public class UploadFile {
 
         //String destination = Util.getRealPath() + "/resources/upload/";
         String destination = FacesContext.getCurrentInstance().getExternalContext().getInitParameter("upload.location");
-
+        System.out.println(destination);
         String name_original = file.getFileName();
 
         //2018-06-01

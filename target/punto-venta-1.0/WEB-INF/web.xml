@@ -12,6 +12,12 @@
         -->
     </context-param>
     
+    <context-param>
+        <param-name>upload.location</param-name>      
+        <param-value>/ventas/detalle_ventas/</param-value>
+    </context-param>
+
+    
     
     <servlet>
         <servlet-name>Faces Servlet</servlet-name>

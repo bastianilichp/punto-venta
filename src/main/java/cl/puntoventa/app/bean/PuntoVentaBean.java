@@ -1,6 +1,8 @@
 package cl.puntoventa.app.bean;
 
+import cl.puntoventa.app.clases.UploadFile;
 import cl.puntoventa.app.clases.Util;
+import cl.puntoventa.app.controller.FichaController;
 import cl.puntoventa.app.controller.ProductosController;
 import cl.puntoventa.app.controller.VentasDetallesController;
 import cl.puntoventa.app.controller.VentasNuevaController;
@@ -19,6 +21,12 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.RollbackException;
 import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
+import java.awt.Desktop;
+import java.awt.GraphicsEnvironment;
+import java.awt.print.PrinterException;
+import java.awt.print.PrinterJob;
+import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -26,6 +34,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import javax.print.PrintService;
+import javax.print.PrintServiceLookup;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.printing.PDFPageable;
+import org.jodconverter.core.office.OfficeException;
 import org.primefaces.model.SortMeta;
 import org.primefaces.model.SortOrder;
 
@@ -61,6 +74,9 @@ public class PuntoVentaBean implements AppBean, Serializable {
     @Inject
     private VentasNuevaController ventasNuevaController;
 
+    @Inject
+    private FichaController fichaController;
+
     private Usuarios user;
 
     private final String HOME_PAGE_REDIRECT = "/view/mailbox/punto/index?faces-redirect=true";
@@ -70,6 +86,8 @@ public class PuntoVentaBean implements AppBean, Serializable {
     public void init() {
         this.prepareCreate();
         this.listar();
+
+        Util.listarImpresorasDisponibles();
 
     }
 
@@ -166,7 +184,7 @@ public class PuntoVentaBean implements AppBean, Serializable {
 //        totalVenta = subTotal - descuento;
     }
 
-    public String terminarVenta() {
+    public String terminarVenta() throws OfficeException, IOException, PrinterException {
 
         if (!ventasTO.isEmpty()) {
 
@@ -184,16 +202,29 @@ public class PuntoVentaBean implements AppBean, Serializable {
                     contador++;
                     //descontar Stock
                     productosController.descontarStock(to);
+
+                    //
+                    ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+                    context.getFlash().setKeepMessages(true);
+                    Util.avisoInfo("infoMsg", "Venta Creada");
+                    File fileDocx = fichaController.imprimirDetalleVenta(ventasTO, nueva);
+                    File fileToPdf = fichaController.libreOfficeToPdf(fileDocx, true);
+
+                    System.out.println("¿Headless?: " + GraphicsEnvironment.isHeadless());
+                    //guardar detalle
+                    // UploadFile.uploadActa(fileToPdf);
+                    //imprimirConDialogo(fileToPdf);
+                    Util.imprimirPdfDirectamente(fileToPdf);
+
+                    return HOME_PAGE_REDIRECT;
+
                 } else {
                     Util.avisoError("infoMsg", "No se guardo la venta.");
                 }
             }
 
             if (contador == ventasTO.size()) {
-                ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-                context.getFlash().setKeepMessages(true);
-                Util.avisoInfo("infoMsg", "Venta Creada");
-                return HOME_PAGE_REDIRECT;
+
             }
 
         } else {
