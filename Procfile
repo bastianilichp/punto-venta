@@ -1,0 +1,1 @@
+web: bin/setup-payara.sh && java -jar server/payara-micro.jar --deploy target/punto-venta-1.0.war --port $PORT
