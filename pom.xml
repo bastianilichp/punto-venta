@@ -132,10 +132,7 @@
             <artifactId>payara-api</artifactId>
             <version>6.2025.4</version>
             <scope>provided</scope>
-        </dependency>
-       
-        
-      
+        </dependency> 
        
         <dependency>
             <groupId>com.github.librepdf</groupId>
