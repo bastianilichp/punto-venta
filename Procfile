@@ -1,1 +1,1 @@
-web: ./tomee/bin/startup.sh
+web: ./tomee/bin/catalina.sh run
