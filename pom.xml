@@ -24,8 +24,7 @@
         <repository>
             <id>local-project-repo</id>
             <url>file://${project.basedir}/lib</url>
-        </repository>
-        
+        </repository>             
     </repositories>
     
     
@@ -130,10 +129,9 @@
         <dependency>
             <groupId>fish.payara.api</groupId>
             <artifactId>payara-api</artifactId>
-            <version>6.2025.4</version>
+            <version>6.2023.9</version>
             <scope>provided</scope>
-        </dependency> 
-       
+        </dependency>
         <dependency>
             <groupId>com.github.librepdf</groupId>
             <artifactId>openpdf</artifactId>
