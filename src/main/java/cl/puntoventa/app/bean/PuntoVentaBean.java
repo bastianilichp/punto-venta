@@ -213,7 +213,7 @@ public class PuntoVentaBean implements AppBean, Serializable {
                     System.out.println("¿Headless?: " + GraphicsEnvironment.isHeadless());
                     //guardar detalle
                     // UploadFile.uploadActa(fileToPdf);
-                    //imprimirConDialogo(fileToPdf);
+                    
                     Util.imprimirPdfDirectamente(fileToPdf);
 
                     return HOME_PAGE_REDIRECT;
