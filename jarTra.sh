@@ -1,0 +1,1 @@
+java -jar C:/BastianIlich/payara-micro-6.jar --deploy ./target/puntoventa.war --outputUberJar ./target/puntoventa.jar --noCluster
