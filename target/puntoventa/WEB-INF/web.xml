@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="5.0" xmlns="https://jakarta.ee/xml/ns/jakartaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd">
+  
+    <context-param>
+        <param-name>jakarta.faces.PROJECT_STAGE</param-name>
+           
+        <param-value>Production</param-value>
+        <!--
+            <param-value>Development</param-value>         
+        -->
+    </context-param>
+    
+    <context-param>
+        <param-name>upload.location</param-name>      
+        <param-value>/ventas/detalle_ventas/</param-value>
+    </context-param>
+
+    
+    
+    <servlet>
+        <servlet-name>Faces Servlet</servlet-name>
+        <servlet-class>jakarta.faces.webapp.FacesServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    
+    <servlet-mapping>
+        <servlet-name>Faces Servlet</servlet-name>
+        <url-pattern>*.hsm</url-pattern>
+    </servlet-mapping>
+    
+    <session-config>
+        <session-timeout>
+            -1
+        </session-timeout>
+    </session-config>
+    
+    
+    <context-param>
+        <param-name>jakarta.faces.FACELETS_SKIP_COMMENTS</param-name>
+        <param-value>true</param-value>
+    </context-param>
+    
+    <context-param>
+        <param-name>jakarta.faces.DATETIMECONVERTER_DEFAULT_TIMEZONE_IS_SYSTEM_TIMEZONE</param-name>
+        <param-value>true</param-value>
+    </context-param>
+    
+    
+    <!-- increase buffer size to avoid JSF1095 errors -->
+    <context-param>
+        <param-name>jakarta.faces.FACELETS_BUFFER_SIZE</param-name>
+        <param-value>131072</param-value>
+    </context-param>
+    
+    
+    
+    <welcome-file-list>
+        <welcome-file>login.hsm</welcome-file>
+    </welcome-file-list>
+    
+    
+    <context-param>
+        <param-name>primefaces.THEME</param-name>
+        <param-value>omega-#{guestPreferences.theme}</param-value>
+    </context-param>
+    
+    
+    <context-param>
+        <param-name>primefaces.FONT_AWESOME</param-name>
+        <param-value>true</param-value>
+    </context-param>
+    
+    <context-param>
+        <param-name>upload.location</param-name>      
+        <param-value>/opt/sga/upload/</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>jakarta.faces.FACELETS_LIBRARIES</param-name>
+        <param-value>/WEB-INF/primefaces-omega.taglib.xml</param-value>
+    </context-param>
+
+    
+    <mime-mapping>
+        <extension>ttf</extension>
+        <mime-type>application/font-sfnt</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>woff</extension>
+        <mime-type>application/font-woff</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>woff2</extension>
+        <mime-type>application/font-woff2</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>eot</extension>
+        <mime-type>application/vnd.ms-fontobject</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>eot?#iefix</extension>
+        <mime-type>application/vnd.ms-fontobject</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>svg</extension>
+        <mime-type>image/svg+xml</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>svg#exosemibold</extension>
+        <mime-type>image/svg+xml</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>svg#exobolditalic</extension>
+        <mime-type>image/svg+xml</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>svg#exomedium</extension>
+        <mime-type>image/svg+xml</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>svg#exoregular</extension>
+        <mime-type>image/svg+xml</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>svg#fontawesomeregular</extension>
+        <mime-type>image/svg+xml</mime-type>
+    </mime-mapping>
+    
+    <data-source>
+        <name>java:global/_puntoventa</name>        
+        <class-name>com.mysql.cj.jdbc.MysqlXADataSource</class-name>
+        <server-name>134.199.221.190</server-name>
+        <port-number>3306</port-number>
+        <database-name>botilleria?characterEncoding=utf8&amp;zeroDateTimeBehavior=convertToNull&amp;useSSL=false</database-name>
+        <user>botilleria</user>
+        <password>BlancoEncalada1215</password>
+        <max-pool-size>10</max-pool-size>
+        <min-pool-size>3</min-pool-size>
+    </data-source>
+
+  
+    
+</web-app>

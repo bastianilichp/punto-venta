@@ -1,0 +1,98 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+    <h:form id="formListProductos"> 
+        <p:toolbar>     
+            
+            <p:toolbarGroup align="left">
+                <p:commandButton  icon="pi pi-plus" value="Agregar Producto" 
+                                  oncomplete="PF('dialogAddProdcutos').show()"
+                                  update="formAddProd" 
+                                  styleClass="ui-button-outlined ui-button-success"/>
+            </p:toolbarGroup>
+            <p:toolbarGroup align="rigth">
+                <p:commandButton value="Exporta Excel" 
+                                 icon="pi pi-file-excel" 
+                                 styleClass="ui-button-outlined ui-button-info" 
+                                 onstart="PF('blockUIWidget').show()" 
+                                 oncomplete="PF('blockUIWidget').hide();">
+                    <p:dataExporter type="xlsxstream" target="dtListProductos" fileName="prodcutos" />
+                </p:commandButton>
+            </p:toolbarGroup>
+        </p:toolbar>
+        <p:dataTable id="dtListProductos"
+                     value="#{productoBean.productosList}"
+                     var="productos"
+                     lazy="true"
+                     paginator="true"
+                     rows="10"
+                     paginatorPosition="bottom"
+                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink}
+                     {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}  "
+                     rowsPerPageTemplate="5,10,15,20,25,50"
+                     currentPageReportTemplate="( {currentPage} of {totalPages} - Total : {totalRecords} )"       
+                     widgetVar="dtListProductos">
+            <p:ajax event="page" onstart="PF('blockUIWidget').show()" oncomplete="PF('blockUIWidget').hide()"/>
+
+            <p:column headerText="Codigo" field="codigo" style="width: 100px">
+                <h:outputText value="#{productos.codigo}"/>
+            </p:column>
+
+            <p:column headerText="Producto" style="width: 180px" field="nombre">
+                <h:outputText value="#{productos.nombre}"/>
+            </p:column>
+
+            <p:column headerText="Precio Compra" field="precioCompra" style="width: 110px"  styleClass="center">
+                <h:outputText value="#{productos.precioCompra}" styleClass="left">
+                    <f:convertNumber  type="currency" currencySymbol="$ " locale="es_CL"/> 
+                </h:outputText>
+            </p:column>
+
+            <p:column headerText="Precio Venta" field="precioVenta" style="width: 100px" styleClass="center">
+                <h:outputText value="#{productos.precioVenta}" styleClass="right">
+                    <f:convertNumber  type="currency" currencySymbol="$ " locale="es_CL"/> 
+                </h:outputText>
+            </p:column>
+
+            <p:column headerText="Stock" field="stock" style="width: 80px" styleClass="center">
+                <h:outputText value="#{productos.stock}" styleClass="center"/>
+            </p:column>
+
+            <p:column headerText="Categoría" field="categoria.descripcion" style="width: 110px" styleClass="center">
+                <f:facet name="filter" >
+                    <p:selectOneMenu onchange="PF('dtListProductos').filter()" 
+                                     filter="true"                                     
+                                     filterMatchMode="contains"
+                                     style="width: 100px">
+                        <f:selectItem itemLabel="Seleccione" itemValue="#{null}"  />
+                        <f:selectItems value="#{productoBean.listCategoria}" var="e" itemLabel="#{e.descripcion}" itemValue="#{e.descripcion}" />
+                    </p:selectOneMenu>
+                </f:facet>
+
+
+                <h:outputText value="#{productos.categoria.descripcion}" styleClass="center"/>
+            </p:column>
+
+            <p:column style="width: 80px" exportable="false" styleClass="center">
+                <p:commandButton  styleClass="rounded-button ui-button-warning" icon="pi pi-pencil"
+                                  action="#{productoBean.editarProductos(productos)}"
+                                  onstart="PF('blockUIWidget').show()" oncomplete="PF('blockUIWidget').hide()"
+                                  process="@this" title="Editar" update="formEditProd"/>
+                <p:spacer width="5px"/>
+                <p:commandButton  icon="pi pi-trash" process="@form"
+                                  title="Eliminar" styleClass="rounded-button ui-button-danger"
+                                  update="formDeleteProducto"
+                                  action="#{productoBean.prepareDelete(productos)}">
+
+                </p:commandButton>
+
+
+
+
+            </p:column>
+        </p:dataTable>
+    </h:form>
+</ui:composition>
+

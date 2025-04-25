@@ -1,0 +1,33 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">     
+
+    <p:dialog onShow="PF('dialogDeleteProducto').initPosition()" 
+              id="dialogDeleteProducto"
+              widgetVar="dialogDeleteProducto" 
+              modal="true" showEffect="explode"
+              resizable="false" appendTo="@(body)" width="300"
+              header="Eliminar Producto" closeOnEscape="true">
+        <h:form id="formDeleteProducto">
+            <h:panelGroup id="displayDeletePro" >
+                <p:panelGrid columns="1"  styleClass="outerpanelgrid"  >
+                    <h:outputText value ="Desea eliminar el siguiente producto?"/>  
+                    <h:outputText value ="#{productoBean.deleteProd.codigo} - #{productoBean.deleteProd.nombre}"/> 
+                </p:panelGrid>
+                <p:panelGrid columns="2"  styleClass="outerpanelgrid" >
+                    <p:commandButton value="Aceptar" styleClass="ui-button-success"
+                                     action="#{productoBean.delete()}"
+                                     update="formListProductos, formMessage"
+                                     oncomplete="PF('dialogDeleteProducto').hide();"/>
+                    <p:commandButton value="Cancelar" 
+                                     oncomplete="PF('dialogDeleteProducto').hide()" 
+                                     process="@this" immediate="true"
+                                     styleClass="ui-button-danger"/>
+                </p:panelGrid>
+            </h:panelGroup>
+        </h:form>
+    </p:dialog>
+</ui:composition>

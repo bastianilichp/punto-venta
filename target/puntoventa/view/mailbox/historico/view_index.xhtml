@@ -1,0 +1,117 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+    <h:form id="formVentasHistoria">
+        <p:toolbar> 
+            <p:toolbarGroup align="left">
+                <p:outputLabel for="fechaD" value="Fecha Desde:" style="font-weight: bold;width: 90px"/>
+                <p:calendar locale="es" id="fechaD"
+                            readonlyInput="false"
+                            size="15"
+                            maxlength="50"                                                 
+                            pattern="dd-MM-yyyy"
+                            required="false"    
+                            navigator="true"
+                            value="#{historicoBean.fechaDesde}"/> 
+
+                <p:spacer width="10px"/>
+
+                <p:outputLabel for="fechaH" value="Fecha Hasta:" style="font-weight: bold;width: 90px"/>
+                <p:calendar locale="es" id="fechaH"
+                            readonlyInput="false"
+                            size="15"
+                            maxlength="50"                                                 
+                            pattern="dd-MM-yyyy"
+                            required="false"    
+                            navigator="true" 
+                            value="#{historicoBean.fechaHasta}"/> 
+                <p:spacer width="5px"/>
+                <p:commandButton 
+                    icon="pi pi-search" title="Buscar"
+                    styleClass="rounded-button ui-button-warning"
+                    action="#{historicoBean.buscarVentasHistorico}"                  
+                    update=":formVentasHistoria:dtVentasHistoria"
+                    onstart="PF('blockUIWidget').show()" 
+                    oncomplete="PF('blockUIWidget').hide();">    
+
+                </p:commandButton>
+
+
+            </p:toolbarGroup>
+            <p:toolbarGroup align="rigth">
+                <p:commandButton value="Exporta Excel" 
+                                 icon="pi pi-file-excel" 
+                                 styleClass="ui-button-outlined ui-button-info" 
+                                 onstart="PF('blockUIWidget').show()" 
+                                 oncomplete="PF('blockUIWidget').hide();">
+                    <p:dataExporter type="xlsxstream" target="dtVentasHistoria" fileName="detalle_ventas" />
+                </p:commandButton>
+            </p:toolbarGroup>
+        </p:toolbar>
+        <p:dataTable id="dtVentasHistoria"
+                     value="#{historicoBean.listaVentasHistoricos}"
+                     sortBy="#{historico.venta.id}"
+                     var="historico"                    
+                     paginator="true"
+                     rows="10"
+                     paginatorPosition="bottom"
+                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink}
+                     {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}  "
+                     rowsPerPageTemplate="5,10,15,20,25,50"
+                     currentPageReportTemplate="( {currentPage} of {totalPages} - Total : {totalRecords} )"       
+                     widgetVar="dtVentasHistoria">
+
+            <p:ajax event="page" onstart="PF('blockUIWidget').show()" oncomplete="PF('blockUIWidget').hide()"/>
+
+            <p:headerRow field="venta.id"
+                         expandable="true"
+                         expanded="#{false}">
+
+                <p:column headerText="N° Venta" style="width: 100px" >
+                    <h:outputText value="#{historico.venta.id}"/>
+                </p:column>
+
+
+                <p:column headerText="Fecha Venta" style="width: 100px" >
+                    <h:outputText value="#{historico.venta.fechayhora}">
+                        <f:convertDateTime pattern="dd-MM-yyyy"  />
+                    </h:outputText>
+                </p:column> 
+
+                <p:column headerText="Descuento Venta"  style="width: 80px" >
+                    <h:outputText value="#{historico.venta.descuento}">
+                        <f:convertNumber  type="currency" currencySymbol="$ " locale="es_CL"/> 
+                    </h:outputText>
+                </p:column>
+            </p:headerRow>
+
+
+            <p:column headerText="Codigo" style="width: 100px" styleClass="center">
+                <h:outputText value="#{historico.codigo}">                  
+                </h:outputText>
+            </p:column> 
+
+            <p:column headerText="Nombre" style="width: 100px" styleClass="center">
+                <h:outputText value="#{historico.nombre}">                  
+                </h:outputText>
+            </p:column>
+
+            <p:column headerText="Cantidad"  style="width: 50px" styleClass="center">
+                <h:outputText value="#{historico.cantidad}" />
+            </p:column>
+
+            <p:column headerText="Precio"  style="width: 80px" styleClass="center">
+                <h:outputText value="#{historico.precio}">
+                    <f:convertNumber  type="currency" currencySymbol="$ " locale="es_CL"/> 
+                </h:outputText>
+            </p:column>
+
+
+
+
+        </p:dataTable>
+    </h:form>
+</ui:composition>
