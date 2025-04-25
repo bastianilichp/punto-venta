@@ -131,11 +131,11 @@
     <data-source>
         <name>java:global/_puntoventa</name>        
         <class-name>com.mysql.cj.jdbc.MysqlXADataSource</class-name>
-        <server-name>ba7cklycwdpg69mbxzyy-mysql.services.clever-cloud.com</server-name>
-        <port-number>20255</port-number>
-        <database-name>ba7cklycwdpg69mbxzyy?characterEncoding=utf8&amp;zeroDateTimeBehavior=convertToNull&amp;useSSL=false</database-name>
-        <user>utdgonlukkd7pbtm</user>
-        <password>4dn78UDjIhgJFzirSCLH</password>
+        <server-name>134.199.221.190</server-name>
+        <port-number>3306</port-number>
+        <database-name>botilleria?characterEncoding=utf8&amp;zeroDateTimeBehavior=convertToNull&amp;useSSL=false</database-name>
+        <user>botilleria</user>
+        <password>BlancoEncalada1215</password>
         <max-pool-size>10</max-pool-size>
         <min-pool-size>3</min-pool-size>
     </data-source>

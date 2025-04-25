@@ -65,30 +65,35 @@ public class FichaController {
             List<Variable> fi1 = new ArrayList<>();
             List<Variable> fi2 = new ArrayList<>();
             List<Variable> fi3 = new ArrayList<>();
+            List<Variable> fi4 = new ArrayList<>();
 
             if (ventasTO.isEmpty()) {
                 fi1.add(new TextVariable("${PRODUCTO}", ""));
                 fi2.add(new TextVariable("${CANTIDAD}", ""));
                 fi3.add(new TextVariable("${VALOR}", ""));
+                fi4.add(new TextVariable("${UNITARIO}", ""));
+
             } else {
                 for (VentasTO v : ventasTO) {
+                    Integer valor = v.getPrecioVenta() * v.getCantidad();
 
-                    fi1.add(new TextVariable("${PRODUCTO}", v.getNombre()));
+                    fi1.add(new TextVariable("${PRODUCTO}", v.getNombre()  + v.getCodigo()));
                     fi2.add(new TextVariable("${CANTIDAD}", v.getCantidad().toString()));
-                    fi3.add(new TextVariable("${VALOR}", "$ " +totalFormat.format(v.getPrecioVenta())));
-
+                    fi3.add(new TextVariable("${VALOR}", "$ " + totalFormat.format(valor)));
+                    fi4.add(new TextVariable("${UNITARIO}", "$ " + totalFormat.format(v.getPrecioVenta())));
                 }
+
             }
 
             tableProductos.addVariable(fi1);
             tableProductos.addVariable(fi2);
             tableProductos.addVariable(fi3);
-
+            tableProductos.addVariable(fi4);
             variables.addTableVariable(tableProductos);
 
             variables.addTextVariable(new TextVariable("${DESCUENTO}", "$ " + totalFormat.format(nueva.getDescuento())));
-            variables.addTextVariable(new TextVariable("${SUBTOTAL}", "$ " +totalFormat.format(nueva.getSubtotal())));
-            variables.addTextVariable(new TextVariable("${TOTAL}", "$ " +totalFormat.format(nueva.getTotal())));
+            variables.addTextVariable(new TextVariable("${SUBTOTAL}", "$ " + totalFormat.format(nueva.getSubtotal())));
+            variables.addTextVariable(new TextVariable("${TOTAL}", "$ " + totalFormat.format(nueva.getTotal())));
 
             docx.fillTemplate(variables);
             File file;

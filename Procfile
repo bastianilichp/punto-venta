@@ -1,1 +1,0 @@
-web: export JAVA_OPTS="-DPORT=$PORT" && ./tomee/bin/catalina.sh run

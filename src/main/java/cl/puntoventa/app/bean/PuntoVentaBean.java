@@ -214,7 +214,7 @@ public class PuntoVentaBean implements AppBean, Serializable {
                     //guardar detalle
                     // UploadFile.uploadActa(fileToPdf);
                     
-                    Util.imprimirPdfDirectamente(fileToPdf);
+                   // Util.imprimirPdfDirectamente(fileToPdf);
 
                     return HOME_PAGE_REDIRECT;
 
