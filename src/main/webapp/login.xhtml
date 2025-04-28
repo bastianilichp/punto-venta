@@ -28,6 +28,9 @@
     -->
 
     <h:body  style="padding-top:75px;background-color:#525252;">
+        <f:metadata>
+            <f:viewAction action="#{loginBean.showMessage}"/>
+        </f:metadata>
 
 
 
@@ -92,38 +95,27 @@
                                              action="#{loginBean.login()}">
                             </p:commandButton>
 
-<!--                            <p:commandLink value="Recuperar contraseña" oncomplete="PF('dlgRecuperarPassword').show()"/>-->
+                            <!--                            <p:commandLink value="Recuperar contraseña" oncomplete="PF('dlgRecuperarPassword').show()"/>-->
 
                             <br/>
-                            
+
                         </div>
                     </div>
                 </p:panel>
             </div>
 
         </h:form>
+        <p:dialog id="dialogExpirada" widgetVar="dialogExpirada" modal="true" showEffect="explode" position="center" closable="false"
+                  showHeader="false"
+                  resizable="false" closeOnEscape="false" class="w-6">
+            <center>
+                <h1>¡Su sesion ha expirado !</h1>
 
+                <h2><a href="#{request.contextPath}/login.hsm" style="font-size: 20px" >Click aquí para volver a iniciar sesión   </a></h2>
 
-
-        <p:dialog header="Recuperar Contraseña" modal="true" widgetVar="dlgRecuperarPassword" id="dlgRecuperarPassword"
-                  class="w-6">
-            <h:form id="formRecovery">
-                <h:panelGroup styleClass="w-full">
-                    <p:panelGrid columns="2" columnClasses="col-3, col-9" styleClass="w-full">
-                        <p:outputLabel value="Email*" for="@next"/>
-                        <p:inputText id="txtEmail" styleClass="w-full" value="#{loginBean.email}"/>
-                    </p:panelGrid>
-                </h:panelGroup>
-                <div class="p-2">
-                    <p:commandButton value="Recuperar" styleClass="mr-2"
-                                     action="#{loginBean.recuperarContrasena}"
-                                     update="formRecovery formMessage"
-                                     onstart="PF('blockUIWidget').show()" 
-                                     oncomplete="PF('blockUIWidget').hide()"/>
-                    <p:commandButton value="Cancelar" onclick="PF('dlgRecuperarPassword').hide()"/>
-                </div>
-            </h:form>
+            </center>
         </p:dialog>
+
 
         <h:outputStylesheet name="css/primeicons.css" library="omega-layout"/>
         <h:outputStylesheet name="css/primeflex.min.css" library="omega-layout"/>

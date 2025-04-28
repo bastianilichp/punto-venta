@@ -20,15 +20,12 @@
             <id>prime-repo</id>
             <name>PrimeFaces Maven Repository</name>
             <url>https://repository.primefaces.org</url>
-        </repository>
-        <repository>
-            <id>local-project-repo</id>
-            <url>file://${project.basedir}/lib</url>
-        </repository>             
+        </repository>                  
     </repositories>
     
     
-    <dependencies>
+    <dependencies>       
+        
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>
             <artifactId>okhttp</artifactId>
@@ -39,9 +36,8 @@
             <artifactId>aspose-cells</artifactId>
             <version>23.1</version>
             <type>jar</type>
-        </dependency>
-
-
+        </dependency>      
+     
         <dependency>
             <groupId>jakarta.platform</groupId>
             <artifactId>jakarta.jakartaee-api</artifactId>
@@ -127,11 +123,12 @@
         </dependency>  
         
         <dependency>
-            <groupId>fish.payara.api</groupId>
-            <artifactId>payara-api</artifactId>
-            <version>6.2023.9</version>
-            <scope>provided</scope>
+            <groupId>fish.payara.extras</groupId>
+            <artifactId>payara-micro</artifactId>
+            <version>6.2023.10</version>
         </dependency>
+
+     
         <dependency>
             <groupId>com.github.librepdf</groupId>
             <artifactId>openpdf</artifactId>

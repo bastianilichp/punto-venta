@@ -24,6 +24,7 @@ import jakarta.inject.Named;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.servlet.http.HttpSession;
+import java.util.Map;
 import org.primefaces.PrimeFaces;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
@@ -262,6 +263,31 @@ public class LoginBean implements AppBean, Serializable {
 
     }
 
+    public void showMessage() {
+        Map<String, String> paramMap = FacesContext.getCurrentInstance()
+                .getExternalContext().getRequestParameterMap();
+
+        if (!paramMap.isEmpty()) {
+            if (paramMap.get("error") != null) {
+                boolean error = Boolean.parseBoolean(paramMap.get("error"));
+                if (error == true) {
+                    Util.avisoError("infoMsg", "Para poder ver este recurso, favor de iniciar sesión");
+                }
+            }
+
+            if (paramMap.get("logout") != null) {
+                boolean logout = Boolean.parseBoolean(paramMap.get("logout"));
+                Util.getSession().invalidate();
+                if (logout == true) {
+                    PrimeFaces.current().executeScript("PF('dialogExpirada').show()");
+                    //Util.avisoError("infoMsg", "Se ha cerrado la sesión por inactividad");
+                }
+            }
+
+        }
+
+    }
+
     public boolean validarFormMaster(String prefix, Usuarios user) {
 
         boolean validar = true;
@@ -311,6 +337,7 @@ public class LoginBean implements AppBean, Serializable {
         }
 
     }
+
     public void recuperarContrasena() {
         if (!validarFormRecovery("Recovery")) {
             return;

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      lang="es"
+      xml:lang="es">
+
+    <h:head>
+        <f:facet name="first">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+            <meta name="apple-mobile-web-app-capable" content="yes"/>
+        </f:facet>
+        <title>Error 500</title>
+        <h:outputScript library="primefaces" name="jquery/jquery.js" />
+        <h:outputScript name="js/layout.js" library="omega-layout"/>
+        <h:outputScript name="js/prism.js" library="omega-layout"/>
+        <h:outputScript library="js" name="spanishLocale.js"/>
+        <h:outputStylesheet name="css/primeicons.css" library="omega-layout"/>
+        <h:outputStylesheet name="css/primeflex.min.css" library="omega-layout"/>
+        <h:outputStylesheet name="css/layout-#{guestPreferences.layout}.css" library="omega-layout"/>
+        <h:outputStylesheet library="css" name="index.css"/>
+        <h:outputStylesheet library="webjars" name="primeflex/3.3.1/primeflex.min.css" />
+        <link rel="shortcut icon" type="image/x-icon" href="#{resource['img/favicon.ico']}"/>
+    </h:head>
+    <h:body>
+        <div class="w-full h-full  flex justify-content-center align-items-center">
+            <p:card style="width: 700px; max-width: 100%; background: white; height: 75vh">
+                <f:facet name="header">
+                    <div class=" w-full flex justify-content-center align-items-center">
+                        <p:graphicImage library="img" name="logo_gore_2024.png" style="width: 50%; height: auto; margin-top: 20px"/>
+                    </div>
+
+                </f:facet>
+                <f:facet name="title">
+                    <span style="display: block; width: 100%; text-align: center">Error 500 - Internal Server Error</span>
+                </f:facet>
+                <h:outputText value="Error Code: #{errorHandler.statusCode}"></h:outputText>
+                <h:outputText value="Request URI : #{errorHandler.requestURI}"></h:outputText>
+                
+            </p:card>
+        </div>
+    </h:body>
+</html>

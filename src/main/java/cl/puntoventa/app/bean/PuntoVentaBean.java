@@ -214,7 +214,7 @@ public class PuntoVentaBean implements AppBean, Serializable {
                     //guardar detalle
                     // UploadFile.uploadActa(fileToPdf);
                     
-                   // Util.imprimirPdfDirectamente(fileToPdf);
+                   Util.imprimirEnImpresoraEspecifica(fileToPdf,"Brother DCP-T220");
 
                     return HOME_PAGE_REDIRECT;
 
