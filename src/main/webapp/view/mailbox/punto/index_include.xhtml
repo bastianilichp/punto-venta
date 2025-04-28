@@ -16,7 +16,7 @@
     <h:form id="formPuntoVenta"> 
         <p:outputLabel value="Código de Barra*"  for="codigoBarra" style="font-weight: bold;"/>
         <br/>
-        <p:autoComplete id="codigoBarra" placeholder="Escenea el código o escríbelo y presiona Enter" value="#{puntoVentaBean.codigo}"  inputStyle="width: 1000px;"    >
+        <p:autoComplete id="codigoBarra" placeholder="Escenea el código o escríbelo y presiona Enter" value="#{puntoVentaBean.codigo}"  inputStyle="width: 1000px;" autocomplete="on"   >
             <p:ajax listener="#{puntoVentaBean.buscarProductos()}" update="dataTableVentas :formMessage codigoBarra subTotal descuento totalF" 
                     onstart="PF('blockUIWidget').show()" oncomplete="PF('blockUIWidget').hide()" />
         </p:autoComplete>
@@ -41,8 +41,7 @@
                         {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}  "
                         rowsPerPageTemplate="10,20,30,40,50"
                         currentPageReportTemplate="( {currentPage} of {totalPages} - Total : {totalRecords} )"
-                        widgetVar="TableVentas"
-                       >
+                        widgetVar="TableVentas">
 
                         <p:ajax event="page" onstart="PF('blockUIWidget').show()" oncomplete="PF('blockUIWidget').hide()"/>
 

@@ -73,6 +73,8 @@ public class VentaHistoricoBean implements AppBean, Serializable {
         this.listDetalleH = new ArrayList<>();
         this.listaVentasHistoricos = new ArrayList<>();
 
+        this.fechaDesde = new Date();
+        this.fechaHasta = new Date();
     }
 
     public void buscarVentasHistorico() {

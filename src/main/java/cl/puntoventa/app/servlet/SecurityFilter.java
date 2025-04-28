@@ -23,7 +23,7 @@ public class SecurityFilter implements Filter {
 
     private static String URL_LOGIN = "/login.hsm";
     private static String URL_ROOT_DESARROLLO = "/puntoventa/";
-    private static String URL_HOME = "/view/index.hsm";
+    private static String URL_HOME = "/view/mailbox/index.hsm";
     private static String URL_ROOT = "/puntoventa/";
 
     private List<String> excludeUrl;

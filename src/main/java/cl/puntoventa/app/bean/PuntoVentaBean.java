@@ -2,6 +2,7 @@ package cl.puntoventa.app.bean;
 
 import cl.puntoventa.app.clases.UploadFile;
 import cl.puntoventa.app.clases.Util;
+import cl.puntoventa.app.controller.ExportarController;
 import cl.puntoventa.app.controller.FichaController;
 import cl.puntoventa.app.controller.ProductosController;
 import cl.puntoventa.app.controller.VentasDetallesController;
@@ -77,6 +78,9 @@ public class PuntoVentaBean implements AppBean, Serializable {
     @Inject
     private FichaController fichaController;
 
+    @Inject
+    private ExportarController exportarController;
+
     private Usuarios user;
 
     private final String HOME_PAGE_REDIRECT = "/view/mailbox/punto/index?faces-redirect=true";
@@ -86,8 +90,6 @@ public class PuntoVentaBean implements AppBean, Serializable {
     public void init() {
         this.prepareCreate();
         this.listar();
-
-        Util.listarImpresorasDisponibles();
 
     }
 
@@ -108,6 +110,8 @@ public class PuntoVentaBean implements AppBean, Serializable {
         this.pagaCon = 0;
         this.user = new Usuarios();
 
+        String headlessProperty = System.getProperty("java.awt.headless");
+        System.out.println(headlessProperty);
     }
 
     public void buscarProductos() {
@@ -209,13 +213,14 @@ public class PuntoVentaBean implements AppBean, Serializable {
                     Util.avisoInfo("infoMsg", "Venta Creada");
                     File fileDocx = fichaController.imprimirDetalleVenta(ventasTO, nueva);
                     File fileToPdf = fichaController.libreOfficeToPdf(fileDocx, true);
-
-                    System.out.println("¿Headless?: " + GraphicsEnvironment.isHeadless());
                     //guardar detalle
                     // UploadFile.uploadActa(fileToPdf);
-                    
-                   Util.imprimirEnImpresoraEspecifica(fileToPdf,"Brother DCP-T220");
 
+                    httpSession.setAttribute("fileToPdf", fileToPdf);
+
+                    //exportarController.descargarDetalleVenta();
+
+                    Util.imprimirPdfDirectamente(fileToPdf);
                     return HOME_PAGE_REDIRECT;
 
                 } else {
