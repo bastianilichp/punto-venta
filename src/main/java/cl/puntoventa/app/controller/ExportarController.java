@@ -13,7 +13,7 @@ public class ExportarController {
 
         ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
 
-        externalContext.redirect(externalContext.getRequestContextPath() + "/detalle?file");
+        externalContext.redirect(externalContext.getRequestContextPath() + "/detalle");
 
     }
 
