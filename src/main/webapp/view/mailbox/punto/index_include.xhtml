@@ -4,26 +4,33 @@
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui">
 
+    <script type="text/javascript">
+        // JavaScript to listen for the Enter key
+        document.addEventListener('keypress', function (event) {
+            if (event.code === 'Space') {
+                event.preventDefault(); // Prevent the default action (form submission)
+                document.getElementById('formPuntoVenta:botonVender').click(); // Trigger the button click
+            }
+        });
+    </script>
 
-    <h:form id="formCodigo">
+
+    <h:form id="formCodigo"> 
         <p:outputLabel value="Código de Barra*"  for="codigoBarra" style="font-weight: bold;"/>
         <br/>
-        <p:inputText id="codigoBarra" placeholder="Escenea el código o escríbelo y presiona Enter" autocomplete="on"
-                        value="#{puntoVentaBean.codigo}"  >
-            <p:ajax listener="#{puntoVentaBean.buscarProductos()}" process="@form"
-                    update=":formPuntoVenta:dataTableVentas :formMessage formCodigo:codigoBarra
-                    formPuntoVenta:subTotal
-                    formPuntoVenta:descuento
-                    formPuntoVenta:totalF"
-                    onstart="PF('blockUIWidget').show()" oncomplete="PF('blockUIWidget').hide()" />
-        </p:inputText>
-    </h:form>
+        <p:inputText id="codigoBarra" placeholder="Escenea el código o escríbelo y presiona Enter" autocomplete="on" style="width: 800px"
+                     value="#{puntoVentaBean.codigo}" widgetVar="codigoBarraWidget" />           
+
+        <p:commandButton action="#{puntoVentaBean.buscarProductos()}"  icon="pi pi-search"
+                         update=":formMessage formPuntoVenta:dataTableVentas codigoBarra formPuntoVenta:totalF formPuntoVenta:subTotal formPuntoVenta:descuento"
+                         styleClass="rounded-button ui-button-flat ui-button-flat"/>
+    </h:form> 
     <br/>
     <br/>
 
     <h:form id="formPuntoVenta"> 
         <p:splitter  styleClass="mb-5" widgetVar="splitter" >
-            <p:splitterPanel styleClass="flex align-items-center justify-content-center" size="150" minSize="150">
+            <p:splitterPanel styleClass="flex align-items-center justify-content-center" size="150" minSize="150" >
                 <h:panelGroup> 
                     <p:dataTable                 
                         id="dataTableVentas"
@@ -59,7 +66,7 @@
 
                         <p:column  headerText="Cantidad"   width="40px">
                             <h:inputText value="#{ventasTO.cantidad}" style="width: 50px" styleClass="center">
-                                <p:ajax update="total formPuntoVenta:subTotal formPuntoVenta:totalF" listener="#{puntoVentaBean.modificarCantidad(ventasTO)}"></p:ajax>
+                                <p:ajax update="total formPuntoVenta:subTotal formPuntoVenta:totalF formPuntoVenta:vuelto" listener="#{puntoVentaBean.modificarCantidad(ventasTO)}"></p:ajax>
                             </h:inputText>
                         </p:column>
 
@@ -74,6 +81,7 @@
                                              action="#{puntoVentaBean.limpiarVenta(ventasTO)}"
                                              update="dataTableVentas formPuntoVenta:subTotal formPuntoVenta:totalF"/>
                         </p:column>
+
                     </p:dataTable>
 
 
@@ -92,35 +100,39 @@
 
                         <p:outputLabel for="descuento" value="Descuento:" style="font-weight: bold;"/>
                         <p:inputText id="descuento"  value="#{puntoVentaBean.descuento}" style="width: 80px; height: 80%">
-                            <p:ajax update="totalF" listener="#{puntoVentaBean.calcularTotal}"></p:ajax>
-                            <f:convertNumber  type="currency" currencySymbol="$ " locale="es_CL"/> 
+                            <p:ajax update="totalF vuelto" listener="#{puntoVentaBean.calcularTotal}"></p:ajax>
+
                         </p:inputText>
 
                         <p:outputLabel for="totalF" value="TOTAL:" style="font-weight: bold; font-size: 18px; color: red"/>
-                        <p:outputLabel id="totalF"  value="#{puntoVentaBean.totalVenta}"> 
+                        <p:outputLabel id="totalF"  value="#{puntoVentaBean.totalVenta}" style="font-weight: bold; font-size: 18px;"> 
                             <f:convertNumber  type="currency" currencySymbol="$ " locale="es_CL"/> 
                         </p:outputLabel>
 
                         <p:outputLabel for="paga" value="PAGA CON:" style="font-weight: bold; font-size: 12px"/>
                         <p:inputText id="paga"  value="#{puntoVentaBean.pagaCon}"> 
                             <p:ajax update="vuelto" ></p:ajax>
-                            <f:convertNumber  type="currency" currencySymbol="$ " locale="es_CL"/> 
+
                         </p:inputText>
 
                         <p:outputLabel for="vuelto" value="VUELTO: " style="font-weight: bold; font-size: 12px"/>
                         <p:outputLabel id="vuelto"  value="#{puntoVentaBean.pagaCon - puntoVentaBean.totalVenta }"> 
-                            <f:convertNumber  type="currency" currencySymbol="$ " locale="es_CL"/> 
+                            <f:convertNumber  type="currency" currencySymbol="$ " locale="es_CL"/>                             
                         </p:outputLabel>
 
                         <p:commandButton value="VENDER" styleClass="ui-button-raised ui-button-success"  icon="pi pi-check" iconPos="right" id="botonVender"
-                                         action="#{puntoVentaBean.terminarVenta}" 
-                                         onstart="PF('blockUIWidget').show()" oncomplete="PF('blockUIWidget').hide()"
-                                         update="formPuntoVenta :formMessage"/>
+                                         action="#{puntoVentaBean.terminarVenta}" process="@form"
+                                         onstart="PF('blockUIWidget').show()"
+                                         oncomplete="PF('blockUIWidget').hide();setTimeout(function() { document.getElementById('formCodigo:codigoBarra').focus(); }, 100);"
+                                         update=":formPuntoVenta :formMessage"/>
 
                         <p:commandButton  value="CANCELAR" styleClass="ui-button-raised ui-button-danger" icon="pi pi-times" iconPos="right"
-                                          action="#{puntoVentaBean.cancelarVenta()}"  process="@form"
-                                          onstart="PF('blockUIWidget').show()" oncomplete="PF('blockUIWidget').hide()"
+                                          process="@form"
+                                          action="#{puntoVentaBean.cancelarVenta()}"
+                                          onstart="PF('blockUIWidget').show()" 
+                                          oncomplete="PF('blockUIWidget').hide();setTimeout(function() { document.getElementById('formCodigo:codigoBarra').focus(); }, 100);"
                                           update="formPuntoVenta :formMessage"/>
+
 
 
                     </p:panelGrid>

@@ -77,7 +77,7 @@ public class FichaController {
                 for (VentasTO v : ventasTO) {
                     Integer valor = v.getPrecioVenta() * v.getCantidad();
 
-                    fi1.add(new TextVariable("${PRODUCTO}", v.getNombre()  + v.getCodigo()));
+                    fi1.add(new TextVariable("${PRODUCTO}", v.getNombre()));
                     fi2.add(new TextVariable("${CANTIDAD}", v.getCantidad().toString()));
                     fi3.add(new TextVariable("${VALOR}", "$ " + totalFormat.format(valor)));
                     fi4.add(new TextVariable("${UNITARIO}", "$ " + totalFormat.format(v.getPrecioVenta())));

@@ -37,6 +37,8 @@ public class ProductosBean implements AppBean, Serializable {
     private CategoriaController categoriaController;
 
     private List<Categoria> listCategoria;
+    
+    private final String HOME_PAGE_REDIRECT = "/view/mailbox/productos/index?faces-redirect=true";
 
     public Producto getProductos() {
         return productos;
@@ -142,7 +144,7 @@ public class ProductosBean implements AppBean, Serializable {
     public void update() {
         if (productosController.update(this.editProducto)) {
             Util.avisoInfo("infoMsg", "Producto Editado");
-            PF.current().executeScript("PF('dialogEditProdcutos').hide()");
+            PF.current().executeScript("PF('dialogEditProdcutos').hide()");          
         }
     }
 

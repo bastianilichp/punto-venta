@@ -96,7 +96,6 @@ public class PuntoVentaBean implements AppBean, Serializable {
     @Override
     public void listar() {
         user = (Usuarios) httpSession.getAttribute("userSession");
-        
 
     }
 
@@ -191,7 +190,8 @@ public class PuntoVentaBean implements AppBean, Serializable {
 //        totalVenta = subTotal - descuento;
     }
 
-    public String terminarVenta() throws OfficeException, IOException, PrinterException {
+    public void terminarVenta() throws OfficeException, IOException, PrinterException {
+        System.out.println("inicio Terminar Venta");
 
         if (!ventasTO.isEmpty()) {
 
@@ -199,7 +199,7 @@ public class PuntoVentaBean implements AppBean, Serializable {
 
             if (nueva == null) {
                 Util.avisoError("infoMsg", "Error al crear la nueva venta. Intente nuevamente.");
-                return null;
+
             }
 
             Integer contador = 0;
@@ -210,28 +210,21 @@ public class PuntoVentaBean implements AppBean, Serializable {
                     //descontar Stock
                     productosController.descontarStock(to);
 
-                    //
-                    ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-                    context.getFlash().setKeepMessages(true);
-                    Util.avisoInfo("infoMsg", "Venta Creada");
-                    File fileDocx = fichaController.imprimirDetalleVenta(ventasTO, nueva);
-                    File fileToPdf = fichaController.libreOfficeToPdf(fileDocx, true);
-                    //guardar detalle
-                    // UploadFile.uploadActa(fileToPdf);
-
-                    httpSession.setAttribute("fileToPdf", fileToPdf);
-
-                    //exportarController.descargarDetalleVenta();
-
-                    //Util.imprimirEnImpresoraEspecifica(fileToPdf,"Brother DCP-T220");
-                    return HOME_PAGE_REDIRECT;
-
                 } else {
                     Util.avisoError("infoMsg", "No se guardo la venta.");
                 }
             }
 
             if (contador == ventasTO.size()) {
+//                File fileDocx = fichaController.imprimirDetalleVenta(ventasTO, nueva);
+//                File fileToPdf = fichaController.libreOfficeToPdf(fileDocx, true); //guardar detalle
+//                UploadFile.uploadActa(fileToPdf);
+//                httpSession.setAttribute("fileToPdf", fileToPdf);
+//                exportarController.descargarDetalleVenta();
+//                Util.imprimirConDialogo(fileToPdf);
+
+                Util.avisoInfo("infoMsg", "Venta Creada");
+                cancelarVenta();
 
             }
 
@@ -239,11 +232,16 @@ public class PuntoVentaBean implements AppBean, Serializable {
 
             Util.avisoError("infoMsg", "No hay ventas para procesar.");
         }
-        return null;
+
     }
 
-    public String cancelarVenta() {
-        return HOME_PAGE_REDIRECT;
+    public void cancelarVenta() {
+        this.ventasTO.clear(); // o lo que sea necesario para limpiar
+        this.subTotal = 0;
+        this.totalVenta = 0;
+        this.pagaCon = 0;
+        this.descuento = 0;
+        this.codigo = "";
     }
 
     public void calcularTotal() {
