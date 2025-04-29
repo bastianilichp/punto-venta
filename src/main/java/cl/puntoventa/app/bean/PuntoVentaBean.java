@@ -96,6 +96,7 @@ public class PuntoVentaBean implements AppBean, Serializable {
     @Override
     public void listar() {
         user = (Usuarios) httpSession.getAttribute("userSession");
+        
 
     }
 
@@ -112,6 +113,7 @@ public class PuntoVentaBean implements AppBean, Serializable {
 
         String headlessProperty = System.getProperty("java.awt.headless");
         System.out.println(headlessProperty);
+        Util.listarImpresorasDisponibles();
     }
 
     public void buscarProductos() {
@@ -152,6 +154,7 @@ public class PuntoVentaBean implements AppBean, Serializable {
                 Util.avisoError("infoMsg", "Producto No Existe");
             }
         }
+        System.out.println("codigo " + codigo);
 
         System.out.println(subTotal);
         subTotal = 0;
@@ -220,7 +223,7 @@ public class PuntoVentaBean implements AppBean, Serializable {
 
                     //exportarController.descargarDetalleVenta();
 
-                    Util.imprimirPdfDirectamente(fileToPdf);
+                    //Util.imprimirEnImpresoraEspecifica(fileToPdf,"Brother DCP-T220");
                     return HOME_PAGE_REDIRECT;
 
                 } else {

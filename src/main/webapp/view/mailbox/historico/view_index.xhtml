@@ -89,22 +89,28 @@
             </p:headerRow>
 
 
-            <p:column headerText="Codigo" style="width: 100px" styleClass="center">
+            <p:column headerText="Codigo" style="width: 100px" >
                 <h:outputText value="#{historico.codigo}">                  
                 </h:outputText>
             </p:column> 
 
-            <p:column headerText="Nombre" style="width: 100px" styleClass="center">
+            <p:column headerText="Nombre" style="width: 100px" >
                 <h:outputText value="#{historico.nombre}">                  
                 </h:outputText>
             </p:column>
 
-            <p:column headerText="Cantidad"  style="width: 50px" styleClass="center">
+            <p:column headerText="Cantidad"  style="width: 50px" >
                 <h:outputText value="#{historico.cantidad}" />
             </p:column>
 
-            <p:column headerText="Precio"  style="width: 80px" styleClass="center">
+            <p:column headerText="Unitario"  style="width: 80px" >
                 <h:outputText value="#{historico.precio}">
+                    <f:convertNumber  type="currency" currencySymbol="$ " locale="es_CL"/> 
+                </h:outputText>
+            </p:column>
+            
+                <p:column headerText="Total"  style="width: 80px" >
+                    <h:outputText value="$ #{historico.cantidad * historico.precio} ">
                     <f:convertNumber  type="currency" currencySymbol="$ " locale="es_CL"/> 
                 </h:outputText>
             </p:column>

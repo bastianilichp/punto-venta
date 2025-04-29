@@ -3,27 +3,25 @@
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui">
-    <script type="text/javascript">
-        // JavaScript to listen for the Enter key
-        document.addEventListener('keypress', function (event) {
-            if (event.key === 'Enter') {
-                event.preventDefault(); // Prevent the default action (form submission)
-                document.getElementById('formPuntoVenta:botonVender').click(); // Trigger the button click
-            }
-        });
-    </script>
 
-    <h:form id="formPuntoVenta"> 
+
+    <h:form id="formCodigo">
         <p:outputLabel value="Código de Barra*"  for="codigoBarra" style="font-weight: bold;"/>
         <br/>
-        <p:autoComplete id="codigoBarra" placeholder="Escenea el código o escríbelo y presiona Enter" value="#{puntoVentaBean.codigo}"  inputStyle="width: 1000px;" autocomplete="on"   >
-            <p:ajax listener="#{puntoVentaBean.buscarProductos()}" update="dataTableVentas :formMessage codigoBarra subTotal descuento totalF" 
+        <p:inputText id="codigoBarra" placeholder="Escenea el código o escríbelo y presiona Enter" autocomplete="on"
+                        value="#{puntoVentaBean.codigo}"  >
+            <p:ajax listener="#{puntoVentaBean.buscarProductos()}" process="@form"
+                    update=":formPuntoVenta:dataTableVentas :formMessage formCodigo:codigoBarra
+                    formPuntoVenta:subTotal
+                    formPuntoVenta:descuento
+                    formPuntoVenta:totalF"
                     onstart="PF('blockUIWidget').show()" oncomplete="PF('blockUIWidget').hide()" />
-        </p:autoComplete>
-        <br/>
-        <br/>
+        </p:inputText>
+    </h:form>
+    <br/>
+    <br/>
 
-
+    <h:form id="formPuntoVenta"> 
         <p:splitter  styleClass="mb-5" widgetVar="splitter" >
             <p:splitterPanel styleClass="flex align-items-center justify-content-center" size="150" minSize="150">
                 <h:panelGroup> 
@@ -115,7 +113,7 @@
                         </p:outputLabel>
 
                         <p:commandButton value="VENDER" styleClass="ui-button-raised ui-button-success"  icon="pi pi-check" iconPos="right" id="botonVender"
-                                         action="#{puntoVentaBean.terminarVenta}" process="@form"  
+                                         action="#{puntoVentaBean.terminarVenta}" 
                                          onstart="PF('blockUIWidget').show()" oncomplete="PF('blockUIWidget').hide()"
                                          update="formPuntoVenta :formMessage"/>
 
