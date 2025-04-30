@@ -13,18 +13,6 @@
             }
         });
         
-        function openPdfInDialog() {
-            // Set the URL of the PDF file you want to display
-            var pdfUrl = "#{request.contextPath}/detalle";  // Replace with the correct path to your PDF file
-            
-            // Set the iframe src to the PDF URL
-            document.getElementById('pdfIframe').src = pdfUrl;
-            
-            // Open the dialog
-            PF('pdfDialog').show(); // Show the dialog with the PDF
-        }
-        
-        
     </script>
 
 
@@ -137,8 +125,7 @@
                                          action="#{puntoVentaBean.terminarVenta}" process="@form"
                                          onstart="PF('blockUIWidget').show()"
                                          oncomplete="PF('blockUIWidget').hide();
-                                         setTimeout(function() { document.getElementById('formCodigo:codigoBarra').focus(); }, 100);
-                                         openPdfInDialog();"
+                                         setTimeout(function() { document.getElementById('formCodigo:codigoBarra').focus(); }, 100);"                                         
                                          update=":formPuntoVenta :formMessage"/>
 
                         <p:commandButton  value="CANCELAR" styleClass="ui-button-raised ui-button-danger" icon="pi pi-times" iconPos="right"
@@ -153,17 +140,6 @@
 
             </p:splitterPanel>
         </p:splitter>
-        <p:dialog id="pdfDialog" header="Detalle Venta" widgetVar="pdfDialog" resizable="true" draggable="true" modal="true" width="80%" height="80%" closeOnEscape="true">
-            <!-- iframe to show the PDF -->
-            <h:outputText id="pdfContent" rendered="false"/>
-            <p:outputPanel id="pdfPanel">
-                <iframe id="pdfIframe" width="100%" height="600px" src="" frameborder="0"></iframe>
-            </p:outputPanel>
-        </p:dialog>
-
-
-
-
     </h:form>
 
 

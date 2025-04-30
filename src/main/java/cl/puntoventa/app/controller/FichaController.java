@@ -1,6 +1,7 @@
 package cl.puntoventa.app.controller;
 
 import cl.puntoventa.app.clases.Util;
+import cl.puntoventa.app.entity.VentaDetalles;
 import cl.puntoventa.app.entity.VentaNueva;
 import cl.puntoventa.app.to.VentasTO;
 
@@ -34,7 +35,7 @@ public class FichaController {
     @Inject
     private HttpSession httpSession;
 
-    public File imprimirDetalleVenta(List<VentasTO> ventasTO, VentaNueva nueva) {
+    public File imprimirDetalleVenta(List<VentaDetalles> ventasTO, VentaNueva nueva) {
         Date date = new Date();
         DateFormat format = new SimpleDateFormat("ddMMyyyyHHmm");
         String fechaNombre = format.format(date);
@@ -74,13 +75,13 @@ public class FichaController {
                 fi4.add(new TextVariable("${UNITARIO}", ""));
 
             } else {
-                for (VentasTO v : ventasTO) {
-                    Integer valor = v.getPrecioVenta() * v.getCantidad();
+                for (VentaDetalles v : ventasTO) {
+                    Integer valor = v.getPrecio() * v.getCantidad();
 
-                    fi1.add(new TextVariable("${PRODUCTO}", v.getNombre()));
+                    fi1.add(new TextVariable("${PRODUCTO}", v.getProducto().getNombre()));
                     fi2.add(new TextVariable("${CANTIDAD}", v.getCantidad().toString()));
                     fi3.add(new TextVariable("${VALOR}", "$ " + totalFormat.format(valor)));
-                    fi4.add(new TextVariable("${UNITARIO}", "$ " + totalFormat.format(v.getPrecioVenta())));
+                    fi4.add(new TextVariable("${UNITARIO}", "$ " + totalFormat.format(v.getPrecio())));
                 }
 
             }

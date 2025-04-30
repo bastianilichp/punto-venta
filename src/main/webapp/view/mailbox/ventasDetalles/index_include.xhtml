@@ -3,6 +3,16 @@
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui">
+    <script>      function openPdfInDialog() {
+            // Set the URL of the PDF file you want to display
+            var pdfUrl = "#{request.contextPath}/detalle";  // Replace with the correct path to your PDF file
+
+            // Set the iframe src to the PDF URL
+            document.getElementById('pdfIframe').src = pdfUrl;
+
+            // Open the dialog
+            PF('pdfDialog').show(); // Show the dialog with the PDF
+        }</script>
 
     <h:form id="formVentasDetalles">
         <p:toolbar> 
@@ -82,7 +92,23 @@
                                   update="formDeleteConfirmacion" >
                     <f:setPropertyActionListener target="#{ventasDetallesBean.deleteVenta}" value="#{vDetalle}"/> 
                 </p:commandButton>
+                <p:spacer width="5px"/>
+                <p:commandButton  icon="pi pi-print" 
+                                  action="#{ventasDetallesBean.imprimirDetalle(vDetalle)}" 
+                                  onstart="PF('blockUIWidget').show()" 
+                                  oncomplete="openPdfInDialog();PF('blockUIWidget').hide();"
+                                  styleClass="rounded-button ui-button-info"                                 
+                                  process="@this" title="Imprimir Detalle" >                   
+                </p:commandButton>
             </p:column>
         </p:dataTable>
+        <p:dialog id="pdfDialog" header="Detalle Venta" widgetVar="pdfDialog" resizable="true" draggable="true" modal="true" width="80%" height="80%" closeOnEscape="true">
+            <!-- iframe to show the PDF -->
+            <h:outputText id="pdfContent" rendered="false"/>
+            <p:outputPanel id="pdfPanel">
+                <iframe id="pdfIframe" width="100%" height="600px" src="" frameborder="0"></iframe>
+            </p:outputPanel>
+        </p:dialog>
+
     </h:form>
 </ui:composition>

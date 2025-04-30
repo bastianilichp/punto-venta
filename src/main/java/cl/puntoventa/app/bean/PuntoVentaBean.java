@@ -219,9 +219,9 @@ public class PuntoVentaBean implements AppBean, Serializable {
             }
 
             if (contador == ventasTO.size()) {
-                File fileDocx = fichaController.imprimirDetalleVenta(ventasTO, nueva);
-                File fileToPdf = fichaController.libreOfficeToPdf(fileDocx, true);
-                httpSession.setAttribute("fileToPdf", fileToPdf);
+//                File fileDocx = fichaController.imprimirDetalleVenta(ventasTO, nueva);
+//                File fileToPdf = fichaController.libreOfficeToPdf(fileDocx, true);
+//                httpSession.setAttribute("fileToPdf", fileToPdf);
                 Util.avisoInfo("infoMsg", "Venta Creada");
                 cancelarVenta();
             }

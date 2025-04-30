@@ -1,6 +1,7 @@
 package cl.puntoventa.app.bean;
 
 import cl.puntoventa.app.clases.Util;
+import cl.puntoventa.app.controller.FichaController;
 import cl.puntoventa.app.controller.ProductosController;
 import cl.puntoventa.app.controller.UserController;
 import cl.puntoventa.app.controller.VentasDetallesController;
@@ -14,12 +15,14 @@ import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.servlet.http.HttpSession;
+import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.jodconverter.core.office.OfficeException;
 import org.primefaces.PrimeFaces;
 import org.primefaces.model.FilterMeta;
 import org.primefaces.model.LazyDataModel;
@@ -36,7 +39,7 @@ public class VentasDetallesBean implements AppBean, Serializable {
 
     private List<Usuarios> listUsuario;
 
-    private LazyDataModel<VentaNueva> ventaNuevaLazy;   
+    private LazyDataModel<VentaNueva> ventaNuevaLazy;
 
     private List<VentaDetalles> listDetalle;
 
@@ -54,7 +57,8 @@ public class VentasDetallesBean implements AppBean, Serializable {
     @Inject
     private ProductosController productoController;
 
- 
+    @Inject
+    private FichaController fichaController;
 
     @PostConstruct
     @Override
@@ -89,6 +93,14 @@ public class VentasDetallesBean implements AppBean, Serializable {
         this.listUsuario = new ArrayList<>();
         this.deleteVenta = new VentaNueva();
 
+    }
+
+    public void imprimirDetalle(VentaNueva venta) throws OfficeException {
+        Set<VentaDetalles> detallesSet = venta.getVentaDetallesSet();
+        List<VentaDetalles> ventaDetalle = new ArrayList<>(detallesSet);
+        File fileDocx = fichaController.imprimirDetalleVenta(ventaDetalle, venta);
+        File fileToPdf = fichaController.libreOfficeToPdf(fileDocx, true);
+        httpSession.setAttribute("fileToPdf", fileToPdf);
     }
 
     public void detallesVentas(VentaNueva venta) {
@@ -129,7 +141,7 @@ public class VentasDetallesBean implements AppBean, Serializable {
             ventasNuevaController.delete(venta);
         }
 
-    }   
+    }
 
     public Usuarios getUsuario() {
         return usuario;
@@ -170,7 +182,5 @@ public class VentasDetallesBean implements AppBean, Serializable {
     public void setDeleteVenta(VentaNueva deleteVenta) {
         this.deleteVenta = deleteVenta;
     }
-
- 
 
 }
