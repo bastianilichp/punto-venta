@@ -167,7 +167,7 @@ public class VentasNuevaController extends AbstractDaoImpl<VentaNueva> {
                     jpql.append(" AND nueva.fechayhora LIKE :fechayhora ");
                 }
                 if (filterField.equals("usuarios.email") && filterValue != null) {
-                    jpql.append(" AND nueva.usuarios.email = :usuarios ");
+                    jpql.append(" AND nueva.usuarios.email LIKE :email ");
                 }
 
             }
@@ -228,6 +228,33 @@ public class VentasNuevaController extends AbstractDaoImpl<VentaNueva> {
             Query query = entityManager.createQuery(jpql.toString());
 
             query.setParameter("fecha", "%" + fechaActual + "%");
+
+            lista = query.getResultList();
+        } catch (Exception ex) {
+            this.rollbackOperation(this.getClass().getSimpleName(), Thread.currentThread().getStackTrace()[1].getMethodName(), ex);
+        }
+
+        return lista;
+    }
+
+    public List<VentaNueva> findByFechaUsuario(Date fecha, Usuarios user) {
+        StringBuilder jpql = new StringBuilder();
+        List<VentaNueva> lista = null;
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        String fechaActual = dateFormat.format(fecha);
+
+        try {
+            jpql.append("SELECT nueva FROM VentaNueva nueva ")
+                    .append(" LEFT JOIN FETCH nueva.usuarios user ")
+                    .append(" WHERE 1=1 ")
+                    .append(" AND nueva.fechayhora like :fecha ")
+                    .append(" AND user.email = :user ");
+
+            Query query = entityManager.createQuery(jpql.toString());
+
+            query.setParameter("fecha", "%" + fechaActual + "%");
+            query.setParameter("user", user.getEmail());
 
             lista = query.getResultList();
         } catch (Exception ex) {

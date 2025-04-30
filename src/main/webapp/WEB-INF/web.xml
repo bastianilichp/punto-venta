@@ -14,7 +14,7 @@
     
     <context-param>
         <param-name>upload.location</param-name>      
-        <param-value>/ventas/detalle_ventas/</param-value>
+        <param-value>/opt/detalle_ventas/</param-value>
     </context-param>
 
     

@@ -73,6 +73,13 @@ public class Util {
         FacesContext.getCurrentInstance().addMessage(growlFor, msg);
 
     }
+    
+     public static void avisoWarn(String growlFor, String mensaje) {
+
+        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_WARN, mensaje, null);
+        FacesContext.getCurrentInstance().addMessage(growlFor, msg);
+
+    }
 
     public static void avisoError(String growlFor, String mensaje) {
 

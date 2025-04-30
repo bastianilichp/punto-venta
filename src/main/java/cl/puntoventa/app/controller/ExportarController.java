@@ -9,11 +9,11 @@ import java.io.IOException;
 @Stateless
 public class ExportarController {
 
-    public void descargarDetalleVenta() throws IOException {
+    public void descargarDetalleVenta(String fileName) throws IOException {
 
         ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
 
-        externalContext.redirect(externalContext.getRequestContextPath() + "/detalle");
+        externalContext.redirect(externalContext.getRequestContextPath() + "/detalle?file=" + fileName);
 
     }
 

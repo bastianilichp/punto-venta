@@ -34,12 +34,15 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.print.PrintService;
 import javax.print.PrintServiceLookup;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.printing.PDFPageable;
 import org.jodconverter.core.office.OfficeException;
+import org.primefaces.PF;
 import org.primefaces.model.SortMeta;
 import org.primefaces.model.SortOrder;
 
@@ -217,15 +220,10 @@ public class PuntoVentaBean implements AppBean, Serializable {
 
             if (contador == ventasTO.size()) {
                 File fileDocx = fichaController.imprimirDetalleVenta(ventasTO, nueva);
-                File fileToPdf = fichaController.libreOfficeToPdf(fileDocx, true); //guardar detalle
-//                UploadFile.uploadActa(fileToPdf);
+                File fileToPdf = fichaController.libreOfficeToPdf(fileDocx, true);
                 httpSession.setAttribute("fileToPdf", fileToPdf);
-                exportarController.descargarDetalleVenta();
-//                Util.imprimirConDialogo(fileToPdf);
-
                 Util.avisoInfo("infoMsg", "Venta Creada");
                 cancelarVenta();
-
             }
 
         } else {
@@ -234,6 +232,7 @@ public class PuntoVentaBean implements AppBean, Serializable {
         }
 
     }
+
 
     public void cancelarVenta() {
         this.ventasTO.clear(); // o lo que sea necesario para limpiar
