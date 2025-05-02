@@ -50,6 +50,14 @@
 
                         </p:submenu>
 
+                       
+
+                        <p:submenu  label="Compras" icon="pi pi-book" rendered="#{ADMIN}">
+                            <p:menuitem  value="Proveedores" icon="pi pi-user"   outcome="/view/mailbox/compras/proveedores/index"    />     
+                            <p:menuitem  value="Orden de Compra" icon="pi pi-shopping-cart" outcome="/view/mailbox/compras/ordenCompra/index" />
+
+                        </p:submenu>
+
                     </po:menu>
                 </div>
             </div>

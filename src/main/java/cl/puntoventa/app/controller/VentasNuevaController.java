@@ -40,7 +40,7 @@ public class VentasNuevaController extends AbstractDaoImpl<VentaNueva> {
                     .append(" LEFT JOIN nueva.usuarios ")
                     .append(" WHERE 1=1 ")
                     .append(this.filtroDataTable(filterBy))
-                    .append(" ORDER BY nueva.fechayhora DESC");
+                    .append(" ORDER BY nueva.id DESC");
 
             Query query = entityManager.createQuery(jpql.toString());
             this.filtroDataTableCheck(query, filterBy);
@@ -130,7 +130,7 @@ public class VentasNuevaController extends AbstractDaoImpl<VentaNueva> {
                     .append(" LEFT JOIN FETCH nueva.usuarios ")
                     .append(" WHERE 1=1 ")
                     .append(this.filtroDataTable(filterBy))
-                    .append(" ORDER BY nueva.fechayhora DESC");
+                    .append(" ORDER BY nueva.id DESC");
 
             Query query = entityManager.createQuery(jpql.toString());
 
