@@ -15,16 +15,20 @@
             <p:panelGrid columns="2" columnClasses="p-col-3, p-col-10" style="width: 100%;">
 
                 <p:outputLabel value="RUT: *" style="font-weight: bold"/>
-                <p:inputText value="#{proveedoresBean.proveedor.rut}"  placeholder="Ingrese RUT" style="width: 100%;"/>
+                <p:inputText value="#{proveedoresBean.proveedor.rut}"  placeholder="Ingrese RUT EJ: 77565852-2" style="width: 100%;">
+                    <f:validateBean disabled="true"/>
+                </p:inputText>
 
                 <p:outputLabel value="Nombre: *" style="font-weight: bold"/>
-                <p:inputText value="#{proveedoresBean.proveedor.nombre}"  placeholder="Ingrese Nombre" style="width: 100%;"/>
+                <p:inputText value="#{proveedoresBean.proveedor.nombre}"  placeholder="Ingrese Nombre" style="width: 100%;">
+                    <f:validateBean disabled="true"/>
+                </p:inputText>
 
             </p:panelGrid>
             <br/><!-- comment -->
             <div style="text-align:center">
                 <p:commandButton value="AGREGAR" styleClass="ui-button-raised ui-button-success"  
-                                 icon="pi pi-check" iconPos="right"  process="@this"
+                                 icon="pi pi-check" iconPos="right"  process="@form"
                                  action="#{proveedoresBean.create()}"
                                  onstart="PF('blockUIWidget').show()" 
                                  oncomplete="PF('blockUIWidget').hide();"

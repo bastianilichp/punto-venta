@@ -26,6 +26,7 @@
                      value="#{proveedoresBean.proveedoresList}"
                      var="proveedor"
                      lazy="true"
+                     editable="true"
                      paginator="true"
                      rows="10"
                      paginatorPosition="bottom"
@@ -34,31 +35,50 @@
                      rowsPerPageTemplate="5,10,15,20,25,50"
                      currentPageReportTemplate="( {currentPage} of {totalPages} - Total : {totalRecords} )"       
                      widgetVar="dtListProveedores">
-            <p:ajax event="page" onstart="PF('blockUIWidget').show()" oncomplete="PF('blockUIWidget').hide()"/>
+
+            <p:ajax event="page" onstart="PF('blockUIWidget').show()" oncomplete="PF('blockUIWidget').hide()"/>           
+            <p:ajax event="rowEdit"  update="formListProveedores:dtListProveedores formMessage" listener="#{proveedoresBean.onRowEdit}" onstart="PF('blockUIWidget').show()" 
+                    oncomplete="PF('blockUIWidget').hide();"/>
+            <p:ajax event="rowEditCancel" listener="#{proveedoresBean.onRowCancel}"  update="formListProveedores:dtListProveedores formMessage" onstart="PF('blockUIWidget').show()" 
+                    oncomplete="PF('blockUIWidget').hide();" />
+
 
             <p:column headerText="Codigo" field="id" style="width: 100px">
                 <h:outputText value="#{proveedor.id}"/>
             </p:column>
 
             <p:column headerText="Rut" style="width: 180px" field="rut">
-                <h:outputText value="#{proveedor.rut}"/>
+               <p:cellEditor>
+                    <f:facet name="output">
+                        <h:outputText value="#{proveedor.rut}"/>
+                    </f:facet>
+                    <f:facet name="input">
+                        <p:inputText value="#{proveedor.rut}" style="width:100%"/>
+                    </f:facet>
+                </p:cellEditor>
             </p:column>
             <p:column headerText="Nombre" style="width: 180px" field="nombre">
-                <h:outputText value="#{proveedor.nombre}"/>
+                <p:cellEditor>
+                    <f:facet name="output">
+                        <h:outputText value="#{proveedor.nombre}"/>
+                    </f:facet>
+                    <f:facet name="input">
+                        <p:inputText  value="#{proveedor.nombre}" style="width:100%"/>
+                    </f:facet>
+                </p:cellEditor>
             </p:column>
 
+            <p:column style="width:20px">
+                <p:rowEditor styleClass="rounded-button ui-button-warning"/>
+            </p:column>
+            <p:column style="width: 10px" exportable="false" styleClass="center">   
 
 
-            <p:column style="width: 80px" exportable="false" styleClass="center">
-                <p:commandButton  styleClass="rounded-button ui-button-warning" icon="pi pi-pencil"
-
-                                  onstart="PF('blockUIWidget').show()" oncomplete="PF('blockUIWidget').hide()"
-                                  process="@this" title="Editar"/>
-                <p:spacer width="5px"/>
                 <p:commandButton  icon="pi pi-trash" process="@form"
+                                  action="#{proveedoresBean.delete()}"
+                                  update="formListProveedores formMessage"
                                   title="Eliminar" styleClass="rounded-button ui-button-danger">
-
-
+                    <f:setPropertyActionListener target="#{proveedoresBean.deleteProveedor}" value="#{proveedor}"/>
                 </p:commandButton>
 
 

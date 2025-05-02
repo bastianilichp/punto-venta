@@ -124,7 +124,7 @@ public class ProveedoresController extends AbstractDaoImpl<Proveedores> {
     public boolean create(Proveedores proveedor) {
 
         if (validar(proveedor)) {
-            super.create(proveedor);
+            return super.create(proveedor);
         }
 
         return false;
@@ -133,12 +133,12 @@ public class ProveedoresController extends AbstractDaoImpl<Proveedores> {
 
     public boolean validar(Proveedores proveedor) {
         boolean valido = true;
-        if (proveedor.getNombre() == null) {
+        if (proveedor.getNombre().isBlank()) {
             Util.avisoError("infoMsg", "Ingrese Nombre");
             valido = false;
         }
 
-        if (proveedor.getRut() == null) {
+        if (proveedor.getRut().isBlank()) {
             Util.avisoError("infoMsg", "Ingrese RUT");
             valido = false;
         } else {
@@ -155,24 +155,69 @@ public class ProveedoresController extends AbstractDaoImpl<Proveedores> {
 
     }
 
-    private Proveedores findByRut(String rut) {
+    public Proveedores findByRut(String rut) {
         StringBuilder jpql = new StringBuilder();
         Proveedores reult = null;
 
         try {
             jpql.append("SELECT proveedores FROM Proveedores proveedores ")
                     .append(" WHERE 1=1 ")
-                    .append(" and proveedores.rut = :rut");
+                    .append(" and proveedores.rut = :rut ");
 
             Query query = entityManager.createQuery(jpql.toString());
+            query.setParameter("rut", rut);
 
             reult = (Proveedores) query.getSingleResult();
-            query.setParameter("rut", rut);
+
         } catch (Exception ex) {
             this.rollbackOperation(this.getClass().getSimpleName(), Thread.currentThread().getStackTrace()[1].getMethodName(), ex);
         }
 
         return reult;
+
+    }
+
+    public List<Proveedores> findByNombre(String nombre) {
+        StringBuilder jpql = new StringBuilder();
+        List<Proveedores> lista = null;
+
+        try {
+            jpql.append("SELECT proveedores FROM Proveedores proveedores ")
+                    .append(" WHERE 1=1 ")
+                    .append(" and proveedores.nombre like :nombre ");
+
+            Query query = entityManager.createQuery(jpql.toString());
+            query.setParameter("nombre", "%" + nombre + "%");
+
+            lista = query.getResultList();
+
+        } catch (Exception ex) {
+            this.rollbackOperation(this.getClass().getSimpleName(), Thread.currentThread().getStackTrace()[1].getMethodName(), ex);
+        }
+
+        return lista;
+
+    }
+    
+      public Proveedores findByNombreExacto(String nombre) {
+        StringBuilder jpql = new StringBuilder();
+        Proveedores result = null;
+
+        try {
+            jpql.append("SELECT proveedores FROM Proveedores proveedores ")
+                    .append(" WHERE 1=1 ")
+                    .append(" and proveedores.nombre = :nombre ");
+
+            Query query = entityManager.createQuery(jpql.toString());
+            query.setParameter("nombre",nombre );
+
+            result = (Proveedores) query.getSingleResult();
+
+        } catch (Exception ex) {
+            this.rollbackOperation(this.getClass().getSimpleName(), Thread.currentThread().getStackTrace()[1].getMethodName(), ex);
+        }
+
+        return result;
 
     }
 

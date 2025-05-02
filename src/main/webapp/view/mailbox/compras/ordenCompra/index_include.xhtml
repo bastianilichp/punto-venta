@@ -5,7 +5,13 @@
                 xmlns:p="http://primefaces.org/ui">
     <h:form id="formListOrdenes"> 
         <p:toolbar>             
-            <p:toolbarGroup align="left">     
+            <p:toolbarGroup align="left"> 
+                <p:commandButton  icon="pi pi-plus" value="Generar Orden"    
+                                  oncomplete="PF('dialogAddOrden').show()"
+                                  update="formAddOrden"
+                                  styleClass="ui-button-outlined ui-button-success"/>
+
+
             </p:toolbarGroup>
             <p:toolbarGroup align="rigth">
                 <p:commandButton value="Exporta Excel" 
@@ -18,7 +24,7 @@
             </p:toolbarGroup>
         </p:toolbar>
         <p:dataTable id="dtListOrdenes"
-                     
+
                      var="orden"
                      lazy="true"
                      paginator="true"
@@ -38,22 +44,22 @@
             <p:column headerText="Fecha" style="width: 180px" field="nombre">
                 <h:outputText value="#{orden.nombre}"/>
             </p:column>
-            
-              <p:column headerText="Usuario" style="width: 180px" field="nombre">
+
+            <p:column headerText="Usuario" style="width: 180px" field="nombre">
                 <h:outputText value="#{orden.nombre}"/>
             </p:column>
-       
-            
+
+
 
             <p:column style="width: 80px" exportable="false" styleClass="center">
                 <p:commandButton  styleClass="rounded-button ui-button-warning" icon="pi pi-pencil"
-                                  
+
                                   onstart="PF('blockUIWidget').show()" oncomplete="PF('blockUIWidget').hide()"
                                   process="@this" title="Editar"/>
                 <p:spacer width="5px"/>
                 <p:commandButton  icon="pi pi-trash" process="@form"
                                   title="Eliminar" styleClass="rounded-button ui-button-danger">
-                                 
+
 
                 </p:commandButton>
 
