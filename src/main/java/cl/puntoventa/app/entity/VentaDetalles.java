@@ -38,15 +38,15 @@ public class VentaDetalles implements Serializable {
     private Integer cantidad;
     @Column(name = "precio")
     private Integer precio;
+    @JoinColumn(name = "venta_id", referencedColumnName = "id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private VentaNueva ventaNueva;
     @JoinColumn(name = "producto_id", referencedColumnName = "id")
     @ManyToOne(fetch = FetchType.LAZY)
     private Producto producto;
     @JoinColumn(name = "usuario_id", referencedColumnName = "id")
     @ManyToOne(fetch = FetchType.LAZY)
     private Usuarios usuarios;
-    @JoinColumn(name = "venta_id", referencedColumnName = "id")
-    @ManyToOne(fetch = FetchType.LAZY)
-    private VentaNueva ventaNueva;
 
     public VentaDetalles() {
     }
@@ -79,6 +79,14 @@ public class VentaDetalles implements Serializable {
         this.precio = precio;
     }
 
+    public VentaNueva getVentaNueva() {
+        return ventaNueva;
+    }
+
+    public void setVentaNueva(VentaNueva ventaNueva) {
+        this.ventaNueva = ventaNueva;
+    }
+
     public Producto getProducto() {
         return producto;
     }
@@ -93,14 +101,6 @@ public class VentaDetalles implements Serializable {
 
     public void setUsuarios(Usuarios usuarios) {
         this.usuarios = usuarios;
-    }
-
-    public VentaNueva getVentaNueva() {
-        return ventaNueva;
-    }
-
-    public void setVentaNueva(VentaNueva ventaNueva) {
-        this.ventaNueva = ventaNueva;
     }
 
     @Override

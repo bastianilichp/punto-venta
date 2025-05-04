@@ -5,20 +5,19 @@
 package cl.puntoventa.app.entity;
 
 import jakarta.persistence.Basic;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.Date;
 import java.util.Set;
 
 /**
@@ -54,10 +53,10 @@ public class Usuarios implements Serializable {
     private Boolean manager;
     @Column(name = "enabled")
     private Boolean enabled;
-    @ManyToMany(mappedBy = "usuariosSet", fetch = FetchType.LAZY)
-    private Set<Rol> rolSet;
     @OneToMany(mappedBy = "usuarios", fetch = FetchType.LAZY)
     private Set<VentaNueva> ventaNuevaSet;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarios", fetch = FetchType.LAZY)
+    private Set<OrdenCompra> ordenCompraSet;
     @OneToMany(mappedBy = "usuarios", fetch = FetchType.LAZY)
     private Set<VentaDetalles> ventaDetallesSet;
 
@@ -124,20 +123,20 @@ public class Usuarios implements Serializable {
         this.enabled = enabled;
     }
 
-    public Set<Rol> getRolSet() {
-        return rolSet;
-    }
-
-    public void setRolSet(Set<Rol> rolSet) {
-        this.rolSet = rolSet;
-    }
-
     public Set<VentaNueva> getVentaNuevaSet() {
         return ventaNuevaSet;
     }
 
     public void setVentaNuevaSet(Set<VentaNueva> ventaNuevaSet) {
         this.ventaNuevaSet = ventaNuevaSet;
+    }
+
+    public Set<OrdenCompra> getOrdenCompraSet() {
+        return ordenCompraSet;
+    }
+
+    public void setOrdenCompraSet(Set<OrdenCompra> ordenCompraSet) {
+        this.ordenCompraSet = ordenCompraSet;
     }
 
     public Set<VentaDetalles> getVentaDetallesSet() {
@@ -172,7 +171,5 @@ public class Usuarios implements Serializable {
     public String toString() {
         return "cl.puntoventa.app.entity.Usuarios[ id=" + id + " ]";
     }
-
-  
     
 }

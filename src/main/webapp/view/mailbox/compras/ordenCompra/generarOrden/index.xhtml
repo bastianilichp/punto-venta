@@ -6,7 +6,7 @@
                 template="/WEB-INF/template.xhtml">     
 
     <ui:define name="title">
-        ORDEN DE COMPRA
+       GENERAR ORDEN DE COMPRA
     </ui:define>
 
     <ui:define name="content">
@@ -26,6 +26,7 @@
 
         </div>       
         
+        <ui:include src="/view/mailbox/compras/ordenCompra/generarOrden/add_producto.xhtml"/>
     </ui:define>
 
 </ui:composition>

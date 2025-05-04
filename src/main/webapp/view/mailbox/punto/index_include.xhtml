@@ -12,7 +12,7 @@
                 document.getElementById('formPuntoVenta:botonVender').click(); // Trigger the button click
             }
         });
-        
+
     </script>
 
 
@@ -66,8 +66,9 @@
                         </p:column>
 
                         <p:column  headerText="Cantidad"   width="40px">
-                            <h:inputText value="#{ventasTO.cantidad}" style="width: 50px" styleClass="center">
-                                <p:ajax update="total formPuntoVenta:subTotal formPuntoVenta:totalF formPuntoVenta:vuelto" listener="#{puntoVentaBean.modificarCantidad(ventasTO)}"></p:ajax>
+                            <h:inputText value="#{ventasTO.cantidad}" style="width: 50px" styleClass="center" onkeydown="if (event.key === 'Enter')
+                                        event.preventDefault();">
+                                <p:ajax update="total formPuntoVenta:subTotal formPuntoVenta:totalF" listener="#{puntoVentaBean.modificarCantidad(ventasTO)}" oncomplete="setTimeout(function() { document.getElementById('formCodigo:codigoBarra').focus(); }, 100)"></p:ajax>
                             </h:inputText>
                         </p:column>
 
@@ -100,8 +101,9 @@
                         </p:outputLabel>
 
                         <p:outputLabel for="descuento" value="Descuento:" style="font-weight: bold;"/>
-                        <p:inputText id="descuento"  value="#{puntoVentaBean.descuento}" style="width: 80px; height: 80%">
-                            <p:ajax update="totalF vuelto" listener="#{puntoVentaBean.calcularTotal}"></p:ajax>
+                        <p:inputText id="descuento"  value="#{puntoVentaBean.descuento}" style="width: 80px; height: 80%" onkeydown="if (event.key === 'Enter')
+                                    event.preventDefault();">
+                            <p:ajax update="totalF" listener="#{puntoVentaBean.calcularTotal}"></p:ajax>
 
                         </p:inputText>
 
@@ -110,7 +112,8 @@
                             <f:convertNumber  type="currency" currencySymbol="$ " locale="es_CL"/> 
                         </p:outputLabel>
 
-                        <p:outputLabel for="paga" value="PAGA CON:" style="font-weight: bold; font-size: 12px"/>
+                        <p:outputLabel for="paga" value="PAGA CON:" style="font-weight: bold; font-size: 12px" onkeydown="if (event.key === 'Enter')
+                                    event.preventDefault();"/>
                         <p:inputText id="paga"  value="#{puntoVentaBean.pagaCon}"> 
                             <p:ajax update="vuelto" ></p:ajax>
 
@@ -134,7 +137,7 @@
                                           onstart="PF('blockUIWidget').show()" 
                                           oncomplete="PF('blockUIWidget').hide();setTimeout(function() { document.getElementById('formCodigo:codigoBarra').focus(); }, 100);"
                                           update="formPuntoVenta :formMessage"/>
-                 
+
                     </p:panelGrid>
                 </div>
 

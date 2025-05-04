@@ -1,6 +1,5 @@
 package cl.puntoventa.app.bean;
 
-import cl.puntoventa.app.clases.UploadFile;
 import cl.puntoventa.app.clases.Util;
 import cl.puntoventa.app.controller.ExportarController;
 import cl.puntoventa.app.controller.FichaController;
@@ -12,39 +11,19 @@ import cl.puntoventa.app.entity.Usuarios;
 import cl.puntoventa.app.entity.VentaNueva;
 import cl.puntoventa.app.to.VentasTO;
 import jakarta.annotation.PostConstruct;
-import jakarta.faces.context.ExternalContext;
-import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.RollbackException;
 import jakarta.servlet.http.HttpSession;
-import jakarta.transaction.Transactional;
-import java.awt.Desktop;
-import java.awt.GraphicsEnvironment;
 import java.awt.print.PrinterException;
-import java.awt.print.PrinterJob;
-import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
-import javax.print.PrintService;
-import javax.print.PrintServiceLookup;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.printing.PDFPageable;
 import org.jodconverter.core.office.OfficeException;
-import org.primefaces.PF;
-import org.primefaces.model.SortMeta;
-import org.primefaces.model.SortOrder;
 
 @Named("puntoVentaBean")
 @ViewScoped
@@ -187,10 +166,10 @@ public class PuntoVentaBean implements AppBean, Serializable {
         descuento = 0;
         totalVenta = 0;
         pagaCon = 0;
-//        for (VentasTO v : ventasTO) {
-//            subTotal += v.getTotal();
-//        }
-//        totalVenta = subTotal - descuento;
+        for (VentasTO v : ventasTO) {
+            subTotal += v.getTotal();
+        }
+        totalVenta = subTotal - descuento;
     }
 
     public void terminarVenta() throws OfficeException, IOException, PrinterException {
@@ -203,27 +182,27 @@ public class PuntoVentaBean implements AppBean, Serializable {
             if (nueva == null) {
                 Util.avisoError("infoMsg", "Error al crear la nueva venta. Intente nuevamente.");
 
-            }
+            } else {
+                Integer contador = 0;
 
-            Integer contador = 0;
+                for (VentasTO to : ventasTO) {
+                    if (ventasDetallesController.create(to, nueva)) {
+                        contador++;
+                        //descontar Stock
+                        productosController.descontarStock(to);
 
-            for (VentasTO to : ventasTO) {
-                if (ventasDetallesController.create(to, nueva)) {
-                    contador++;
-                    //descontar Stock
-                    productosController.descontarStock(to);
-
-                } else {
-                    Util.avisoError("infoMsg", "No se guardo la venta.");
+                    } else {
+                        Util.avisoError("infoMsg", "No se guardo la venta.");
+                    }
                 }
-            }
 
-            if (contador == ventasTO.size()) {
+                if (contador == ventasTO.size()) {
 //                File fileDocx = fichaController.imprimirDetalleVenta(ventasTO, nueva);
 //                File fileToPdf = fichaController.libreOfficeToPdf(fileDocx, true);
 //                httpSession.setAttribute("fileToPdf", fileToPdf);
-                Util.avisoInfo("infoMsg", "Venta Creada");
-                cancelarVenta();
+                    Util.avisoInfo("infoMsg", "Venta Creada");
+                    cancelarVenta();
+                }
             }
 
         } else {
@@ -232,7 +211,6 @@ public class PuntoVentaBean implements AppBean, Serializable {
         }
 
     }
-
 
     public void cancelarVenta() {
         this.ventasTO.clear(); // o lo que sea necesario para limpiar

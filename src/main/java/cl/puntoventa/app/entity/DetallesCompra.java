@@ -16,9 +16,14 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 
-
+/**
+ *
+ * @author basti
+ */
 @Entity
 @Table(name = "detalles_compra")
 @NamedQueries({
@@ -31,6 +36,28 @@ public class DetallesCompra implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 100)
+    @Column(name = "codigo_producto")
+    private String codigoProducto;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 100)
+    @Column(name = "nombre_producto")
+    private String nombreProducto;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "unitario")
+    private int unitario;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "cantidad")
+    private int cantidad;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "total")
+    private int total;
     @JoinColumn(name = "orden_id", referencedColumnName = "id")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private OrdenCompra ordenCompra;
@@ -42,12 +69,61 @@ public class DetallesCompra implements Serializable {
         this.id = id;
     }
 
+    public DetallesCompra(Integer id, String codigoProducto, String nombreProducto, int unitario, int cantidad, int total) {
+        this.id = id;
+        this.codigoProducto = codigoProducto;
+        this.nombreProducto = nombreProducto;
+        this.unitario = unitario;
+        this.cantidad = cantidad;
+        this.total = total;
+    }
+
     public Integer getId() {
         return id;
     }
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getCodigoProducto() {
+        return codigoProducto;
+    }
+
+    public void setCodigoProducto(String codigoProducto) {
+        this.codigoProducto = codigoProducto;
+    }
+
+    public String getNombreProducto() {
+        return nombreProducto;
+    }
+
+    public void setNombreProducto(String nombreProducto) {
+        this.nombreProducto = nombreProducto;
+    }
+
+    public int getUnitario() {
+        return unitario;
+    }
+
+    public void setUnitario(int unitario) {
+        this.unitario = unitario;
+    }
+
+    public int getCantidad() {
+        return cantidad;
+    }
+
+    public void setCantidad(int cantidad) {
+        this.cantidad = cantidad;
+    }
+
+    public int getTotal() {
+        return total;
+    }
+
+    public void setTotal(int total) {
+        this.total = total;
     }
 
     public OrdenCompra getOrdenCompra() {

@@ -1,68 +1,54 @@
 package cl.puntoventa.app.bean;
 
-import cl.puntoventa.app.controller.ProveedoresController;
+import cl.puntoventa.app.controller.OrdenCompraController;
 import cl.puntoventa.app.entity.OrdenCompra;
-import cl.puntoventa.app.entity.Proveedores;
-import cl.puntoventa.app.to.OrdenCompraTO;
-import jakarta.annotation.PostConstruct;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import org.primefaces.model.FilterMeta;
 import org.primefaces.model.LazyDataModel;
+import org.primefaces.model.SortMeta;
 
 @Named("ordenCompraBean")
 @ViewScoped
 public class OrdenCompraBean implements AppBean, Serializable {
 
-    private OrdenCompra ordenCompra;
-
-    private Proveedores listaProveedores;
-
-    private String nombreProveedor;
-
-    private OrdenCompraTO ordenCompraTO;
-
-    private LazyDataModel<OrdenCompra> ordenLazy;
+    private LazyDataModel<OrdenCompra> ordenCompraLazy;
 
     @Inject
-    private ProveedoresController proveedoresController;
+    private OrdenCompraController ordenCompraController;
 
-    @PostConstruct
     @Override
     public void init() {
-        this.prepareCreate();
-        this.listar();
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
     public void listar() {
+        this.ordenCompraLazy = new LazyDataModel<OrdenCompra>() {
+            @Override
+            public int count(Map<String, FilterMeta> map) {
+                return ordenCompraController.count(map).intValue();
+            }
 
+            @Override
+            public List<OrdenCompra> load(int i, int i1, Map<String, SortMeta> map, Map<String, FilterMeta> map1) {
+                return ordenCompraController.findAll(i, i1, map, map1);
+            }
+        };
     }
 
     @Override
     public void prepareCreate() {
-        this.ordenCompraTO = new OrdenCompraTO();
-        this.nombreProveedor = "";
-
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
-    public List<String> buscarProveedores(String nombre) {
-        List<Proveedores> proveedores = proveedoresController.findByNombre(nombre);
-        List<String> fullName = new ArrayList<>();
-        for (Proveedores pr : proveedores) {
-            fullName.add(pr.getNombre());
-        }
-        return fullName;
-    }
+    public String abrirGenerarOrden() {
+        return "/view/mailbox/compras/ordenCompra/generarOrden/index.hsm?faces-redirect=true";
 
-    public void completarDatos() {
-        Proveedores p = proveedoresController.findByNombreExacto(nombreProveedor);
-        if (p != null) {
-            ordenCompraTO.setRut(p.getRut());
-        }
     }
 
     @Override
@@ -80,44 +66,12 @@ public class OrdenCompraBean implements AppBean, Serializable {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
-    public OrdenCompra getOrdenCompra() {
-        return ordenCompra;
+    public LazyDataModel<OrdenCompra> getOrdenCompraLazy() {
+        return ordenCompraLazy;
     }
 
-    public void setOrdenCompra(OrdenCompra ordenCompra) {
-        this.ordenCompra = ordenCompra;
-    }
-
-    public Proveedores getListaProveedores() {
-        return listaProveedores;
-    }
-
-    public void setListaProveedores(Proveedores listaProveedores) {
-        this.listaProveedores = listaProveedores;
-    }
-
-    public String getNombreProveedor() {
-        return nombreProveedor;
-    }
-
-    public void setNombreProveedor(String nombreProveedor) {
-        this.nombreProveedor = nombreProveedor;
-    }
-
-    public OrdenCompraTO getOrdenCompraTO() {
-        return ordenCompraTO;
-    }
-
-    public void setOrdenCompraTO(OrdenCompraTO ordenCompraTO) {
-        this.ordenCompraTO = ordenCompraTO;
-    }
-
-    public LazyDataModel<OrdenCompra> getOrdenLazy() {
-        return ordenLazy;
-    }
-
-    public void setOrdenLazy(LazyDataModel<OrdenCompra> ordenLazy) {
-        this.ordenLazy = ordenLazy;
+    public void setOrdenCompraLazy(LazyDataModel<OrdenCompra> ordenCompraLazy) {
+        this.ordenCompraLazy = ordenCompraLazy;
     }
 
 }

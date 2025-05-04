@@ -3,6 +3,7 @@ package cl.puntoventa.app.controller;
 import cl.puntoventa.app.clases.Util;
 import cl.puntoventa.app.dao.AbstractDaoImpl;
 import cl.puntoventa.app.entity.Producto;
+import cl.puntoventa.app.entity.Proveedores;
 import cl.puntoventa.app.entity.Usuarios;
 import cl.puntoventa.app.to.VentasTO;
 import jakarta.ejb.Stateless;
@@ -141,7 +142,7 @@ public class ProductosController extends AbstractDaoImpl<Producto> {
                 if (filterField.equals("Stock") && filterValue != null) {
                     query.setParameter("Stock", "%" + filterValue + "%");
                 }
-                 if (filterField.equals("categoria.descripcion") && filterValue != null) {
+                if (filterField.equals("categoria.descripcion") && filterValue != null) {
                     query.setParameter("categoria", "%" + filterValue + "%");
                 }
 
@@ -257,6 +258,50 @@ public class ProductosController extends AbstractDaoImpl<Producto> {
         }
 
         return valido;
+    }
+
+    public List<Producto> findByNombre(String nombre) {
+        StringBuilder jpql = new StringBuilder();
+        List<Producto> lista = null;
+
+        try {
+            jpql.append("SELECT producto FROM Producto producto ")
+                    .append(" WHERE 1=1 ")
+                    .append(" and producto.nombre like :nombre ");
+
+            Query query = entityManager.createQuery(jpql.toString());
+            query.setParameter("nombre", "%" + nombre + "%");
+
+            lista = query.getResultList();
+
+        } catch (Exception ex) {
+            this.rollbackOperation(this.getClass().getSimpleName(), Thread.currentThread().getStackTrace()[1].getMethodName(), ex);
+        }
+
+        return lista;
+
+    }
+
+    public Producto findByNombreExacto(String nombre) {
+        StringBuilder jpql = new StringBuilder();
+        Producto result = null;
+
+        try {
+            jpql.append("SELECT producto FROM Producto producto ")
+                    .append(" WHERE 1=1 ")
+                    .append(" and producto.nombre = :nombre ");
+
+            Query query = entityManager.createQuery(jpql.toString());
+            query.setParameter("nombre", nombre.trim());
+
+            result = (Producto) query.getSingleResult();
+
+        } catch (Exception ex) {
+            this.rollbackOperation(this.getClass().getSimpleName(), Thread.currentThread().getStackTrace()[1].getMethodName(), ex);
+        }
+
+        return result;
+
     }
 
 }

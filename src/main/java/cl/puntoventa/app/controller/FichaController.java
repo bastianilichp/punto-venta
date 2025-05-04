@@ -112,6 +112,83 @@ public class FichaController {
         return null;
     }
 
+    public File imprimirOrdenCompra(List<VentaDetalles> ventasTO, VentaNueva nueva) {
+        Date date = new Date();
+        DateFormat format = new SimpleDateFormat("ddMMyyyyHHmm");
+        String fechaNombre = format.format(date);
+
+        String nombreFinal = "detalle_venta-" + fechaNombre + ".docx";
+
+        File fileOrigen = new File(httpSession.getServletContext().getRealPath("/") + "resources/templates/detalle_venta.docx");
+
+        if (fileOrigen.exists() && !fileOrigen.isDirectory()) {
+
+            DateFormat fecha = new SimpleDateFormat("dd MMM yyyy");
+            String fechaActual = fecha.format(date);
+
+            NumberFormat totalFormat = NumberFormat.getNumberInstance(new Locale("es", "CL"));
+            Docx docx = null;
+            docx = new Docx(fileOrigen.getPath());
+
+            docx.setVariablePattern(new VariablePattern("${", "}"));
+            Variables variables = new Variables();
+
+            //0.- Cabezera
+            variables.addTextVariable(new TextVariable("${NVENTA}", nueva.getId().toString()));
+            variables.addTextVariable(new TextVariable("${FECHAEMISION}", fechaActual));
+            variables.addTextVariable(new TextVariable("${CAJERO}", nueva.getUsuarios().getNombre() + " " + nueva.getUsuarios().getApellido()));
+
+            TableVariable tableProductos = new TableVariable();
+
+            List<Variable> fi1 = new ArrayList<>();
+            List<Variable> fi2 = new ArrayList<>();
+            List<Variable> fi3 = new ArrayList<>();
+            List<Variable> fi4 = new ArrayList<>();
+
+            if (ventasTO.isEmpty()) {
+                fi1.add(new TextVariable("${PRODUCTO}", ""));
+                fi2.add(new TextVariable("${CANTIDAD}", ""));
+                fi3.add(new TextVariable("${VALOR}", ""));
+                fi4.add(new TextVariable("${UNITARIO}", ""));
+
+            } else {
+                for (VentaDetalles v : ventasTO) {
+                    Integer valor = v.getPrecio() * v.getCantidad();
+
+                    fi1.add(new TextVariable("${PRODUCTO}", v.getProducto().getNombre()));
+                    fi2.add(new TextVariable("${CANTIDAD}", v.getCantidad().toString()));
+                    fi3.add(new TextVariable("${VALOR}", "$ " + totalFormat.format(valor)));
+                    fi4.add(new TextVariable("${UNITARIO}", "$ " + totalFormat.format(v.getPrecio())));
+                }
+
+            }
+
+            tableProductos.addVariable(fi1);
+            tableProductos.addVariable(fi2);
+            tableProductos.addVariable(fi3);
+            tableProductos.addVariable(fi4);
+            variables.addTableVariable(tableProductos);
+
+            variables.addTextVariable(new TextVariable("${DESCUENTO}", "$ " + totalFormat.format(nueva.getDescuento())));
+            variables.addTextVariable(new TextVariable("${SUBTOTAL}", "$ " + totalFormat.format(nueva.getSubtotal())));
+            variables.addTextVariable(new TextVariable("${TOTAL}", "$ " + totalFormat.format(nueva.getTotal())));
+
+            docx.fillTemplate(variables);
+            File file;
+            docx.save(System.getProperty("java.io.tmpdir") + "/" + nombreFinal);
+
+            file = new File(System.getProperty("java.io.tmpdir") + "/" + nombreFinal);
+
+            if (file.exists() && !file.isDirectory()) {
+
+                return file;
+            }
+
+        }
+
+        return null;
+    }
+
     public File libreOfficeToPdf(File inputFile, boolean tmpDir) throws OfficeException {
         String file = inputFile.getName();
         int ext = file.lastIndexOf(".");

@@ -21,6 +21,10 @@ import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Set;
 
+/**
+ *
+ * @author basti
+ */
 @Entity
 @Table(name = "proveedores")
 @NamedQueries({

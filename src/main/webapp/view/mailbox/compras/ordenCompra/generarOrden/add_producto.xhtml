@@ -1,0 +1,28 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">               
+
+
+    <p:dialog onShow="PF('dialogAddProductoOrden').initPosition()" id="DlgAddProductoOrden" 
+              widgetVar="dialogAddProductoOrden" modal="true" showEffect="explode" 
+              resizable="false" appendTo="@(body)" closable="true"     
+              header="Agregar Producto Orden" >
+
+        <h:form id="formAddProductoOrden" >
+            <p:panelGrid columns="2" columnClasses="column" style="width: 100%" >
+                <p:outputLabel value="Nombre Producto *"  for="nombre"/>  
+                <p:autoComplete id="nombre" placeholder="Ingrese Nombre" inputStyle="width: 500px;"
+                                minQueryLength="3" value="#{generarOrdenBean.nombreProducto}" scrollHeight="250"
+                                completeMethod="#{generarOrdenBean.buscarProductos}" >
+                    <p:ajax listener="#{generarOrdenBean.completarProductoOrden}" 
+                            oncomplete="PF('dialogAddProductoOrden').hide()"
+                            update="formAddOrden:dataTableProductos" />
+                </p:autoComplete>
+
+            </p:panelGrid>
+        </h:form>
+    </p:dialog>
+</ui:composition>

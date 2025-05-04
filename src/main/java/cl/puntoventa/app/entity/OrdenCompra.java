@@ -25,7 +25,10 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 
-
+/**
+ *
+ * @author basti
+ */
 @Entity
 @Table(name = "orden_compra")
 @NamedQueries({
@@ -52,6 +55,9 @@ public class OrdenCompra implements Serializable {
     @JoinColumn(name = "proveedor_id", referencedColumnName = "id")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Proveedores proveedores;
+    @JoinColumn(name = "usuario_id", referencedColumnName = "id")
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    private Usuarios usuarios;
 
     public OrdenCompra() {
     }
@@ -104,6 +110,14 @@ public class OrdenCompra implements Serializable {
 
     public void setProveedores(Proveedores proveedores) {
         this.proveedores = proveedores;
+    }
+
+    public Usuarios getUsuarios() {
+        return usuarios;
+    }
+
+    public void setUsuarios(Usuarios usuarios) {
+        this.usuarios = usuarios;
     }
 
     @Override

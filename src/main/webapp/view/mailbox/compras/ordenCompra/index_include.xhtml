@@ -7,8 +7,7 @@
         <p:toolbar>             
             <p:toolbarGroup align="left"> 
                 <p:commandButton  icon="pi pi-plus" value="Generar Orden"    
-                                  oncomplete="PF('dialogAddOrden').show()"
-                                  update="formAddOrden"
+                                  action="#{ordenCompraBean.abrirGenerarOrden}"
                                   styleClass="ui-button-outlined ui-button-success"/>
 
 
@@ -24,7 +23,7 @@
             </p:toolbarGroup>
         </p:toolbar>
         <p:dataTable id="dtListOrdenes"
-
+                     
                      var="orden"
                      lazy="true"
                      paginator="true"
