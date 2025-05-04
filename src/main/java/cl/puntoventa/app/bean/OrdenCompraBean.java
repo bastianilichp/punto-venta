@@ -2,6 +2,7 @@ package cl.puntoventa.app.bean;
 
 import cl.puntoventa.app.controller.OrdenCompraController;
 import cl.puntoventa.app.entity.OrdenCompra;
+import jakarta.annotation.PostConstruct;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
@@ -21,9 +22,11 @@ public class OrdenCompraBean implements AppBean, Serializable {
     @Inject
     private OrdenCompraController ordenCompraController;
 
+    @PostConstruct
     @Override
     public void init() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        this.prepareCreate();
+        this.listar();
     }
 
     @Override
@@ -43,7 +46,7 @@ public class OrdenCompraBean implements AppBean, Serializable {
 
     @Override
     public void prepareCreate() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+
     }
 
     public String abrirGenerarOrden() {
