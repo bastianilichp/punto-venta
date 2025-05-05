@@ -14,9 +14,11 @@
         <h:form id="formAddProveedor" >
             <p:panelGrid columns="2" columnClasses="p-col-3, p-col-10" style="width: 100%;">
 
-                <p:outputLabel value="RUT: *" style="font-weight: bold"/>
-                <p:inputText value="#{proveedoresBean.proveedor.rut}"  placeholder="Ingrese RUT EJ: 77565852-2" style="width: 100%;">
+                <p:outputLabel value="RUT: *" style="font-weight: bold" />
+                <p:inputText value="#{proveedoresBean.proveedor.rut}" onpaste="return false;" id="txtRutBusq" onkeypress="return /^[0-9kK\-]$/.test(event.key)"
+                             placeholder="Ingrese RUT EJ: 77565852-2" style="width: 100%;">
                     <f:validateBean disabled="true"/>
+                      <p:ajax event="valueChange" listener="#{proveedoresBean.formatRutFirma}" process="@this" update="txtRutBusq :formMessage" />
                 </p:inputText>
 
                 <p:outputLabel value="Nombre: *" style="font-weight: bold"/>
@@ -37,7 +39,8 @@
                 <p:commandButton  value="CANCELAR" styleClass="ui-button-raised ui-button-danger" 
                                   icon="pi pi-times" iconPos="right"                                 
                                   onstart="PF('blockUIWidget').show()" 
-                                  oncomplete="PF('blockUIWidget').hide(); PF('dialogAddProveedor').hide()"
+                                  oncomplete="PF('blockUIWidget').hide();"
+                                  action="#{proveedoresBean.limpiarProveedores}"
                                   update="formListProveedores formAddProveedor"/>
             </div>
 

@@ -92,9 +92,7 @@ public class PuntoVentaBean implements AppBean, Serializable {
         this.pagaCon = 0;
         this.user = new Usuarios();
 
-        String headlessProperty = System.getProperty("java.awt.headless");
-        System.out.println(headlessProperty);
-        Util.listarImpresorasDisponibles();
+       
     }
 
     public void buscarProductos() {

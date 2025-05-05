@@ -66,10 +66,12 @@
                         </p:column>
 
                         <p:column  headerText="Cantidad"   width="40px">
-                            <h:inputText value="#{ventasTO.cantidad}" style="width: 50px" styleClass="center" onkeydown="if (event.key === 'Enter')
-                                        event.preventDefault();">
-                                <p:ajax update="total formPuntoVenta:subTotal formPuntoVenta:totalF" listener="#{puntoVentaBean.modificarCantidad(ventasTO)}" oncomplete="setTimeout(function() { document.getElementById('formCodigo:codigoBarra').focus(); }, 100)"></p:ajax>
-                            </h:inputText>
+                            <p:spinner id="cantidad" min="1" value="#{ventasTO.cantidad}" >
+                                <p:ajax update="total formPuntoVenta:subTotal formPuntoVenta:totalF" listener="#{puntoVentaBean.modificarCantidad(ventasTO)}" 
+                                        oncomplete="setTimeout(function() { document.getElementById('formCodigo:codigoBarra').focus(); }, 100)"></p:ajax>
+                            </p:spinner>
+
+
                         </p:column>
 
                         <p:column  headerText="Total"   width="40px">

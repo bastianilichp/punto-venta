@@ -6,6 +6,8 @@ import cl.puntoventa.app.entity.Producto;
 import cl.puntoventa.app.entity.Proveedores;
 import cl.puntoventa.app.entity.Usuarios;
 import jakarta.annotation.PostConstruct;
+import jakarta.faces.component.UIInput;
+import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
@@ -13,6 +15,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import org.primefaces.PF;
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.RowEditEvent;
 import org.primefaces.model.FilterMeta;
 import org.primefaces.model.LazyDataModel;
@@ -25,7 +28,7 @@ public class ProveedoresBean implements AppBean, Serializable {
     private LazyDataModel<Proveedores> proveedoresList;
 
     private Proveedores proveedor;
-    
+
     private Proveedores deleteProveedor;
 
     @Inject
@@ -61,18 +64,18 @@ public class ProveedoresBean implements AppBean, Serializable {
     }
 
     @Override
-    public void create() {  
+    public void create() {
         if (proveedoresController.create(this.proveedor)) {
             Util.avisoInfo("infoMsg", "Proveedor Agregado");
-             PF.current().executeScript("PF('dialogAddProveedor').hide()");
+            PF.current().executeScript("PF('dialogAddProveedor').hide()");
             this.proveedor = new Proveedores();
         } else {
             Util.avisoError("infoMsg", "Error al agregar un proveedor");
         }
 
     }
-    
-        public void onRowEdit(RowEditEvent<Proveedores> event) {
+
+    public void onRowEdit(RowEditEvent<Proveedores> event) {
         Proveedores proveedor = proveedoresController.findOneById(event.getObject().getId());
         proveedor.setNombre(event.getObject().getNombre());
         proveedor.setRut(event.getObject().getRut());
@@ -94,14 +97,38 @@ public class ProveedoresBean implements AppBean, Serializable {
 
     @Override
     public void delete() {
-        if(proveedoresController.delete(this.deleteProveedor)){
-             Util.avisoInfo("infoMsg", "Proveedor Eliminado");
-        
+        if (proveedoresController.delete(this.deleteProveedor)) {
+            Util.avisoInfo("infoMsg", "Proveedor Eliminado");
+
         } else {
             Util.avisoError("infoMsg", "Error al Eliminar un proveedor");
         }
-        
+
     }
+
+    public void formatRutFirma() {
+        String valor = formatRut(proveedor.getRut(), "formAddProveedor:txtRutBusq");
+        this.proveedor.setRut(valor);
+    }
+
+    public String formatRut(String rut, String componente) {
+        String valor = Util.sanitizeRutValue(rut);
+        if (!Util.isNullOrEmpty(valor)) {
+            if (!Util.validaRut(valor)) {
+                UIInput input_rut = (UIInput) FacesContext.getCurrentInstance().getViewRoot().findComponent(componente);
+                input_rut.setValid(false);
+                Util.avisoError("infoMsg", "Rut ingresado No es correcto");
+            }
+        }
+        return valor;
+    }
+    
+    public void limpiarProveedores(){
+        this.proveedor = new Proveedores();
+         PrimeFaces.current().executeScript("PF('dialogAddProveedor').hide()");
+    
+    }
+    
 
     public LazyDataModel<Proveedores> getProveedoresList() {
         return proveedoresList;
@@ -126,6 +153,5 @@ public class ProveedoresBean implements AppBean, Serializable {
     public void setDeleteProveedor(Proveedores deleteProveedor) {
         this.deleteProveedor = deleteProveedor;
     }
-    
 
 }

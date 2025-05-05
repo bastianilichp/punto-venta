@@ -5,12 +5,18 @@
                 xmlns:p="http://primefaces.org/ui">
     <h:form id="formListProductos"> 
         <p:toolbar>     
-            
+
             <p:toolbarGroup align="left">
                 <p:commandButton  icon="pi pi-plus" value="Agregar Producto" 
                                   oncomplete="PF('dialogAddProdcutos').show()"
                                   update=":formAddProd" 
                                   styleClass="ui-button-outlined ui-button-success"/>
+                <p:spacer width="10px"/>
+                <p:commandButton  icon="pi pi-eye" value="Categorias" 
+                                  action="#{productoBean.abrirCategorias()}"
+                                  oncomplete="PF('dtListCategorias').getPaginator().setPage(0);"
+                                  update="formCategorias:dtListCategorias" 
+                                  styleClass="ui-button-outlined ui-button-info"/>
             </p:toolbarGroup>
             <p:toolbarGroup align="rigth">
                 <p:commandButton value="Exporta Excel" 

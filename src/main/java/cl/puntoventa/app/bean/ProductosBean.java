@@ -5,6 +5,7 @@ import cl.puntoventa.app.controller.CategoriaController;
 import cl.puntoventa.app.controller.ProductosController;
 import cl.puntoventa.app.entity.Categoria;
 import cl.puntoventa.app.entity.Producto;
+import cl.puntoventa.app.entity.Usuarios;
 import jakarta.annotation.PostConstruct;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import org.primefaces.PF;
+import org.primefaces.event.RowEditEvent;
 import org.primefaces.model.FilterMeta;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortMeta;
@@ -37,7 +39,7 @@ public class ProductosBean implements AppBean, Serializable {
     private CategoriaController categoriaController;
 
     private List<Categoria> listCategoria;
-    
+
     private final String HOME_PAGE_REDIRECT = "/view/mailbox/productos/index?faces-redirect=true";
 
     public Producto getProductos() {
@@ -144,7 +146,7 @@ public class ProductosBean implements AppBean, Serializable {
     public void update() {
         if (productosController.update(this.editProducto)) {
             Util.avisoInfo("infoMsg", "Producto Editado");
-            PF.current().executeScript("PF('dialogEditProdcutos').hide()");          
+            PF.current().executeScript("PF('dialogEditProdcutos').hide()");
         }
     }
 
@@ -162,6 +164,45 @@ public class ProductosBean implements AppBean, Serializable {
         System.out.println("cl.puntoventa.app.bean.ProductosBean.prepareDelete()");
         this.deleteProd = pro;
         PF.current().executeScript("PF('dialogDeleteProducto').show()");
+
+    }
+
+    public void eliminarCategoria(Categoria categoria) {
+        if (categoriaController.delete(categoria)) {
+            this.listCategoria = categoriaController.findAll();
+            Util.avisoInfo("infoMsg", "Categoria Eliminada");
+        }
+    }
+
+    public void abrirCategorias() {
+        this.listCategoria = categoriaController.findAll();
+        PF.current().executeScript("PF('dialogCategorias').show()");
+
+    }
+
+    public void onAddNew() {
+        // Add one new product to the table:
+        Categoria categoria = new Categoria();
+        categoria.setDescripcion("Nueva Categoria");
+        if (categoriaController.create(categoria)) {
+            this.listCategoria = categoriaController.findAll();
+            Util.avisoInfo("infoMsg", "Categoria Agregada");
+
+        }
+    }
+
+    public void onRowEdit(RowEditEvent<Categoria> event) {
+        Categoria cat = categoriaController.findOneById(event.getObject().getId());
+        cat.setDescripcion(event.getObject().getDescripcion());
+
+        if (categoriaController.update(cat)) {
+            Util.avisoInfo("infoMsg", "Categoria Modificado");
+        }
+
+    }
+
+    public void onRowCancel(RowEditEvent<Usuarios> event) {
+        Util.avisoInfo("infoMsg", "Categoria No Modificado");
 
     }
 

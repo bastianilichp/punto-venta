@@ -56,6 +56,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.printing.PDFPageable;
 import org.apache.pdfbox.printing.PDFPrintable;
@@ -73,8 +74,8 @@ public class Util {
         FacesContext.getCurrentInstance().addMessage(growlFor, msg);
 
     }
-    
-     public static void avisoWarn(String growlFor, String mensaje) {
+
+    public static void avisoWarn(String growlFor, String mensaje) {
 
         FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_WARN, mensaje, null);
         FacesContext.getCurrentInstance().addMessage(growlFor, msg);
@@ -165,7 +166,6 @@ public class Util {
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
 
         //return String url =   request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
-        //http://localhost:8084/divac
         return request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
 
     }
@@ -183,7 +183,6 @@ public class Util {
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
 
         //return String url =   request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
-        //http://localhost:8084/divac
         return request.getServerPort();
 
     }
@@ -515,74 +514,7 @@ public class Util {
         //Files.createFile(path, permissions);
     }
 
-    public static String creacionPeriodo() {
 
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        String[] fechaHoy = sdf.format(new Date()).split("/");
-        int mes = Integer.parseInt(fechaHoy[1]);
-        if (mes == 13) {
-            mes = 1;
-        } else {
-            mes += 1;
-        }
-        String mesF = mes + "";
-        if (mesF.length() < 2) {
-            mesF = "0" + mesF;
-        }
-        String newPeriodo = mesF + "-" + fechaHoy[2];
-
-        return newPeriodo;
-    }
-
-    public static Integer peticionHttpGet(String session_uuid, String fileName) throws Exception {
-
-        URL obj = new URL("https://jsga.gobiernosantiago.cl/jsga/api/bodega/" + fileName + "/" + session_uuid);
-        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-
-        con.setRequestMethod("GET");
-
-        con.setRequestProperty("cache-control", "no-cache");
-
-        int responseCode = con.getResponseCode();
-        System.out.println("\nSending 'GET' request to URL : " + obj);
-        System.out.println("Response Code : " + responseCode);
-
-        BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-        String inputLine;
-        StringBuffer response = new StringBuffer();
-
-        while ((inputLine = in.readLine()) != null) {
-            response.append(inputLine);
-        }
-        in.close();
-
-        return responseCode;
-
-    }
-
-    public static String inicioMes() {
-
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.DAY_OF_MONTH, 1);
-        String fecha = sdf.format(calendar.getTime());
-        return fecha;
-    }
-
-    public static String nuevoPeriodo() {
-        Calendar calendar = Calendar.getInstance();
-
-        // Sumamos un mes a la fecha actual
-        calendar.add(Calendar.MONTH, 1);
-
-        // Obtenemos la fecha del mes siguiente
-        int año = calendar.get(Calendar.YEAR);
-        int mes = calendar.get(Calendar.MONTH) + 1;
-
-        String periodo = mes + "-" + año;
-
-        return periodo;
-    }
 
     public static String rutCero(String rut) {
         String[] rut_dv = rut.split("-");
@@ -603,93 +535,34 @@ public class Util {
         return pattern.matcher(normalized).replaceAll("");
     }
 
-    public static void imprimirConDialogo(File fileToPdf) throws IOException, PrinterException {
-        PDDocument document = PDDocument.load(fileToPdf);
-        PrinterJob job = PrinterJob.getPrinterJob();
-        job.setPageable(new PDFPageable(document));
+    public static boolean isNullOrEmpty(String str) {
+        return str == null || StringUtils.isEmpty(str) || StringUtils.trimToEmpty(str).isEmpty();
+    }
 
-// Verificamos modo gráfico
-        if (!GraphicsEnvironment.isHeadless()) {
-            System.out.println("🖨️ Mostrando diálogo de impresión...");
-            if (job.printDialog()) {
-                job.print();
-                System.out.println("✅ Impresión completada.");
-            } else {
-                System.out.println("❌ Impresión cancelada por el usuario.");
+    public static String sanitizeRutValue(String valor) {
+        StringBuilder sanitized = new StringBuilder();
+        sanitized.append("");
+        if (valor != null && valor.length() > 0) {
+            char digito = 0;
+            valor = valor.toUpperCase();
+            if (valor.length() >= 2) {
+                digito = valor.charAt(valor.length() - 1);
+                valor = valor.substring(0, valor.length() - 1);
             }
-        } else {
-            System.out.println("⚠️ Modo headless detectado. Imprimiendo directamente.");
-            job.print();
-        }
-
-        document.close();
-
-    }
-
-    public static void imprimirPdfDirectamente(File fileToPdf) {
-        try (PDDocument document = PDDocument.load(fileToPdf)) {
-
-            PrinterJob job = PrinterJob.getPrinterJob();
-            job.setPageable(new PDFPageable(document));
-
-            // Imprimir directamente (sin diálogo)
-            job.print();
-
-            System.out.println("✅ PDF enviado a la impresora predeterminada.");
-
-        } catch (Exception e) {
-            System.err.println("❌ Error al imprimir el PDF directamente:");
-            e.printStackTrace();
-        }
-    }
-
-    public static void imprimirEnImpresoraEspecifica(File fileToPdf, String nombreImpresora) {
-        try (PDDocument document = PDDocument.load(fileToPdf)) {
-
-            PrinterJob job = PrinterJob.getPrinterJob();
-            job.setPageable(new PDFPageable(document));
-
-            // Buscar la impresora por nombre
-            PrintService[] servicios = PrinterJob.lookupPrintServices();
-            boolean encontrada = false;
-
-            for (PrintService service : servicios) {
-                if (service.getName().equalsIgnoreCase(nombreImpresora)) {
-                    job.setPrintService(service);
-                    encontrada = true;
-                    break;
+            for (int i = 0; i < valor.length(); i++) {
+                if (Character.isDigit(valor.charAt(i))) {
+                    sanitized.append(valor.charAt(i));
                 }
             }
-
-            if (!encontrada) {
-                System.err.println("❌ Impresora '" + nombreImpresora + "' no encontrada.");
-                System.out.println("🖨️ Impresoras disponibles:");
-                for (PrintService service : servicios) {
-                    System.out.println(" - " + service.getName());
-                }
-                return;
+            if (sanitized.length() == 0) {
+                sanitized.append("0");
             }
-
-            job.print();
-            System.out.println("✅ PDF enviado a la impresora '" + nombreImpresora + "'.");
-
-        } catch (Exception e) {
-            System.err.println("❌ Error al imprimir en impresora específica:");
-            e.printStackTrace();
-        }
-    }
-
-    public static void listarImpresorasDisponibles() {
-        PrintService[] services = PrintServiceLookup.lookupPrintServices(null, null);
-
-        if (services.length == 0) {
-            System.out.println("❌ No se encontraron impresoras disponibles.");
-        } else {
-            System.out.println("🖨️ Impresoras disponibles:");
-            for (PrintService service : services) {
-                System.out.println(" - " + service.getName());
+            if ((Character.isDigit(digito) || digito == 'K' || digito == 'k')) {
+                sanitized.append("-");
+                sanitized.append(digito);
             }
         }
+        return sanitized.toString();
     }
 
 }
