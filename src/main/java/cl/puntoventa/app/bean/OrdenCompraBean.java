@@ -41,7 +41,7 @@ public class OrdenCompraBean implements AppBean, Serializable {
 
     @Inject
     private HttpSession httpSession;
-    
+
     @Inject
     private ExportarController exportarController;
 
@@ -90,8 +90,9 @@ public class OrdenCompraBean implements AppBean, Serializable {
         Set<DetallesCompra> detallesSet = orden.getDetallesCompraSet();
         List<DetallesCompra> ventaDetalle = new ArrayList<>(detallesSet);
         File fileDocx = fichaController.imprimirOrdenCompra(ventaDetalle, orden);
-       exportarController.descargarDetalleOrden();
-        httpSession.setAttribute("fileDocx", fileDocx);
+        File fileToPdf = fichaController.libreOfficeToPdf(fileDocx, true);
+        httpSession.setAttribute("fileToPdfOrden", fileToPdf);
+       
     }
 
     @Override

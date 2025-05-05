@@ -70,6 +70,7 @@
 
             <p:column  headerText="Acción"  width="50px" >
                 <p:commandButton icon="pi pi-trash" styleClass="rounded-button ui-button-danger" 
+                                 action="#{generarOrdenBean.limpiarVenta(varProductos)}"
                                  update="dataTableProductos"/>
             </p:column>
         </p:dataTable>

@@ -11,6 +11,7 @@ import cl.puntoventa.app.entity.Producto;
 import cl.puntoventa.app.entity.Proveedores;
 import cl.puntoventa.app.entity.Usuarios;
 import cl.puntoventa.app.to.ProductoOrdenTO;
+import cl.puntoventa.app.to.VentasTO;
 import jakarta.annotation.PostConstruct;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
@@ -169,6 +170,16 @@ public class GenerarOrdenBean implements AppBean, Serializable {
                 }
 
             }
+        }else {
+            Util.avisoError("infoMsg", "Sin productos para generar la orden");        
+        }
+    }
+
+    public void limpiarVenta(ProductoOrdenTO to) {
+        productoOrdenTO.remove(to);
+        montoTotal = 0;
+        for (ProductoOrdenTO v : productoOrdenTO) {
+            montoTotal += v.getTotal();
         }
     }
 

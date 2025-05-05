@@ -120,7 +120,7 @@ public class FichaController {
         DateFormat format = new SimpleDateFormat("ddMMyyyyHHmm");
         String fechaNombre = format.format(date);
 
-        String nombreFinal = "oriden_compra-" + fechaNombre + ".docx";
+        String nombreFinal = "orden_compra-" + fechaNombre + ".docx";
 
         File fileOrigen = new File(httpSession.getServletContext().getRealPath("/") + "resources/templates/orden_compra.docx");
 
@@ -175,6 +175,8 @@ public class FichaController {
             tableProductos.addVariable(fi4);
             tableProductos.addVariable(fi5);
             variables.addTableVariable(tableProductos);
+
+            variables.addTextVariable(new TextVariable("${MONTOTOTAL}", "$ " + totalFormat.format(orden.getMontoTotal())));
 
             docx.fillTemplate(variables);
             File file;

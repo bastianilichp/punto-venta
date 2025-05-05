@@ -24,7 +24,7 @@ public class OrdenServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        File downloadFile = (File) httpSession.getAttribute("fileDocx");
+        File downloadFile = (File) httpSession.getAttribute("fileToPdfOrden");
 
         FileInputStream inStream = new FileInputStream(downloadFile);
 

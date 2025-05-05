@@ -24,7 +24,9 @@ import jakarta.inject.Named;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.servlet.http.HttpSession;
+import java.io.File;
 import java.util.Map;
+import static java.util.UUID.randomUUID;
 import org.primefaces.PrimeFaces;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
@@ -35,6 +37,8 @@ public class LoginBean implements AppBean, Serializable {
     private final String HOME_PAGE = "/view/mailbox/index?faces-redirect=true";
 
     private String email;
+
+    private static String TEMP_DIR = System.getProperty("java.io.tmpdir");
 
     @Inject
     private UserController userController;
@@ -202,6 +206,7 @@ public class LoginBean implements AppBean, Serializable {
                 httpSession.setAttribute("autologin", false);
                 httpSession.setAttribute("full_name", userValidado.getNombre() + " " + userValidado.getApellido());
                 httpSession.setAttribute("ADMIN", userValidado.getManager());
+                httpSession.setAttribute("workDir", this.mkWorkDir(userValidado));
 
                 redirect = true;
             } else {
@@ -336,6 +341,20 @@ public class LoginBean implements AppBean, Serializable {
             return null;
         }
 
+    }
+
+    public String mkWorkDir(Usuarios userValidado) {
+        String userName = this.userValidado.getNombre().toLowerCase();
+        String workDir = TEMP_DIR + "/" + userName + "_" + randomUUID().toString().substring(0, 18);
+        File file = new File(workDir);
+        boolean bool = file.mkdir();
+        if (bool) {
+            System.out.println("Directorio creado con éxito");
+        } else {
+            System.out.println("No se pudo crear el directorio");
+        }
+
+        return workDir;
     }
 
     public void recuperarContrasena() {
