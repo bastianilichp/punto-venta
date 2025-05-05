@@ -1,14 +1,26 @@
 package cl.puntoventa.app.bean;
 
+import cl.puntoventa.app.controller.ExportarController;
+import cl.puntoventa.app.controller.FichaController;
 import cl.puntoventa.app.controller.OrdenCompraController;
+import cl.puntoventa.app.entity.DetallesCompra;
 import cl.puntoventa.app.entity.OrdenCompra;
+import cl.puntoventa.app.entity.VentaDetalles;
+import cl.puntoventa.app.entity.VentaNueva;
 import jakarta.annotation.PostConstruct;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+import jakarta.servlet.http.HttpSession;
+import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import org.jodconverter.core.office.OfficeException;
+import org.primefaces.PrimeFaces;
 import org.primefaces.model.FilterMeta;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortMeta;
@@ -19,8 +31,19 @@ public class OrdenCompraBean implements AppBean, Serializable {
 
     private LazyDataModel<OrdenCompra> ordenCompraLazy;
 
+    private List<DetallesCompra> listaDetalleOrden;
+
     @Inject
     private OrdenCompraController ordenCompraController;
+
+    @Inject
+    private FichaController fichaController;
+
+    @Inject
+    private HttpSession httpSession;
+    
+    @Inject
+    private ExportarController exportarController;
 
     @PostConstruct
     @Override
@@ -46,12 +69,29 @@ public class OrdenCompraBean implements AppBean, Serializable {
 
     @Override
     public void prepareCreate() {
+        this.listaDetalleOrden = new ArrayList<>();
 
     }
 
     public String abrirGenerarOrden() {
         return "/view/mailbox/compras/ordenCompra/generarOrden/index.hsm?faces-redirect=true";
 
+    }
+
+    public void detallesVentas(OrdenCompra orden) {
+        System.out.println("detalleorden");
+        Set<DetallesCompra> detallesSet = orden.getDetallesCompraSet();
+        this.listaDetalleOrden = new ArrayList<>(detallesSet);
+        PrimeFaces.current().executeScript("PF('dialogDetallesOrden').show()");
+
+    }
+
+    public void imprimirOrden(OrdenCompra orden) throws OfficeException, IOException {
+        Set<DetallesCompra> detallesSet = orden.getDetallesCompraSet();
+        List<DetallesCompra> ventaDetalle = new ArrayList<>(detallesSet);
+        File fileDocx = fichaController.imprimirOrdenCompra(ventaDetalle, orden);
+       exportarController.descargarDetalleOrden();
+        httpSession.setAttribute("fileDocx", fileDocx);
     }
 
     @Override
@@ -75,6 +115,14 @@ public class OrdenCompraBean implements AppBean, Serializable {
 
     public void setOrdenCompraLazy(LazyDataModel<OrdenCompra> ordenCompraLazy) {
         this.ordenCompraLazy = ordenCompraLazy;
+    }
+
+    public List<DetallesCompra> getListaDetalleOrden() {
+        return listaDetalleOrden;
+    }
+
+    public void setListaDetalleOrden(List<DetallesCompra> listaDetalleOrden) {
+        this.listaDetalleOrden = listaDetalleOrden;
     }
 
 }

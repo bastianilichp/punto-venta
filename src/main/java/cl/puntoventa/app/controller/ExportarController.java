@@ -16,5 +16,13 @@ public class ExportarController {
         externalContext.redirect(externalContext.getRequestContextPath() + "/detalle?file=" + fileName);
 
     }
+    
+      public void descargarDetalleOrden() throws IOException {
+
+        ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+
+        externalContext.redirect(externalContext.getRequestContextPath() + "/orden");
+
+    }
 
 }

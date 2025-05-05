@@ -16,6 +16,7 @@ import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.servlet.http.HttpSession;
+import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -163,9 +164,6 @@ public class GenerarOrdenBean implements AppBean, Serializable {
                     }
                 }
                 if (contador == productoOrdenTO.size()) {
-//                File fileDocx = fichaController.imprimirDetalleVenta(ventasTO, nueva);
-//                File fileToPdf = fichaController.libreOfficeToPdf(fileDocx, true);
-//                httpSession.setAttribute("fileToPdf", fileToPdf);
                     Util.avisoInfo("infoMsg", "Orden Creada");
                     cancelarOrden();
                 }

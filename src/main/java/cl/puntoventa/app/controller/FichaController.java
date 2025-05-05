@@ -1,8 +1,11 @@
 package cl.puntoventa.app.controller;
 
 import cl.puntoventa.app.clases.Util;
+import cl.puntoventa.app.entity.DetallesCompra;
+import cl.puntoventa.app.entity.OrdenCompra;
 import cl.puntoventa.app.entity.VentaDetalles;
 import cl.puntoventa.app.entity.VentaNueva;
+import cl.puntoventa.app.to.ProductoOrdenTO;
 import cl.puntoventa.app.to.VentasTO;
 
 import jakarta.ejb.Stateless;
@@ -112,14 +115,14 @@ public class FichaController {
         return null;
     }
 
-    public File imprimirOrdenCompra(List<VentaDetalles> ventasTO, VentaNueva nueva) {
+    public File imprimirOrdenCompra(List<DetallesCompra> detalle, OrdenCompra orden) {
         Date date = new Date();
         DateFormat format = new SimpleDateFormat("ddMMyyyyHHmm");
         String fechaNombre = format.format(date);
 
-        String nombreFinal = "detalle_venta-" + fechaNombre + ".docx";
+        String nombreFinal = "oriden_compra-" + fechaNombre + ".docx";
 
-        File fileOrigen = new File(httpSession.getServletContext().getRealPath("/") + "resources/templates/detalle_venta.docx");
+        File fileOrigen = new File(httpSession.getServletContext().getRealPath("/") + "resources/templates/orden_compra.docx");
 
         if (fileOrigen.exists() && !fileOrigen.isDirectory()) {
 
@@ -134,9 +137,10 @@ public class FichaController {
             Variables variables = new Variables();
 
             //0.- Cabezera
-            variables.addTextVariable(new TextVariable("${NVENTA}", nueva.getId().toString()));
-            variables.addTextVariable(new TextVariable("${FECHAEMISION}", fechaActual));
-            variables.addTextVariable(new TextVariable("${CAJERO}", nueva.getUsuarios().getNombre() + " " + nueva.getUsuarios().getApellido()));
+            variables.addTextVariable(new TextVariable("${FECHA}", fechaActual));
+            variables.addTextVariable(new TextVariable("${NROORDEN}", orden.getId().toString()));
+            variables.addTextVariable(new TextVariable("${NPROVEEDOR}", orden.getProveedores().getNombre()));
+            variables.addTextVariable(new TextVariable("${RUTPROVEEDOR}", orden.getProveedores().getRut()));
 
             TableVariable tableProductos = new TableVariable();
 
@@ -144,21 +148,23 @@ public class FichaController {
             List<Variable> fi2 = new ArrayList<>();
             List<Variable> fi3 = new ArrayList<>();
             List<Variable> fi4 = new ArrayList<>();
+            List<Variable> fi5 = new ArrayList<>();
 
-            if (ventasTO.isEmpty()) {
-                fi1.add(new TextVariable("${PRODUCTO}", ""));
-                fi2.add(new TextVariable("${CANTIDAD}", ""));
-                fi3.add(new TextVariable("${VALOR}", ""));
+            if (detalle.isEmpty()) {
+                fi1.add(new TextVariable("${CODIGO}", ""));
+                fi2.add(new TextVariable("${DESCRIPCION}", ""));
+                fi3.add(new TextVariable("${CANTIDAD}", ""));
                 fi4.add(new TextVariable("${UNITARIO}", ""));
+                fi5.add(new TextVariable("${TOTAL}", ""));
 
             } else {
-                for (VentaDetalles v : ventasTO) {
-                    Integer valor = v.getPrecio() * v.getCantidad();
+                for (DetallesCompra v : detalle) {
 
-                    fi1.add(new TextVariable("${PRODUCTO}", v.getProducto().getNombre()));
-                    fi2.add(new TextVariable("${CANTIDAD}", v.getCantidad().toString()));
-                    fi3.add(new TextVariable("${VALOR}", "$ " + totalFormat.format(valor)));
-                    fi4.add(new TextVariable("${UNITARIO}", "$ " + totalFormat.format(v.getPrecio())));
+                    fi1.add(new TextVariable("${CODIGO}", v.getCodigoProducto()));
+                    fi2.add(new TextVariable("${DESCRIPCION}", v.getNombreProducto()));
+                    fi3.add(new TextVariable("${CANTIDAD}", "$ " + totalFormat.format(v.getCantidad())));
+                    fi4.add(new TextVariable("${UNITARIO}", "$ " + totalFormat.format(v.getUnitario())));
+                    fi5.add(new TextVariable("${TOTAL}", "$ " + totalFormat.format(v.getTotal())));
                 }
 
             }
@@ -167,11 +173,8 @@ public class FichaController {
             tableProductos.addVariable(fi2);
             tableProductos.addVariable(fi3);
             tableProductos.addVariable(fi4);
+            tableProductos.addVariable(fi5);
             variables.addTableVariable(tableProductos);
-
-            variables.addTextVariable(new TextVariable("${DESCUENTO}", "$ " + totalFormat.format(nueva.getDescuento())));
-            variables.addTextVariable(new TextVariable("${SUBTOTAL}", "$ " + totalFormat.format(nueva.getSubtotal())));
-            variables.addTextVariable(new TextVariable("${TOTAL}", "$ " + totalFormat.format(nueva.getTotal())));
 
             docx.fillTemplate(variables);
             File file;

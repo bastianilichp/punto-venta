@@ -1,0 +1,56 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">               
+
+
+    <p:dialog onShow="PF('dialogDetallesOrden').initPosition()" id="DlgDetallesOrden" 
+              widgetVar="dialogDetallesOrden" modal="true" showEffect="explode" 
+              resizable="false" appendTo="@(body)" 
+              width="1000" 
+              header="Detalles Orden Compra" closeOnEscape="true">
+
+        <h:form id="formDetallesOrden" >
+            <p:dataTable id="dtListOrdenDetalle"
+                         value="#{ordenCompraBean.listaDetalleOrden}"
+                         var="detallesOr"
+                         lazy="true"
+                         paginator="true"
+                         rows="5"
+                         paginatorPosition="bottom"
+                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink}
+                         {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}  "
+                         rowsPerPageTemplate="5,10,15,20,25,50"
+                         currentPageReportTemplate="( {currentPage} of {totalPages} - Total : {totalRecords} )"       
+                         widgetVar="dtListOrdenDetalle">
+                <p:ajax event="page" onstart="PF('blockUIWidget').show()" oncomplete="PF('blockUIWidget').hide()"/>
+
+                <p:column headerText="Codigo" style="width: 100px">
+                    <h:outputText value="#{detallesOr.codigoProducto}"/>
+                </p:column>
+
+                <p:column headerText="Producto" style="width: 200px">
+                    <h:outputText value="#{detallesOr.nombreProducto}"/>
+                </p:column>
+                <p:column headerText="Cantidad" style="width: 80px">
+                    <h:outputText value="#{detallesOr.cantidad}"/>
+                </p:column>
+
+                <p:column headerText="Precio" style="width: 80px" >
+                    <h:outputText value="#{detallesOr.unitario}">
+                        <f:convertNumber  type="currency" currencySymbol="$ " locale="es_CL"/> 
+                    </h:outputText>
+                </p:column>
+
+                <p:column headerText="Total" style="width: 80px" >
+                    <h:outputText value="#{detallesOr.total}">
+                        <f:convertNumber  type="currency" currencySymbol="$ " locale="es_CL"/> 
+                    </h:outputText>
+                </p:column>
+            </p:dataTable>
+
+        </h:form>
+    </p:dialog>
+</ui:composition>

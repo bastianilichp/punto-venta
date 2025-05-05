@@ -95,13 +95,20 @@ public class OrdenCompraController extends AbstractDaoImpl<OrdenCompra> {
                 if (filterField.equals("id") && filterValue != null) {
                     jpql.append(" AND CAST(orden.id AS string) LIKE :id ");
                 }
-               
+
                 if (filterField.equals("usuarios.email") && filterValue != null) {
                     jpql.append(" AND orden.usuarios.email LIKE :email ");
                 }
-                
-                 if (filterField.equals("proveedores.nombre") && filterValue != null) {
+
+                if (filterField.equals("proveedores.nombre") && filterValue != null) {
                     jpql.append(" AND orden.proveedores.nombre LIKE :nombre ");
+                }
+
+                if (filterField.equals("montoTotal") && filterValue != null) {
+                    jpql.append(" AND CAST(orden.montoTotal AS string) LIKE :montoTotal ");
+                }
+                if (filterField.equals("fecha") && filterValue != null) {
+                    jpql.append(" AND CAST(orden.fecha AS string) LIKE :fecha ");
                 }
 
             }
@@ -120,12 +127,19 @@ public class OrdenCompraController extends AbstractDaoImpl<OrdenCompra> {
                     query.setParameter("id", "%" + filterValue + "%");
                 }
 
-              
                 if (filterField.equals("usuarios.email") && filterValue != null) {
                     query.setParameter("email", "%" + filterValue + "%");
                 }
                 if (filterField.equals("proveedores.nombre") && filterValue != null) {
                     query.setParameter("nombre", "%" + filterValue + "%");
+                }
+
+                if (filterField.equals("montoTotal") && filterValue != null) {
+                    query.setParameter("montoTotal", "%" + filterValue + "%");
+                }
+
+                if (filterField.equals("fecha") && filterValue != null) {
+                    query.setParameter("fecha", "%" + filterValue + "%");
                 }
 
             }
