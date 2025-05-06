@@ -103,10 +103,8 @@
                         </p:outputLabel>
 
                         <p:outputLabel for="descuento" value="Descuento:" style="font-weight: bold;"/>
-                        <p:inputText id="descuento"  value="#{puntoVentaBean.descuento}" style="width: 80px; height: 80%" onkeydown="if (event.key === 'Enter')
-                                    event.preventDefault();">
+                        <p:inputText id="descuento"  value="#{puntoVentaBean.descuento}" style="width: 80px; height: 80%" onkeydown="if (event.key === 'Enter')event.preventDefault();">
                             <p:ajax update="totalF" listener="#{puntoVentaBean.calcularTotal}"></p:ajax>
-
                         </p:inputText>
 
                         <p:outputLabel for="totalF" value="TOTAL:" style="font-weight: bold; font-size: 18px; color: red"/>
@@ -114,11 +112,9 @@
                             <f:convertNumber  type="currency" currencySymbol="$ " locale="es_CL"/> 
                         </p:outputLabel>
 
-                        <p:outputLabel for="paga" value="PAGA CON:" style="font-weight: bold; font-size: 12px" onkeydown="if (event.key === 'Enter')
-                                    event.preventDefault();"/>
-                        <p:inputText id="paga"  value="#{puntoVentaBean.pagaCon}"> 
+                        <p:outputLabel for="paga" value="PAGA CON:" style="font-weight: bold; font-size: 12px" />
+                        <p:inputText id="paga"  value="#{puntoVentaBean.pagaCon}" onkeydown="if (event.key === 'Enter')event.preventDefault();"> 
                             <p:ajax update="vuelto" ></p:ajax>
-
                         </p:inputText>
 
                         <p:outputLabel for="vuelto" value="VUELTO: " style="font-weight: bold; font-size: 12px"/>

@@ -77,6 +77,15 @@
                                               process="@this"/>
                         </td>
                         <td style="text-align: center;">
+                            <p:commandButton  value="ENVIAR MAIL" 
+                                              icon="pi pi-file-excel" rendered="#{ADMIN}"
+                                              styleClass="rounded-button ui-button-secondary"
+                                              style="width: 300px; height:80px "
+                                              onstart="PF('blockUIWidget').show()" 
+                                              oncomplete="PF('blockUIWidget').hide();"
+                                              update="formDetallesIndex formMessage"
+                                              action="#{inboxBean.enviarCorreo()}"
+                                              process="@this"/>
 
 
                         </td>

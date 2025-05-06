@@ -20,7 +20,9 @@ import jakarta.servlet.http.HttpSession;
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Named("generarOrdenBean")
 @ViewScoped
@@ -117,12 +119,16 @@ public class GenerarOrdenBean implements AppBean, Serializable {
         Producto p = productosController.findByNombreExacto(nombreProducto);
         if (p != null) {
             ProductoOrdenTO po = new ProductoOrdenTO();
+            po.setFecha(new Date());
             po.setCodigo(p.getCodigo());
             po.setNombre(p.getNombre());
             po.setUnitario(p.getPrecioCompra());
             po.setCantidad(cantidad);
             po.setTotal(cantidad * p.getPrecioCompra());
             productoOrdenTO.add(po);
+            productoOrdenTO = productoOrdenTO.stream()
+                            .sorted((v1, v2) -> v2.getFecha().compareTo(v1.getFecha())) // v2 primero para orden descendente
+                            .collect(Collectors.toList());
             this.nombreProducto = new String();
         }
 

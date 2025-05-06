@@ -65,7 +65,8 @@ public class VentasNuevaController extends AbstractDaoImpl<VentaNueva> {
                     .append(" LEFT JOIN nueva.usuarios ")
                     .append(" WHERE 1=1 ")
                     .append(" AND nueva.fechayhora BETWEEN :fechaDesde AND :fechaHasta ")
-                    .append(this.filtroDataTable(filterBy));
+                    .append(this.filtroDataTable(filterBy))
+                    .append(" ORDER BY nueva.id DESC");
 
             Query query = entityManager.createQuery(jpql.toString());
             query.setParameter("fechaDesde", fechaDesde + " 00:00:00");
@@ -94,7 +95,8 @@ public class VentasNuevaController extends AbstractDaoImpl<VentaNueva> {
                     .append(" LEFT JOIN FETCH nueva.usuarios ")
                     .append(" WHERE 1=1 ")
                     .append(" AND nueva.fechayhora BETWEEN :fechaDesde AND :fechaHasta ")
-                    .append(this.filtroDataTable(filterBy));
+                    .append(this.filtroDataTable(filterBy))
+                    .append(" ORDER BY nueva.id DESC");
 
             Query query = entityManager.createQuery(jpql.toString());
             query.setParameter("fechaDesde", fechaDesde + " 00:00:00");

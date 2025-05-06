@@ -1,6 +1,7 @@
 package cl.puntoventa.app.bean;
 
 import cl.puntoventa.app.clases.Util;
+import cl.puntoventa.app.controller.EmailController;
 import cl.puntoventa.app.controller.ProductoVendidoController;
 import cl.puntoventa.app.controller.UserController;
 import cl.puntoventa.app.controller.VentasDetallesController;
@@ -13,6 +14,7 @@ import jakarta.annotation.PostConstruct;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+import jakarta.servlet.http.HttpSession;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -45,6 +47,12 @@ public class InboxBean implements AppBean, Serializable {
     @Inject
     private ProductoVendidoController productoVendidoController;
 
+    @Inject
+    private EmailController emailController;
+
+    @Inject
+    private HttpSession httpSession;
+
     @PostConstruct
     @Override
     public void init() {
@@ -56,6 +64,7 @@ public class InboxBean implements AppBean, Serializable {
     @Override
     public void listar() {
         listUsuarios = userController.findAllModificacion();
+        user = (Usuarios) httpSession.getAttribute("userSession");
 
     }
 
@@ -160,6 +169,15 @@ public class InboxBean implements AppBean, Serializable {
 
     public void onRowCancel(RowEditEvent<Usuarios> event) {
         Util.avisoInfo("infoMsg", "Usuario No Modificado");
+
+    }
+
+    public void enviarCorreo() {
+
+        if (emailController.sendNuevoUser(user, "123456")) {
+            Util.avisoInfo("infoMsg", "Correo Enviado");
+
+        }
 
     }
 

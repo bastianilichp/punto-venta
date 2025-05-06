@@ -1,5 +1,7 @@
 package cl.puntoventa.app.to;
 
+import java.util.Date;
+
 public class ProductoOrdenTO {
 
     private String codigo;
@@ -7,6 +9,7 @@ public class ProductoOrdenTO {
     private Integer cantidad;
     private Integer unitario;
     private Integer total;
+    private Date fecha;
 
     public String getCodigo() {
         return codigo;
@@ -46,6 +49,14 @@ public class ProductoOrdenTO {
 
     public void setTotal(Integer total) {
         this.total = total;
+    }
+
+    public Date getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(Date fecha) {
+        this.fecha = fecha;
     }
 
 }

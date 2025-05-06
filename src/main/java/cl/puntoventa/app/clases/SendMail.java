@@ -1,7 +1,7 @@
 package cl.puntoventa.app.clases;
 
-
-
+import cl.puntoventa.app.entity.Usuarios;
+import cl.puntoventa.app.helpers.ConfigManager;
 import jakarta.activation.DataHandler;
 import jakarta.activation.DataSource;
 import jakarta.activation.FileDataSource;
@@ -19,6 +19,8 @@ import jakarta.mail.internet.MimeBodyPart;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.mail.internet.MimeMultipart;
 import jakarta.servlet.http.HttpSession;
+import jakarta.mail.*;
+import jakarta.mail.internet.*;
 import java.io.File;
 
 @ApplicationScoped
@@ -27,16 +29,25 @@ public class SendMail {
 
     final Properties prop = new Properties();
 
-    public SendMail() {
+    final String username = ConfigManager.GetProperty("mail");
+    final String password = ConfigManager.GetProperty("pass");
 
-        prop.put("mail.smtp.host", "10.13.10.50"); //optional, defined in SMTPTransport   
-        prop.put("mail.smtp.port", "25"); // default port 25
-        prop.put("mail.debug", "true");
+    public SendMail() {
+        prop.put("mail.smtp.host", "smtp.gmail.com");
+        prop.put("mail.smtp.port", "587");
+        prop.put("mail.smtp.starttls.enable", "true");
+        prop.put("mail.smtp.auth", "true");
+
     }
 
-    public boolean sendReMailActa(String subject, String body, File filename) {
+    public boolean send(String subject, String body, Usuarios user) {
 
-        Session session = Session.getInstance(prop, null);
+        Session session = Session.getInstance(prop,
+                new jakarta.mail.Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(username, password);
+            }
+        });
 
         boolean validar = true;
 
@@ -44,11 +55,9 @@ public class SendMail {
 
             MimeMessage message = new MimeMessage(session);
 
-            message.setFrom(new InternetAddress("sistemas@gobiernosantiago.cl"));
+            message.setFrom(new InternetAddress("botilleriadondeellito@gmail.com"));
 
-//            message.addRecipient(RecipientType.TO, new InternetAddress(acta.getCorreo()));
-//
-//            message.addRecipient(RecipientType.CC, new InternetAddress(acta.getSgaUsers().getEmail()));
+            message.addRecipient(RecipientType.TO, new InternetAddress(user.getEmail()));
 
             message.setSubject(subject, "UTF-8");
             BodyPart messageBodyPart = new MimeBodyPart();
@@ -57,25 +66,18 @@ public class SendMail {
             Multipart multipart = new MimeMultipart("alternative");
             multipart.addBodyPart(messageBodyPart);
 
-            messageBodyPart = new MimeBodyPart();
-            DataSource source = new FileDataSource(filename.getPath());
-            messageBodyPart.setDataHandler(new DataHandler(source));
-            messageBodyPart.setFileName(filename.getName());
-            multipart.addBodyPart(messageBodyPart);
-            message.setContent(multipart, "text/html; charset=utf-8");
+            message.setContent(multipart);
 
             // Send message
             Transport.send(message);
 
         } catch (MessagingException e) {
-
-            //throw new RuntimeException(e);
             validar = false;
+            throw new RuntimeException(e);
+
         }
 
         return validar;
     }
-
- 
 
 }
