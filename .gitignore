@@ -25,3 +25,5 @@ nbdist/
 # End of https://www.gitignore.io/api/maven,netbeans
 /nbproject/
 /target/
+
+.env

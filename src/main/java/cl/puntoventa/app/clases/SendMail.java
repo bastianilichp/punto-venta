@@ -21,33 +21,37 @@ import jakarta.mail.internet.MimeMultipart;
 import jakarta.servlet.http.HttpSession;
 import jakarta.mail.*;
 import jakarta.mail.internet.*;
+import jakarta.mail.Message.RecipientType;
 import java.io.File;
 
 @ApplicationScoped
 @Named("sendMailController")
 public class SendMail {
 
-    final Properties prop = new Properties();
+    final Properties props = new Properties();
 
-    final String username = ConfigManager.GetProperty("mail");
-    final String password = ConfigManager.GetProperty("pass");
+    final Session session;
 
     public SendMail() {
-        prop.put("mail.smtp.host", "smtp.gmail.com");
-        prop.put("mail.smtp.port", "587");
-        prop.put("mail.smtp.starttls.enable", "true");
-        prop.put("mail.smtp.auth", "true");
+        Properties props = new Properties();
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.socketFactory.port", "465");
+        props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.port", "465");
+
+        session = Session.getInstance(props,
+                new jakarta.mail.Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(ConfigManager.GetProperty("mail"), ConfigManager.GetProperty("pass"));
+            }
+        });
+
+        System.out.println(props);
 
     }
 
     public boolean send(String subject, String body, Usuarios user) {
-
-        Session session = Session.getInstance(prop,
-                new jakarta.mail.Authenticator() {
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(username, password);
-            }
-        });
 
         boolean validar = true;
 
@@ -56,6 +60,7 @@ public class SendMail {
             MimeMessage message = new MimeMessage(session);
 
             message.setFrom(new InternetAddress("botilleriadondeellito@gmail.com"));
+          
 
             message.addRecipient(RecipientType.TO, new InternetAddress(user.getEmail()));
 
@@ -75,6 +80,46 @@ public class SendMail {
             validar = false;
             throw new RuntimeException(e);
 
+        }
+
+        return validar;
+    }
+
+    public boolean sendSinStock(String subject, String body, Usuarios user, File file) {
+        boolean validar = true;
+
+        try {
+            MimeMessage message = new MimeMessage(session);
+            message.setFrom(new InternetAddress("botilleriadondeellito@gmail.com"));
+            message.addRecipient(RecipientType.TO, new InternetAddress(user.getEmail()));
+
+            message.setSubject(subject, "UTF-8");
+
+            // Parte del cuerpo del mensaje
+            MimeBodyPart textPart = new MimeBodyPart();
+            textPart.setContent(body, "text/html; charset=utf-8");
+
+            // Parte del archivo adjunto
+            MimeBodyPart attachmentPart = new MimeBodyPart();
+            DataSource source = new FileDataSource(file.getPath());
+            attachmentPart.setDataHandler(new DataHandler(source));
+            attachmentPart.setFileName(file.getName());
+
+            // Agregar ambas partes al multipart
+            Multipart multipart = new MimeMultipart();
+            multipart.addBodyPart(textPart);
+            multipart.addBodyPart(attachmentPart);
+
+            // Configurar el contenido del mensaje
+            message.setContent(multipart);
+
+            // Enviar mensaje
+            Transport.send(message);
+            System.out.println(body);
+
+        } catch (MessagingException e) {
+            validar = false;
+            e.printStackTrace();  // Mejor que RuntimeException para depurar
         }
 
         return validar;

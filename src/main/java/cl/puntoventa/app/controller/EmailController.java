@@ -1,9 +1,7 @@
 package cl.puntoventa.app.controller;
 
-
 import cl.puntoventa.app.clases.SendMail;
 import cl.puntoventa.app.entity.Usuarios;
-
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -14,7 +12,7 @@ import java.util.List;
 public class EmailController {
 
     @Inject
-    private SendMail sendMail;  
+    private SendMail sendMail;
 
     public boolean sendNuevoUser(Usuarios user, String pass) {
 
@@ -28,7 +26,7 @@ public class EmailController {
         body.append("<br>");
         body.append("<p>Ingresar a:</p>");
         body.append("</p><br> ");
-      
+
         body.append("</body></html>");
 
         subject.append("Creación Usuario");
@@ -37,6 +35,21 @@ public class EmailController {
 
     }
 
+    public boolean sendSinStock(Usuarios user, File file) {
 
+        StringBuilder body = new StringBuilder();
+        StringBuilder subject = new StringBuilder();
+        body.append("<html><body>");
+        body.append("<h4>Estimad@, </h4>");
+        body.append("<p> Ha continuación, se adjunta total de productos sin stock ").append("PRODUCTOS_SIN_STOCK").append("</p>");
+        body.append("</p><br> ");
+
+        body.append("</body></html>");
+
+        subject.append("Sistema Punto Venta Donde El Lito");
+
+        return sendMail.sendSinStock(subject.toString(), body.toString(), user, file);
+
+    }
 
 }

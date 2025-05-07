@@ -18,24 +18,24 @@ public class ScheduleController {
     @Inject
     private ExportarController exportarController;
 
-    @Schedule(hour = "8", minute = "0", second = "0", persistent = false)
-    public void exportarProyectosUtemEmailAudit() throws InterruptedException, IOException {
+    @Schedule(hour = "10", minute = "40", second = "0", persistent = false)
+    public void exportarProductosSinStock() throws InterruptedException, IOException {
 
-        ServerSocket serverSocket;
-
-        try {
-
-            serverSocket = new ServerSocket(1235);
-
-            exportarController.exportarSinStock();
-
-            serverSocket.close();
-
-        } catch (IOException e) {
-
-            System.out.println("error en socket " + e.getMessage());
-
-        }
+//        ServerSocket serverSocket;
+//
+//        try {
+//
+//            serverSocket = new ServerSocket(1235);
+//
+//            exportarController.exportarSinStock();
+//
+//            serverSocket.close();
+//
+//        } catch (IOException e) {
+//
+//            System.out.println("error en socket " + e.getMessage());
+//
+//        }
 
     }
 

@@ -62,29 +62,29 @@ public class ExportarController {
     public void exportarSinStock() throws InterruptedException, IOException {
 
         //List<PostUser> lista = postUserController.findAllEmailAudit();
-        List<Usuarios> lista = usuarioController.findAll();
-        List<Producto> listaProyecto = productoController.findAll();
+        List<Usuarios> lista = usuarioController.findAllManager();
+        List<Producto> listaProductos = productoController.findSinStock();
 
-        File file = exportarProyectosUtem(listaProyecto);
+        File file = exportarListadoStock(listaProductos);
 
         if (file.exists() && !file.isDirectory()) {
 
-            for (Usuarios postUser : lista) {
+            for (Usuarios user : lista) {
 
-                emailController.sendNuevoUser(postUser,"");
+                emailController.sendSinStock(user, file);
 
             }
         }
 
     }
 
-    private File exportarProyectosUtem(List<Producto> lista) throws InterruptedException, FileNotFoundException, IOException {
+    private File exportarListadoStock(List<Producto> lista) throws InterruptedException, FileNotFoundException, IOException {
 
         DateFormat fecha = new SimpleDateFormat("yyyy-MM-dd-HH-mm");
 
         String destination = System.getProperty("java.io.tmpdir") + "/";
 
-        String nombre = "proyectos-" + fecha.format(new Date()) + ".xls";
+        String nombre = "productos_sin_stock-" + fecha.format(new Date()) + ".xls";
 
         FileOutputStream fileOut = null;
 
@@ -98,9 +98,9 @@ public class ExportarController {
 
         HSSFWorkbook workbook = new HSSFWorkbook();
 
-        HSSFSheet worksheet = workbook.createSheet("ProyectosUtem");
+        HSSFSheet worksheet = workbook.createSheet("Productos Sin Stock");
 
-        HSSFSheet sheet = workbook.getSheet("ProyectosUtem");
+        HSSFSheet sheet = workbook.getSheet("Productos Sin Stock");
 
         // create style for header cells
         CellStyle style = workbook.createCellStyle();
@@ -217,7 +217,7 @@ public class ExportarController {
 
         //titulo
         HSSFRow titulo = worksheet.createRow((short) 0);
-        titulo.createCell(0).setCellValue("Gobierno Regional Metropolitano");
+        titulo.createCell(0).setCellValue("Botilleria Donde El Lito");
 
         titulo.setHeight((short) 500);
 
@@ -231,7 +231,7 @@ public class ExportarController {
         // create header row
         HSSFRow header = worksheet.createRow(3);
 
-        header.createCell(0).setCellValue("Proyectos - [ Periodo : " +" ]");
+        header.createCell(0).setCellValue("Productos Sin Stock");
 
         header.getCell(0).setCellStyle(style2);
 
@@ -247,31 +247,15 @@ public class ExportarController {
         header.createCell(1).setCellValue("Nombre");
         header.getCell(1).setCellStyle(style);
 
-        header.createCell(2).setCellValue("Tipo Institución");
+        header.createCell(2).setCellValue("Stock");
         header.getCell(2).setCellStyle(style);
 
-        header.createCell(3).setCellValue("Institución");
+        header.createCell(3).setCellValue("Categoria");
         header.getCell(3).setCellStyle(style);
 
         int fila = 5;
 
-        StringBuilder comunas = new StringBuilder();
-
-        StringBuilder provincias = new StringBuilder();
-
-        StringBuilder tipodeBeneficiario = new StringBuilder();
-
-        StringBuilder estrategiaRegional = new StringBuilder();
-
-        StringBuilder estrategiaSantiago = new StringBuilder();
-
-        //List<PostProyecto> lista = proyectoController.findAll(finashed);
-        System.out.println("lista " + lista.size());
-        int contador = 1;
-
         for (Producto producto : lista) {
-
-            contador++;
 
             HSSFRow row = worksheet.createRow(fila);
 
@@ -281,20 +265,21 @@ public class ExportarController {
 
             row.createCell(2).setCellValue(producto.getStock());
 
-        }
+            row.createCell(3).setCellValue(producto.getCategoria().getDescripcion());
 
-        fila++;
+            fila++;
+
+        }
 
         worksheet.setAutoFilter(CellRangeAddress.valueOf("A5:D5"));
         worksheet.createFreezePane(0, 5);
 
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 5; i++) {
 
             worksheet.autoSizeColumn(i);
 
         }
 
-       
         try {
 
             workbook.write(fileOut);

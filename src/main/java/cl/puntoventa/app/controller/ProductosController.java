@@ -304,4 +304,26 @@ public class ProductosController extends AbstractDaoImpl<Producto> {
 
     }
 
+    public List<Producto> findSinStock() {
+        StringBuilder jpql = new StringBuilder();
+        List<Producto> lista = null;
+
+        try {
+            jpql.append("SELECT producto FROM Producto producto ")
+                    .append(" LEFT JOIN FETCH producto.categoria ")
+                    .append(" WHERE 1=1 ")
+                    .append(" and producto.stock = 0 ");
+
+            Query query = entityManager.createQuery(jpql.toString());
+
+            lista = query.getResultList();
+
+        } catch (Exception ex) {
+            this.rollbackOperation(this.getClass().getSimpleName(), Thread.currentThread().getStackTrace()[1].getMethodName(), ex);
+        }
+
+        return lista;
+
+    }
+
 }

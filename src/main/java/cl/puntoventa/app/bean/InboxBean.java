@@ -9,16 +9,20 @@ import cl.puntoventa.app.controller.VentasNuevaController;
 import cl.puntoventa.app.entity.Usuarios;
 import cl.puntoventa.app.entity.VentaDetalles;
 import cl.puntoventa.app.entity.VentaNueva;
+import cl.puntoventa.app.schedule.ScheduleController;
 import cl.puntoventa.app.to.TopProductosTO;
 import jakarta.annotation.PostConstruct;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.servlet.http.HttpSession;
+import java.io.IOException;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.commons.math3.stat.descriptive.summary.Product;
 import org.primefaces.PrimeFaces;
 import org.primefaces.event.RowEditEvent;
@@ -52,6 +56,9 @@ public class InboxBean implements AppBean, Serializable {
 
     @Inject
     private HttpSession httpSession;
+
+    @Inject
+    private ScheduleController scheduleController;
 
     @PostConstruct
     @Override
@@ -172,11 +179,12 @@ public class InboxBean implements AppBean, Serializable {
 
     }
 
-    public void enviarCorreo() {
+    public void enviarCorreo() throws InterruptedException {
 
-        if (emailController.sendNuevoUser(user, "123456")) {
-            Util.avisoInfo("infoMsg", "Correo Enviado");
-
+        try {
+            scheduleController.exportarProductosSinStock();
+        } catch (IOException ex) {
+            Logger.getLogger(InboxBean.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }

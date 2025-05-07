@@ -54,6 +54,28 @@ public class UserController extends AbstractDaoImpl<Usuarios> {
 
     }
 
+    public List<Usuarios> findAllManager() {
+
+        List<Usuarios> user = null;
+        StringBuilder jpql = new StringBuilder();
+
+        try {
+            jpql.append("SELECT usuario FROM Usuarios usuario ");
+            jpql.append(" WHERE 1=1 ");
+            jpql.append(" AND usuario.enabled = true");
+            jpql.append(" AND usuario.manager = true");
+
+            Query query = entityManager.createQuery(jpql.toString());
+            user = query.getResultList();
+
+        } catch (Exception ex) {
+            this.rollbackOperation(this.getClass().getSimpleName(), Thread.currentThread().getStackTrace()[1].getMethodName(), ex);
+        }
+
+        return user;
+
+    }
+
     public List<Usuarios> findAllModificacion() {
 
         List<Usuarios> user = null;
@@ -61,7 +83,7 @@ public class UserController extends AbstractDaoImpl<Usuarios> {
 
         try {
             jpql.append("SELECT usuario FROM Usuarios usuario ");
-            jpql.append(" WHERE 1=1 ");            
+            jpql.append(" WHERE 1=1 ");
 
             Query query = entityManager.createQuery(jpql.toString());
             user = query.getResultList();
