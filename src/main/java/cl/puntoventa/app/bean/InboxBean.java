@@ -179,15 +179,6 @@ public class InboxBean implements AppBean, Serializable {
 
     }
 
-    public void enviarCorreo() throws InterruptedException {
-
-        try {
-            scheduleController.exportarProductosSinStock();
-        } catch (IOException ex) {
-            Logger.getLogger(InboxBean.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-    }
 
     @Override
     public void create() {
