@@ -32,7 +32,7 @@
                                               icon="pi pi-file-excel" rendered="#{ADMIN}"
                                               styleClass="rounded-button ui-button-secondary" 
                                               style="width: 300px; height:80px " 
-                                              update="formTopProductos formMessage" 
+                                              update="formTopProductosH formMessage" 
                                               onstart="PF('blockUIWidget').show()" 
                                               oncomplete="PF('blockUIWidget').hide();"
                                               action="#{inboxBean.topProductosHistorico()}"
@@ -57,10 +57,8 @@
                                               icon="pi pi-file-excel" rendered="#{ADMIN}"
                                               styleClass="rounded-button ui-button-secondary" 
                                               style="width: 300px; height:80px " 
-                                              update="formTopProductos formMessage" 
-                                              onstart="PF('blockUIWidget').show()" 
-                                              oncomplete="PF('blockUIWidget').hide();"
-                                              action="#{inboxBean.topProductos()}"
+                                              update="formTopProductos formMessage"                                               
+                                              oncomplete="PF('dialogTopProdcutos').show()"
                                               process="@this"/>
                         </td>
                     </tr>
@@ -87,6 +85,7 @@
 
         <ui:include src="/view/mailbox/modal_detalles.xhtml"/>
         <ui:include src="/view/mailbox/modal_top.xhtml"/>
+        <ui:include src="/view/mailbox/modal_top_hist.xhtml"/>
 
     </ui:define>
 

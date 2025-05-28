@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -60,6 +61,9 @@ public class InboxBean implements AppBean, Serializable {
     @Inject
     private ScheduleController scheduleController;
 
+    private Date fechaDesde;
+    private Date fechaHasta;
+
     @PostConstruct
     @Override
     public void init() {
@@ -81,6 +85,8 @@ public class InboxBean implements AppBean, Serializable {
         this.listUsuarios = new ArrayList<>();
         this.listVenta = new ArrayList<>();
         this.topProdcutos = new ArrayList<>();
+        this.fechaDesde = new Date();
+        this.fechaHasta = new Date();
     }
 
     public void dlgCrearUsuario() {
@@ -130,7 +136,7 @@ public class InboxBean implements AppBean, Serializable {
 
     public void topProductos() {
         this.topProdcutos = new ArrayList<>();
-        List<Object[]> obj = ventasDetallesController.obtenerTopProductosVendidos();
+        List<Object[]> obj = ventasDetallesController.obtenerTopProductosVendidos(fechaDesde,fechaHasta);
         for (Object[] row : obj) {
             TopProductosTO to = new TopProductosTO();
             to.setCodigo((String) row[0]);
@@ -157,7 +163,7 @@ public class InboxBean implements AppBean, Serializable {
             topProdcutos.add(to);
         }
         if (!topProdcutos.isEmpty()) {
-            PrimeFaces.current().executeScript("PF('dialogTopProdcutos').show()");
+            PrimeFaces.current().executeScript("PF('dialogTopProdcutosH').show()");
 
         }
         System.out.println(topProdcutos);
@@ -178,7 +184,6 @@ public class InboxBean implements AppBean, Serializable {
         Util.avisoInfo("infoMsg", "Usuario No Modificado");
 
     }
-
 
     @Override
     public void create() {
@@ -225,6 +230,22 @@ public class InboxBean implements AppBean, Serializable {
 
     public void setTopProdcutos(List<TopProductosTO> topProdcutos) {
         this.topProdcutos = topProdcutos;
+    }
+
+    public Date getFechaDesde() {
+        return fechaDesde;
+    }
+
+    public void setFechaDesde(Date fechaDesde) {
+        this.fechaDesde = fechaDesde;
+    }
+
+    public Date getFechaHasta() {
+        return fechaHasta;
+    }
+
+    public void setFechaHasta(Date fechaHasta) {
+        this.fechaHasta = fechaHasta;
     }
 
 }

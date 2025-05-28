@@ -260,20 +260,28 @@ public class VentasDetallesController extends AbstractDaoImpl<VentaDetalles> {
 
     }
 
-    public List<Object[]> obtenerTopProductosVendidos() {
+    public List<Object[]> obtenerTopProductosVendidos(Date fechaD, Date fechaH) {
         List<Object[]> resultados = null;
         StringBuilder jpql = new StringBuilder();
 
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        String fechaDesde = dateFormat.format(fechaD);
+        String fechaHasta = dateFormat.format(fechaH);
+
         try {
-             jpql.append("SELECT detalle.producto.codigo, detalle.producto.nombre, SUM(detalle.cantidad) ")
-            .append("FROM VentaDetalles detalle ") // Use the entity name, not the full class path
-            .append("JOIN detalle.producto ") // Use JOIN instead of LEFT JOIN FETCH
-            .append("GROUP BY detalle.producto.nombre ")
-            .append("ORDER BY SUM(detalle.cantidad) DESC");
+            jpql.append("SELECT detalle.producto.codigo, detalle.producto.nombre, SUM(detalle.cantidad) ")
+                    .append("FROM VentaDetalles detalle ") // Use the entity name, not the full class path
+                    .append(" JOIN detalle.producto ") // Use JOIN instead of LEFT JOIN FETCH
+                    .append(" JOIN detalle.ventaNueva venta ")
+                    .append(" WHERE venta.fechayhora BETWEEN :fechaDesde AND :fechaHasta ")
+                    .append("GROUP BY detalle.producto.nombre ")
+                    .append("ORDER BY SUM(detalle.cantidad) DESC");
 
             // Crear la consulta
             Query query = entityManager.createQuery(jpql.toString());
-            query.setMaxResults(30); // Limitar a los 10 productos más vendidos
+            query.setParameter("fechaDesde", fechaDesde + " 00:00:00");
+            query.setParameter("fechaHasta", fechaHasta + " 23:59:59");
+            query.setMaxResults(50); // Limitar a los 10 productos más vendidos
 
             resultados = query.getResultList();
 

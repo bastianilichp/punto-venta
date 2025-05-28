@@ -6,59 +6,29 @@
                 xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">               
 
 
-    <p:dialog onShow="PF('dialogTopProdcutos').initPosition()" id="DlgTopProdcutos" 
-              widgetVar="dialogTopProdcutos" modal="true" showEffect="explode" 
+    <p:dialog onShow="PF('dialogTopProdcutosH').initPosition()" id="DlgTopProdcutosH" 
+              widgetVar="dialogTopProdcutosH" modal="true" showEffect="explode" 
               resizable="false" appendTo="@(body)" 
               width="700" 
               header="Top Prodcutos" closeOnEscape="true">
 
-        <h:form id="formTopProductos" >
+        <h:form id="formTopProductosH" >
             <p:toolbar> 
                 <p:toolbarGroup align="left">
-                    <p:outputLabel for="fechaD" value="Fecha Desde:" style="font-weight: bold;width: 90px"/>
-                    <p:calendar locale="es" id="fechaD"
-                                readonlyInput="false"
-                                size="15"
-                                maxlength="50"                                                 
-                                pattern="dd-MM-yyyy"
-                                required="false"    
-                                navigator="true"
-                                value="#{inboxBean.fechaDesde}"/> 
-
-                    <p:spacer width="10px"/>
-
-                    <p:outputLabel for="fechaH" value="Fecha Hasta:" style="font-weight: bold;width: 90px"/>
-                    <p:calendar locale="es" id="fechaH"
-                                readonlyInput="false"
-                                size="15"
-                                maxlength="50"                                                 
-                                pattern="dd-MM-yyyy"
-                                required="false"    
-                                navigator="true" 
-                                value="#{inboxBean.fechaHasta}"/> 
-                    <p:spacer width="5px"/>
-                    <p:commandButton 
-                        icon="pi pi-search" title="Buscar"
-                        styleClass="rounded-button ui-button-warning"
-                        action="#{inboxBean.topProductos}"                  
-                        update=":formTopProductos:dtListTopProductos"
-                        onstart="PF('blockUIWidget').show()" 
-                        oncomplete="PF('blockUIWidget').hide();">    
-
-                    </p:commandButton>
                 </p:toolbarGroup>
+
                 <p:toolbarGroup align="rigth">
                     <p:commandButton value="Exporta Excel" 
                                      icon="pi pi-file-excel" 
                                      styleClass="ui-button-outlined ui-button-info" 
                                      onstart="PF('blockUIWidget').show()" 
                                      oncomplete="PF('blockUIWidget').hide();">
-                        <p:dataExporter type="xlsxstream" target="dtListTopProductos" fileName="top_prodcutos" />
+                        <p:dataExporter type="xlsxstream" target="dtListTopProductosH" fileName="top_prodcutos" />
                     </p:commandButton>
                 </p:toolbarGroup>
             </p:toolbar>
 
-            <p:dataTable id="dtListTopProductos"
+            <p:dataTable id="dtListTopProductosH"
                          value="#{inboxBean.topProdcutos}"
                          var="top"                         
                          paginator="true"
