@@ -1,0 +1,55 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">     
+
+    <p:dialog onShow="PF('dialogSelectFecha').initPosition()" 
+              id="dialogSelectFecha"
+              widgetVar="dialogSelectFecha" 
+              modal="true" showEffect="explode"
+              resizable="false" appendTo="@(body)" width="300"
+              header="Seleccione Fecha" closeOnEscape="false">
+        <h:form id="formPeriodoIndex">
+            <h:panelGroup id="displayPeriodoIndex" >
+                <p:panelGrid columns="1"  styleClass="outerpanelgrid"  >
+                    <h:outputText value ="Seleccione una fecha de inicio y termino de ventas"/> 
+
+                </p:panelGrid>
+                <p:panelGrid columns="2"  styleClass="outerpanelgrid" >
+                    <p:outputLabel for="fechaD" value="Fecha Desde:" style="font-weight: bold;width: 90px"/>
+                    <p:calendar locale="es" id="fechaD"
+                                readonlyInput="false"
+                                size="15"
+                                maxlength="50"                                                 
+                                pattern="dd-MM-yyyy"
+                                required="false"    
+                                navigator="true"
+                                value="#{inboxBean.fechaDesde}"/>                   
+
+                    <p:outputLabel for="fechaH" value="Fecha Hasta:" style="font-weight: bold;width: 90px"/>
+                    <p:calendar locale="es" id="fechaH"
+                                readonlyInput="false"
+                                size="15"
+                                maxlength="50"                                                 
+                                pattern="dd-MM-yyyy"
+                                required="false"    
+                                navigator="true" 
+                                value="#{inboxBean.fechaHasta}"/> 
+                    <div style="text-align:center">
+                        <p:commandButton 
+                            icon="pi pi-search" title="Buscar" value="Buscar"
+                            styleClass="rounded-button ui-button-warning"
+                            action="#{inboxBean.exportVentasDetallePeriodo}"                
+                            update="formDetallesIndex formMessage"
+                            onstart="PF('blockUIWidget').show()" 
+                            oncomplete="PF('blockUIWidget').hide();">    
+
+                        </p:commandButton>
+                    </div>
+                </p:panelGrid>
+            </h:panelGroup>
+        </h:form>
+    </p:dialog>
+</ui:composition>

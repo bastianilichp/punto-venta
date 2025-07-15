@@ -64,8 +64,12 @@
                     </h:outputText>
                 </p:column>
 
-                <p:column headerText="Usuario" style="width: 180px" >
+                <p:column headerText="Usuario" style="width: 130px" >
                     <h:outputText value="#{detallesU.usuarios.nombre}  #{detallesU.usuarios.apellido}"/>
+                </p:column>
+
+                <p:column headerText="N° Venta" style="width: 80px" >
+                    <h:outputText value="#{detallesU.ventaNueva.id}"/>
                 </p:column>
 
 

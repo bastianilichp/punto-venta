@@ -75,7 +75,12 @@
                                               process="@this"/>
                         </td>
                         <td style="text-align: center;">                     
-                  
+                            <p:commandButton  value="DESCARGAR VENTAS PERIODO" 
+                                              icon="pi pi-file-excel" rendered="#{ADMIN}"
+                                              styleClass="rounded-button ui-button-secondary"
+                                              style="width: 300px; height:80px "
+                                              oncomplete="PF('dialogSelectFecha').show();"
+                                              process="@this"/>
                         </td>
                     </tr>
                 </table>
@@ -86,6 +91,7 @@
         <ui:include src="/view/mailbox/modal_detalles.xhtml"/>
         <ui:include src="/view/mailbox/modal_top.xhtml"/>
         <ui:include src="/view/mailbox/modal_top_hist.xhtml"/>
+        <ui:include src="/view/mailbox/modal_fecha.xhtml"/>
 
     </ui:define>
 

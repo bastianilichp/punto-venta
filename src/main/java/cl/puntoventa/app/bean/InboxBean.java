@@ -130,13 +130,24 @@ public class InboxBean implements AppBean, Serializable {
         }
     }
 
+    public void exportVentasDetallePeriodo() {
+        this.listVenta = new ArrayList<>();
+        this.listVenta = ventasDetallesController.findByPeriodoVentas(fechaDesde,fechaHasta);
+        if (!listVenta.isEmpty()) {
+            PrimeFaces.current().executeScript(" PF('dialogSelectFecha').hide()");
+            PrimeFaces.current().executeScript("PF('dialogIndex').show()");
+        } else {
+            Util.avisoInfo("infoMsg", "Sin Datos Exportar");
+        }
+    }
+
     public void exportVentasUsuario() {
         this.listVenta = new ArrayList<>();
     }
 
     public void topProductos() {
         this.topProdcutos = new ArrayList<>();
-        List<Object[]> obj = ventasDetallesController.obtenerTopProductosVendidos(fechaDesde,fechaHasta);
+        List<Object[]> obj = ventasDetallesController.obtenerTopProductosVendidos(fechaDesde, fechaHasta);
         for (Object[] row : obj) {
             TopProductosTO to = new TopProductosTO();
             to.setCodigo((String) row[0]);

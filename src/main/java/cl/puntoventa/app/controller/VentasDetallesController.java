@@ -260,6 +260,38 @@ public class VentasDetallesController extends AbstractDaoImpl<VentaDetalles> {
 
     }
 
+    public List<VentaDetalles> findByPeriodoVentas(Date fechaD, Date fechaH) {
+        StringBuilder jpql = new StringBuilder();
+        List<VentaDetalles> lista = null;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+
+        String fechaDesde = dateFormat.format(fechaD);
+        String fechaHasta = dateFormat.format(fechaH);
+        System.out.println(fechaDesde);
+        System.out.println(fechaHasta);
+
+        try {
+            jpql.append("SELECT detalle FROM VentaDetalles detalle ")
+                    .append(" LEFT JOIN FETCH detalle.producto ")
+                    .append(" LEFT JOIN FETCH detalle.usuarios ")
+                    .append(" LEFT JOIN FETCH detalle.ventaNueva ")
+                    .append(" WHERE 1=1 ")
+                    .append(" AND detalle.ventaNueva.fechayhora BETWEEN :fechaDesde AND :fechaHasta ")
+                    .append("ORDER BY detalle.id DESC");
+
+            Query query = entityManager.createQuery(jpql.toString());
+            query.setParameter("fechaDesde", fechaDesde + " 00:00:00");
+            query.setParameter("fechaHasta", fechaHasta + " 23:59:59");
+
+            lista = query.getResultList();
+        } catch (Exception ex) {
+            this.rollbackOperation(this.getClass().getSimpleName(), Thread.currentThread().getStackTrace()[1].getMethodName(), ex);
+        }
+
+        return lista;
+
+    }
+
     public List<Object[]> obtenerTopProductosVendidos(Date fechaD, Date fechaH) {
         List<Object[]> resultados = null;
         StringBuilder jpql = new StringBuilder();
