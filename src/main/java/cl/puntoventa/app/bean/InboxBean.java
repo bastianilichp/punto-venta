@@ -11,6 +11,7 @@ import cl.puntoventa.app.entity.VentaDetalles;
 import cl.puntoventa.app.entity.VentaNueva;
 import cl.puntoventa.app.schedule.ScheduleController;
 import cl.puntoventa.app.to.TopProductosTO;
+import cl.puntoventa.app.to.VentasDetalleTO;
 import jakarta.annotation.PostConstruct;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
@@ -37,6 +38,8 @@ public class InboxBean implements AppBean, Serializable {
     private List<Usuarios> listUsuarios;
 
     private List<VentaDetalles> listVenta;
+
+    private List<VentasDetalleTO> listVentaDetalle;
 
     private List<TopProductosTO> topProdcutos;
 
@@ -107,13 +110,13 @@ public class InboxBean implements AppBean, Serializable {
     }
 
     public void exportVentasMensuales() {
-        this.listVenta = new ArrayList<>();
+        this.listVentaDetalle = new ArrayList<>();
         LocalDate fechaActual = LocalDate.now();
         LocalDate primerDia = fechaActual.withDayOfMonth(1);
-        LocalDate ultimoDia = fechaActual.withDayOfMonth(fechaActual.lengthOfMonth());
-        this.listVenta = ventasDetallesController.findByPeriodo(primerDia, ultimoDia);
-        if (!listVenta.isEmpty()) {
-            PrimeFaces.current().executeScript("PF('dialogIndex').show()");
+        LocalDate ultimoDia = fechaActual;
+        this.listVentaDetalle = ventasDetallesController.findByPeriodo(primerDia, ultimoDia);
+        if (!listVentaDetalle.isEmpty()) {
+            PrimeFaces.current().executeScript("PF('dialogIndex1').show()");
         } else {
             Util.avisoInfo("infoMsg", "Sin Datos Exportar");
         }
@@ -131,11 +134,11 @@ public class InboxBean implements AppBean, Serializable {
     }
 
     public void exportVentasDetallePeriodo() {
-        this.listVenta = new ArrayList<>();
-        this.listVenta = ventasDetallesController.findByPeriodoVentas(fechaDesde,fechaHasta);
-        if (!listVenta.isEmpty()) {
+        this.listVentaDetalle = new ArrayList<>();
+        this.listVentaDetalle = ventasDetallesController.findByPeriodoVentas(fechaDesde, fechaHasta);
+        if (!listVentaDetalle.isEmpty()) {
             PrimeFaces.current().executeScript(" PF('dialogSelectFecha').hide()");
-            PrimeFaces.current().executeScript("PF('dialogIndex').show()");
+            PrimeFaces.current().executeScript("PF('dialogIndex1').show()");
         } else {
             Util.avisoInfo("infoMsg", "Sin Datos Exportar");
         }
@@ -257,6 +260,14 @@ public class InboxBean implements AppBean, Serializable {
 
     public void setFechaHasta(Date fechaHasta) {
         this.fechaHasta = fechaHasta;
+    }
+
+    public List<VentasDetalleTO> getListVentaDetalle() {
+        return listVentaDetalle;
+    }
+
+    public void setListVentaDetalle(List<VentasDetalleTO> listVentaDetalle) {
+        this.listVentaDetalle = listVentaDetalle;
     }
 
 }

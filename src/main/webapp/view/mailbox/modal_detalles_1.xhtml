@@ -6,13 +6,13 @@
                 xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">               
 
 
-    <p:dialog onShow="PF('dialogIndex').initPosition()" id="DlgIndex" 
-              widgetVar="dialogIndex" modal="true" showEffect="explode" 
+    <p:dialog onShow="PF('dialogIndex1').initPosition()" id="DlgIndex1" 
+              widgetVar="dialogIndex1" modal="true" showEffect="explode" 
               resizable="false" appendTo="@(body)" 
               width="1200" height="500"
               header="Detalles Venta" closeOnEscape="true">
 
-        <h:form id="formDetallesIndex" >
+        <h:form id="formDetallesIndex1" >
             <p:toolbar> 
                 <p:toolbarGroup align="left"></p:toolbarGroup>
                 <p:toolbarGroup align="rigth">
@@ -21,13 +21,13 @@
                                      styleClass="ui-button-outlined ui-button-info" 
                                      onstart="PF('blockUIWidget').show()" 
                                      oncomplete="PF('blockUIWidget').hide();">
-                        <p:dataExporter type="xlsxstream" target="dt-ListIndex" fileName="detalle_ventas_index" />
+                        <p:dataExporter type="xlsxstream" target="dt-ListIndex1" fileName="detalle_ventas_periodo" />
                     </p:commandButton>
                 </p:toolbarGroup>
             </p:toolbar>
 
-            <p:dataTable id="dt-ListIndex"
-                         value="#{inboxBean.listVenta}"
+            <p:dataTable id="dt-ListIndex1"
+                         value="#{inboxBean.listVentaDetalle}"
                          var="detallesU"                         
                          paginator="true"
                          rows="5"
@@ -36,51 +36,50 @@
                          {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}  "
                          rowsPerPageTemplate="5,10,15,20,25,50"
                          currentPageReportTemplate="( {currentPage} of {totalPages} - Total : {totalRecords} )"       
-                         widgetVar="dtListIndex"
-                         rowKey="#{detallesU.id}">
+                         widgetVar="dtListIndex1">
                 <p:ajax event="page" onstart="PF('blockUIWidget').show()" oncomplete="PF('blockUIWidget').hide()"/>
 
 
                 <p:column headerText="Codigo" style="width: 100px">
-                    <h:outputText value="#{detallesU.producto.codigo}"/>
+                    <h:outputText value="#{detallesU.codigo}"/>
                 </p:column>
 
                 <p:column headerText="Producto" style="width: 200px">
-                    <h:outputText value="#{detallesU.producto.nombre}"/>
+                    <h:outputText value="#{detallesU.productoNombre}"/>
                 </p:column>
                 <p:column headerText="Cantidad" style="width: 80px">
                     <h:outputText value="#{detallesU.cantidad}"/>
                 </p:column>
 
                 <p:column headerText="Precio Compra" style="width: 80px" >
-                    <h:outputText value="#{detallesU.producto.precioCompra}">
+                    <h:outputText value="#{detallesU.precioCompra}">
                         <f:convertNumber  type="currency" currencySymbol="$ " locale="es_CL"/> 
                     </h:outputText>
                 </p:column>
 
                 <p:column headerText="Precio" style="width: 80px" >
-                    <h:outputText value="#{detallesU.precio}">
+                    <h:outputText value="#{detallesU.precioVenta}">
                         <f:convertNumber  type="currency" currencySymbol="$ " locale="es_CL"/> 
                     </h:outputText>
                 </p:column>
 
                 <p:column headerText="Total" style="width: 80px" >
-                    <h:outputText value="#{detallesU.cantidad * detallesU.precio}">
+                    <h:outputText value="#{detallesU.cantidad * detallesU.precioVenta}">
                         <f:convertNumber  type="currency" currencySymbol="$ " locale="es_CL"/> 
                     </h:outputText>
                 </p:column>
 
                 <p:column headerText="Usuario" style="width: 130px" >
-                    <h:outputText value="#{detallesU.usuarios.nombre}  #{detallesU.usuarios.apellido}"/>
+                    <h:outputText value="#{detallesU.usuarioNombre}"/>
                 </p:column>
 
                 <p:column headerText="N° Venta" style="width: 80px" >
-                    <h:outputText value="#{detallesU.ventaNueva.id}"/>
+                    <h:outputText value="#{detallesU.ventaId}"/>
                 </p:column>
 
                 <p:column headerText="Fecha Venta" style="width: 80px" >
-                    <h:outputText value="#{detallesU.ventaNueva.fechayhora}">
-                       
+                    <h:outputText value="#{detallesU.fechaVenta}">
+
                     </h:outputText>
                 </p:column>
 

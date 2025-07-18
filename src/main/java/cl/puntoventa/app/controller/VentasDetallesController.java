@@ -6,23 +6,37 @@ import cl.puntoventa.app.entity.Producto;
 import cl.puntoventa.app.entity.Usuarios;
 import cl.puntoventa.app.entity.VentaDetalles;
 import cl.puntoventa.app.entity.VentaNueva;
+import cl.puntoventa.app.to.VentasDetalleTO;
 
 import cl.puntoventa.app.to.VentasTO;
+import jakarta.annotation.Resource;
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
 import jakarta.persistence.Query;
 import jakarta.servlet.http.HttpSession;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.sql.DataSource;
 import org.primefaces.model.FilterMeta;
 import org.primefaces.model.SortMeta;
 
 @Stateless
 public class VentasDetallesController extends AbstractDaoImpl<VentaDetalles> {
+
+    @Resource(lookup = "java:global/_puntoventa")
+    private DataSource dataSource;
 
     @Inject
     private ProductosController productosController;
@@ -230,66 +244,150 @@ public class VentasDetallesController extends AbstractDaoImpl<VentaDetalles> {
 
     }
 
-    public List<VentaDetalles> findByPeriodo(LocalDate fechaD, LocalDate fechaH) {
-        StringBuilder jpql = new StringBuilder();
-        List<VentaDetalles> lista = null;
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+    public List<VentasDetalleTO> findByPeriodo(LocalDate fechaD, LocalDate fechaH) {
+        List<VentasDetalleTO> lista = new ArrayList<>();
 
-        String fechaDesde = fechaD.format(formatter);
-        String fechaHasta = fechaH.format(formatter);
-        System.out.println(fechaDesde);
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+        String fechaDesde = fechaD.atStartOfDay().format(formatter);        // 00:00:00
+        String fechaHasta = fechaH.atTime(23, 59, 59).format(formatter);    // 23:59:59
 
         try {
-            jpql.append("SELECT detalle FROM VentaDetalles detalle ")
-                    .append(" LEFT JOIN FETCH detalle.producto ")
-                    .append(" LEFT JOIN FETCH detalle.usuarios ")
-                    .append(" LEFT JOIN FETCH detalle.ventaNueva ")
-                    .append(" WHERE 1=1 ")
-                    .append(" AND detalle.ventaNueva.fechayhora BETWEEN :fechaDesde AND :fechaHasta ");
+            String sql = "SELECT p.codigo, p.nombre, p.precio_compra, vd.precio, "
+                    + "vd.cantidad, u.nombre as nombre_user, u.apellido as apellido_user, "
+                    + "vn.fechayhora, vn.id "
+                    + "FROM venta_detalles vd "
+                    + "JOIN producto p ON vd.producto_id = p.id "
+                    + "JOIN usuarios u ON vd.usuario_id = u.id "
+                    + "JOIN venta_nueva vn ON vd.venta_id = vn.id "
+                    + "WHERE STR_TO_DATE(vn.fechayhora, '%d-%m-%Y %H:%i:%s') "
+                    + "BETWEEN STR_TO_DATE(?, '%d-%m-%Y %H:%i:%s') "
+                    + "AND STR_TO_DATE(?, '%d-%m-%Y %H:%i:%s')";
 
-            Query query = entityManager.createQuery(jpql.toString());
-            query.setParameter("fechaDesde", fechaDesde + " 00:00:00");
-            query.setParameter("fechaHasta", fechaHasta + " 23:59:59");
+            conn = dataSource.getConnection();
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, fechaDesde);
+            stmt.setString(2, fechaHasta);
 
-            lista = query.getResultList();
+            rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                VentasDetalleTO v = new VentasDetalleTO();
+                v.setCodigo(rs.getString("codigo"));
+                v.setProductoNombre(rs.getString("nombre"));
+                v.setPrecioCompra(rs.getInt("precio_compra"));
+                v.setPrecioVenta(rs.getInt("precio"));
+                v.setCantidad(rs.getInt("cantidad"));
+
+                String nombreCompleto = rs.getString("nombre_user") + " " + rs.getString("apellido_user");
+                v.setUsuarioNombre(nombreCompleto);
+
+                v.setFechaVenta(rs.getString("fechayhora"));
+                v.setVentaId(rs.getInt("id"));
+
+                lista.add(v);
+            }
+
         } catch (Exception ex) {
             this.rollbackOperation(this.getClass().getSimpleName(), Thread.currentThread().getStackTrace()[1].getMethodName(), ex);
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+            } catch (SQLException ignored) {
+            }
+            try {
+                if (stmt != null) {
+                    stmt.close();
+                }
+            } catch (SQLException ignored) {
+            }
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception ignored) {
+            }
         }
 
         return lista;
-
     }
 
-    public List<VentaDetalles> findByPeriodoVentas(Date fechaD, Date fechaH) {
-        StringBuilder jpql = new StringBuilder();
-        List<VentaDetalles> lista = null;
+    public List<VentasDetalleTO> findByPeriodoVentas(Date fechaD, Date fechaH) {
+        List<VentasDetalleTO> lista = new ArrayList<>();
+
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 
         String fechaDesde = dateFormat.format(fechaD);
         String fechaHasta = dateFormat.format(fechaH);
-        System.out.println(fechaDesde);
-        System.out.println(fechaHasta);
 
         try {
-            jpql.append("SELECT detalle FROM VentaDetalles detalle ")
-                    .append(" LEFT JOIN FETCH detalle.producto ")
-                    .append(" LEFT JOIN FETCH detalle.usuarios ")
-                    .append(" LEFT JOIN FETCH detalle.ventaNueva ")
-                    .append(" WHERE 1=1 ")
-                    .append(" AND detalle.ventaNueva.fechayhora BETWEEN :fechaDesde AND :fechaHasta ")
-                    .append("ORDER BY detalle.id DESC");
+            String sql = "SELECT p.codigo, p.nombre, p.precio_compra, vd.precio, "
+                    + "vd.cantidad, u.nombre as nombre_user, u.apellido as apellido_user, "
+                    + "vn.fechayhora, vn.id "
+                    + "FROM venta_detalles vd "
+                    + "JOIN producto p ON vd.producto_id = p.id "
+                    + "JOIN usuarios u ON vd.usuario_id = u.id "
+                    + "JOIN venta_nueva vn ON vd.venta_id = vn.id "
+                    + "WHERE STR_TO_DATE(vn.fechayhora, '%d-%m-%Y %H:%i:%s') "
+                    + "BETWEEN STR_TO_DATE(?, '%d-%m-%Y %H:%i:%s') "
+                    + "AND STR_TO_DATE(?, '%d-%m-%Y %H:%i:%s')";
 
-            Query query = entityManager.createQuery(jpql.toString());
-            query.setParameter("fechaDesde", fechaDesde + " 00:00:00");
-            query.setParameter("fechaHasta", fechaHasta + " 23:59:59");
+            conn = dataSource.getConnection();
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, fechaDesde);
+            stmt.setString(2, fechaHasta);
 
-            lista = query.getResultList();
+            rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                VentasDetalleTO v = new VentasDetalleTO();
+                v.setCodigo(rs.getString("codigo"));
+                v.setProductoNombre(rs.getString("nombre"));
+                v.setPrecioCompra(rs.getInt("precio_compra"));
+                v.setPrecioVenta(rs.getInt("precio"));
+                v.setCantidad(rs.getInt("cantidad"));
+
+                String nombreCompleto = rs.getString("nombre_user") + " " + rs.getString("apellido_user");
+                v.setUsuarioNombre(nombreCompleto);
+
+                v.setFechaVenta(rs.getString("fechayhora"));
+                v.setVentaId(rs.getInt("id"));
+
+                lista.add(v);
+            }
+
         } catch (Exception ex) {
             this.rollbackOperation(this.getClass().getSimpleName(), Thread.currentThread().getStackTrace()[1].getMethodName(), ex);
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+            } catch (SQLException ignored) {
+            }
+            try {
+                if (stmt != null) {
+                    stmt.close();
+                }
+            } catch (SQLException ignored) {
+            }
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception ignored) {
+            }
         }
 
         return lista;
-
     }
 
     public List<Object[]> obtenerTopProductosVendidos(Date fechaD, Date fechaH) {
